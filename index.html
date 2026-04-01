@@ -1,682 +1,900 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Custos · Monitor de Caudal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custos · Caudalímetro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F7FA;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --primary: #3366FF;
+      --primary-light: #EBF0FF;
+      --text-main: #0F172A;
+      --text-mut: #64748B;
+      --emerald: #10B981;
+      --red: #F43F5E;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 
-  :root {
-    --bg:       #020810;
-    --surface:  #080f1e;
-    --card:     #0c1628;
-    --border:   rgba(56,189,248,0.1);
-    --sky:      #38bdf8;
-    --sky-dim:  rgba(56,189,248,0.15);
-    --emerald:  #34d399;
-    --red:      #f87171;
-    --text:     #e2e8f0;
-    --muted:    #475569;
-    --mono:     'JetBrains Mono', monospace;
-    --sans:     'Sora', sans-serif;
-  }
+      --font-sans: 'Inter', Arial, Helvetica, sans-serif;
+      --font-mono: 'Fira Mono', monospace;
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    font-size: 14px;
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Fondo sutil */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(14,165,233,0.06) 0%, transparent 60%);
-    pointer-events: none;
-  }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
 
-  /* ── Header ── */
-  header {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(8,15,30,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--sky-dim);
-    border: 1px solid rgba(56,189,248,0.3);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-  }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary-light);
+      border-radius: 8px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .logo-icon svg { width: 16px; height: 16px; fill: var(--sky); }
+    .logo-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
 
-  .logo-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
+    .logo-sub {
+      font-size: 0.75rem;
+      color: var(--text-mut);
+      margin-top: 1px;
+      font-weight: 500;
+    }
 
-  .logo-sub {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: var(--mono);
-    margin-top: 1px;
-  }
+    .badge-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 5px 12px;
-    border-radius: 100px;
-    border: 1px solid transparent;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.05em;
-    transition: all 0.4s;
-  }
-  .status-badge.online  { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.25); color: var(--emerald); }
-  .status-badge.offline { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.25); color: var(--red); }
+    .badge-offline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .status-badge.online .status-dot { animation: blink 2s ease-in-out infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
 
-  /* ── Layout ── */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+    .badge-online .dot {
+      animation: pulse 2s infinite;
+    }
 
-  /* ── Banner anomalía ── */
-  .anomalia-banner {
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.5s;
-  }
-  .anomalia-banner.on {
-    background: rgba(248,113,113,0.07);
-    border-color: rgba(248,113,113,0.25);
-  }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+      }
 
-  .anomalia-led {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--emerald);
-    flex-shrink: 0;
-    transition: all 0.5s;
-    box-shadow: 0 0 5px rgba(52,211,153,0.4);
-  }
-  .anomalia-banner.on .anomalia-led {
-    background: var(--red);
-    box-shadow: 0 0 10px rgba(248,113,113,0.6);
-    animation: blink 0.8s ease-in-out infinite;
-  }
+      70% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
 
-  .anomalia-label { font-size: 0.85rem; color: var(--text); }
-  .anomalia-label span { color: var(--emerald); transition: color 0.4s; font-weight: 500; }
-  .anomalia-banner.on .anomalia-label span { color: var(--red); font-weight: 600; }
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      }
+    }
 
-  .anomalia-estado {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+    /* ── Layout ── */
+    main {
+      max-width: 1200px;
+      margin: 36px auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
 
-  /* ── KPI Grid ── */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
 
-  .kpi {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    transition: border-color 0.3s;
-  }
-  .kpi:hover { border-color: rgba(56,189,248,0.25); }
-  .kpi.accent { background: rgba(56,189,248,0.06); border-color: rgba(56,189,248,0.2); }
+    /* ── Banner Anomalía ── */
+    .anomalia-banner {
+      padding: 20px 24px;
+      border-radius: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
 
-  .kpi-label {
-    font-family: var(--mono);
-    font-size: 0.63rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+    .anomalia-banner.normal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left-color: var(--emerald);
+      box-shadow: var(--shadow);
+    }
 
-  .kpi-value {
-    font-family: var(--mono);
-    font-size: 2rem;
-    font-weight: 500;
-    line-height: 1.1;
-    color: var(--text);
-    transition: color 0.4s;
-  }
-  .kpi.accent .kpi-value { color: var(--sky); }
+    .anomalia-banner.alert {
+      background: #FFF1F2;
+      border: 1px solid #FECDD3;
+      border-left-color: var(--red);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.1);
+    }
 
-  .kpi-unit {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
+    .banner-icon {
+      margin-top: 2px;
+    }
 
-  /* ── Middle row ── */
-  .mid-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
+    .normal .banner-icon {
+      color: var(--emerald);
+    }
 
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-  }
+    .alert .banner-icon {
+      color: var(--red);
+    }
 
-  .card-title {
-    font-family: var(--mono);
-    font-size: 0.63rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
+    .banner-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
 
-  /* ── Gauge ── */
-  .gauge-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
+    .banner-content p {
+      font-size: 0.875rem;
+      color: var(--text-mut);
+      line-height: 1.5;
+    }
 
-  #gaugeCanvas {
-    width: 220px;
-    height: 130px;
-    display: block;
-  }
+    .alert .banner-content h3 {
+      color: #9F1239;
+    }
 
-  .gauge-reading {
-    text-align: center;
-    margin-top: 4px;
-  }
-  .gauge-big {
-    font-family: var(--mono);
-    font-size: 2.8rem;
-    font-weight: 500;
-    color: var(--sky);
-    line-height: 1;
-  }
-  .gauge-unit {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: var(--mono);
-    margin-top: 4px;
-  }
+    .alert .banner-content p {
+      color: #BE123C;
+    }
 
-  /* ── Gráfica manual ── */
-  .chart-area {
-    position: relative;
-    height: 160px;
-  }
+    /* ── KPIs ── */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
 
-  #chartCanvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-  /* ── Tabla histórico ── */
-  .hist-scroll {
-    max-height: 200px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(56,189,248,0.2) transparent;
-  }
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-  }
+    .kpi-icon {
+      color: var(--text-mut);
+      opacity: 0.8;
+    }
 
-  thead th {
-    text-align: left;
-    padding: 6px 8px;
-    color: var(--muted);
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-  }
+    .kpi-card.primary .kpi-icon {
+      color: var(--primary);
+      opacity: 1;
+    }
 
-  tbody td {
-    padding: 10px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    color: var(--text);
-  }
-  tbody tr:hover td { background: rgba(56,189,248,0.04); }
+    .kpi-card.primary {
+      background: #F8FAFC;
+      border-color: #E2E8F0;
+      border-left: 3px solid var(--primary);
+    }
 
-  .td-sky   { color: var(--sky); }
-  .td-muted { color: var(--muted); }
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-mut);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-  .dot-on  { display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sky); }
-  .dot-off { display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted); }
+    .kpi-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
 
-  /* ── Footer ── */
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
+    .kpi-card.primary .kpi-value {
+      color: var(--primary);
+    }
 
-  /* ── Responsive ── */
-  @media (max-width: 900px) {
-    .kpi-grid { grid-template-columns: repeat(2,1fr); }
-    .mid-grid  { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 500px) {
-    .kpi-grid { grid-template-columns: 1fr 1fr; }
-  }
-</style>
+    .kpi-unit {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-mut);
+    }
+
+    /* ── Charts Grid ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+    }
+
+    .card-header {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .gauge-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+    }
+
+    .gauge-reading {
+      margin-top: -14px;
+      text-align: center;
+    }
+
+    .gauge-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .gauge-unit {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-mut);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    canvas {
+      width: 100%;
+      display: block;
+    }
+
+    #gaugeCanvas {
+      width: 220px;
+      height: 130px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 200px;
+      width: 100%;
+    }
+
+    /* ── History Table ── */
+    .table-wrap {
+      overflow-x: auto;
+      max-height: 350px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #CBD5E1 transparent;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      font-weight: 600;
+      color: #475569;
+      padding: 12px 16px;
+      border-bottom: 2px solid #E2E8F0;
+      z-index: 10;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      color: var(--text-main);
+    }
+
+    tr:hover td {
+      background: #F8FAFC;
+    }
+
+    .td-mono {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+
+    .td-muted {
+      color: #64748B;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+
+    .td-primary {
+      color: var(--primary);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-pill.green {
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+    }
+
+    .status-pill.red {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    .status-dot-inner {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-size: 0.8rem;
+      color: #94A3B8;
+      font-family: var(--font-mono);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
-      </svg>
+  <header>
+    <div class="header-logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-title">Custos Dashboard</div>
+        <div class="logo-sub">Panel de Control de Caudalímetro</div>
+      </div>
     </div>
-    <div>
-      <div class="logo-name">Custos · Caudalímetro</div>
-      <div class="logo-sub">Monitor en tiempo real · Firebase</div>
+    <div class="badge-offline" id="statusBadge">
+      <div class="dot"></div>
+      <span id="statusText">Conectando...</span>
     </div>
-  </div>
-  <div class="status-badge offline" id="statusBadge">
-    <div class="status-dot"></div>
-    <span id="statusText">Conectando…</span>
-  </div>
-</header>
+  </header>
 
-<main>
-
-  <!-- Banner anomalía -->
-  <div class="anomalia-banner" id="anomaliaBanner">
-    <div class="anomalia-led"></div>
-    <div class="anomalia-label">Suministro de agua: <span id="anomaliaLabel">normal</span></div>
-    <div class="anomalia-estado" id="anomaliaEstado">—</div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi accent">
-      <div class="kpi-label">Caudal actual</div>
-      <div class="kpi-value" id="kpiLPM">—</div>
-      <div class="kpi-unit">litros / minuto</div>
+  <main>
+    <!-- Banner -->
+    <div class="anomalia-banner normal" id="anomaliaBanner">
+      <div class="banner-icon" id="anomaliaIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <div class="banner-content">
+        <h3 id="anomaliaTitle">Suministro Estable</h3>
+        <p id="anomaliaDesc">El flujo de agua se encuentra operando bajo parámetros normales en tiempo real.</p>
+      </div>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Instantáneo</div>
-      <div class="kpi-value" id="kpiLPS">—</div>
-      <div class="kpi-unit">litros / segundo</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Esta sesión</div>
-      <div class="kpi-value" id="kpiSesion">—</div>
-      <div class="kpi-unit">litros acumulados</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Total histórico</div>
-      <div class="kpi-value" id="kpiTotal">—</div>
-      <div class="kpi-unit">litros totales</div>
-    </div>
-  </div>
 
-  <!-- Gauge + Gráfica -->
-  <div class="mid-grid">
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="card kpi-card primary">
+        <div class="kpi-top">
+          <span class="kpi-label">Caudal Actual</span>
+          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="kpiLPM">0.00</div>
+          <div class="kpi-unit">litros / min</div>
+        </div>
+      </div>
 
-    <div class="card">
-      <div class="card-title">Caudal en vivo</div>
-      <div class="gauge-wrap">
-        <canvas id="gaugeCanvas" width="220" height="130"></canvas>
-        <div class="gauge-reading">
-          <div class="gauge-big" id="gaugeLPM">0.00</div>
-          <div class="gauge-unit">L / MIN</div>
+      <div class="card kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Instantáneo</span>
+          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="kpiLPS">0.00</div>
+          <div class="kpi-unit">litros / seg</div>
+        </div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Esta Sesión</span>
+          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+            <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+            <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="kpiSesion">0.00</div>
+          <div class="kpi-unit">litros acumulados</div>
+        </div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Volumen Total</span>
+          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="kpiTotal">0.00</div>
+          <div class="kpi-unit">rendimiento histórico</div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">Evolución del caudal</div>
-      <div class="chart-area">
-        <canvas id="chartCanvas"></canvas>
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">Medidor en Vivo</div>
+        <div class="gauge-wrap">
+          <canvas id="gaugeCanvas"></canvas>
+          <div class="gauge-reading">
+            <div class="gauge-value" id="gaugeLPM">0.00</div>
+            <div class="gauge-unit">L / MIN</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Gestión de Tráfico de Fluidos</div>
+        <div class="chart-container">
+          <canvas id="chartCanvas"></canvas>
+        </div>
       </div>
     </div>
 
-  </div>
-
-  <!-- Histórico -->
-  <div class="card">
-    <div class="card-title">Histórico de mediciones</div>
-    <div class="hist-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Hora</th>
-            <th>Caudal L/min</th>
-            <th>Sesión (L)</th>
-            <th>Total (L)</th>
-            <th>Anomalía</th>
-          </tr>
-        </thead>
-        <tbody id="histBody">
-          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">
-            Esperando datos de Firebase…
-          </td></tr>
-        </tbody>
-      </table>
+    <!-- Table -->
+    <div class="card">
+      <div class="card-header">Registro Inteligente (Últimos Eventos)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Marca Temporal</th>
+              <th>Caudal (L/min)</th>
+              <th>Sesión (L)</th>
+              <th>Total Acumulado (L)</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="histBody">
+            <tr>
+              <td colspan="5" style="text-align:center;color:var(--text-mut);padding:32px">Esperando conexión
+                criptográfica segura...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  </main>
 
-</main>
+  <footer>CUSTOS IoT PLATFORM · <span id="footerTime">—</span></footer>
 
-<footer>CUSTOS GUARDIAN · ESP32-C3 · Firebase Realtime Database · <span id="footerTime">—</span></footer>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    // ─── Firebase Config ─────────────────────────────────────
+    const firebaseConfig = {
+      apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
+      authDomain: "custos-database.firebaseapp.com",
+      databaseURL: "https://custos-database-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "custos-database",
+      storageBucket: "custos-database.firebasestorage.app",
+      messagingSenderId: "973520011818",
+      appId: "1:973520011818:web:a245d327ad157320227953"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-<script>
-// ─── Firebase ────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey:            "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
-  authDomain:        "custos-database.firebaseapp.com",
-  databaseURL:       "https://custos-database-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:         "custos-database",
-  storageBucket:     "custos-database.firebasestorage.app",
-  messagingSenderId: "973520011818",
-  appId:             "1:973520011818:web:a245d327ad157320227953"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    // ─── Variables de Estado ─────────────────────────────────
+    const chartPoints = [];
+    const MAX_CHART = 40;
+    let lastPing = null;
+    let chartColor = '#3366FF'; // Azul primario
 
-// ─── Estado ──────────────────────────────────────────────
-const chartPoints = [];   // historial del gráfico en memoria
-const MAX_CHART   = 40;   // máximo de puntos en la gráfica
-let   lastPing    = null;
-let   chartColor  = '#38bdf8';
+    // ─── Helpers ─────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    const fmt = (n, d = 2) => (n ?? 0).toFixed(d);
 
-// ─── Helpers ─────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const fmt = (n, d=2) => (n ?? 0).toFixed(d);
+    function formatHora(ts) {
+      return new Date(ts * 1000).toLocaleTimeString('es-ES', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
 
-function formatHora(ts) {
-  return new Date(ts * 1000).toLocaleTimeString('es-ES', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-}
+    function setStatus(online) {
+      const badge = $('statusBadge');
+      badge.className = online ? 'badge-online' : 'badge-offline';
+      $('statusText').textContent = online ? 'En Línea' : 'Sin Señal';
+    }
 
-function setStatus(online) {
-  const badge = $('statusBadge');
-  badge.className = 'status-badge ' + (online ? 'online' : 'offline');
-  $('statusText').textContent = online ? 'En línea' : 'Sin señal';
-}
+    // ─── Gauge Canvas (Modo Claro Premium) ───────────────────
+    const gc = $('gaugeCanvas').getContext('2d');
+    const GW = 220, GH = 130;
+    // Soporte HighDPI para pantallas modernas
+    $('gaugeCanvas').width = GW * 2;
+    $('gaugeCanvas').height = GH * 2;
+    gc.scale(2, 2);
 
-// ─── Gauge canvas ─────────────────────────────────────────
-const gc   = $('gaugeCanvas').getContext('2d');
-const GW   = 220, GH = 130;
-const GCX  = GW / 2, GCY = GH - 16;
-const GR   = 90;
-const GMAX = 20; // L/min máximo en el gauge
+    const GCX = GW / 2, GCY = GH - 16;
+    const GR = 90;
+    const GMAX = 20;
 
-function drawGauge(val) {
-  gc.clearRect(0, 0, GW, GH);
-  const frac  = Math.min(Math.max(val, 0) / GMAX, 1);
-  const start = Math.PI;
-  const end   = 2 * Math.PI;
-  const curr  = start + frac * Math.PI;
+    function drawGauge(val) {
+      gc.clearRect(0, 0, GW, GH);
+      const frac = Math.min(Math.max(val, 0) / GMAX, 1);
+      const start = Math.PI;
+      const end = 2 * Math.PI;
+      const curr = start + frac * Math.PI;
 
-  // Arco fondo
-  gc.beginPath();
-  gc.arc(GCX, GCY, GR, start, end);
-  gc.strokeStyle = 'rgba(255,255,255,0.06)';
-  gc.lineWidth = 12;
-  gc.lineCap   = 'round';
-  gc.stroke();
+      // Fondo arco (Gris Claro Suave)
+      gc.beginPath();
+      gc.arc(GCX, GCY, GR, start, end);
+      gc.strokeStyle = '#F1F5F9';
+      gc.lineWidth = 14;
+      gc.lineCap = 'round';
+      gc.stroke();
 
-  // Arco valor
-  if (frac > 0) {
-    const grad = gc.createLinearGradient(GCX - GR, GCY, GCX + GR, GCY);
-    grad.addColorStop(0, '#0ea5e9');
-    grad.addColorStop(1, '#38bdf8');
-    gc.beginPath();
-    gc.arc(GCX, GCY, GR, start, curr);
-    gc.strokeStyle = grad;
-    gc.lineWidth   = 12;
-    gc.lineCap     = 'round';
-    gc.stroke();
-  }
+      // Arco valor (Gradientes según si hay anomalía o no)
+      if (frac > 0) {
+        const isDanger = chartColor === '#F43F5E';
+        const grad = gc.createLinearGradient(GCX - GR, GCY, GCX + GR, GCY);
+        if (isDanger) {
+          grad.addColorStop(0, '#FDA4AF');
+          grad.addColorStop(1, '#E11D48');
+        } else {
+          grad.addColorStop(0, '#93C5FD');
+          grad.addColorStop(1, '#2563EB');
+        }
 
-  // Marcas escala
-  for (let i = 0; i <= 5; i++) {
-    const a  = Math.PI + (i / 5) * Math.PI;
-    const x1 = GCX + (GR - 18) * Math.cos(a);
-    const y1 = GCY + (GR - 18) * Math.sin(a);
-    const x2 = GCX + (GR - 6)  * Math.cos(a);
-    const y2 = GCY + (GR - 6)  * Math.sin(a);
-    gc.beginPath();
-    gc.moveTo(x1, y1); gc.lineTo(x2, y2);
-    gc.strokeStyle = 'rgba(255,255,255,0.15)';
-    gc.lineWidth = 1.5;
-    gc.stroke();
-  }
+        gc.beginPath();
+        gc.arc(GCX, GCY, GR, start, curr);
+        gc.strokeStyle = grad;
+        gc.lineWidth = 14;
+        gc.lineCap = 'round';
+        gc.stroke();
+      }
 
-  // Aguja
-  const nx = GCX + (GR - 22) * Math.cos(curr);
-  const ny = GCY + (GR - 22) * Math.sin(curr);
-  gc.beginPath();
-  gc.moveTo(GCX, GCY); gc.lineTo(nx, ny);
-  gc.strokeStyle = 'rgba(255,255,255,0.9)';
-  gc.lineWidth   = 2;
-  gc.lineCap     = 'round';
-  gc.stroke();
+      // Marcas de cuadrante
+      for (let i = 0; i <= 5; i++) {
+        const a = Math.PI + (i / 5) * Math.PI;
+        const x1 = GCX + (GR - 22) * Math.cos(a);
+        const y1 = GCY + (GR - 22) * Math.sin(a);
+        const x2 = GCX + (GR - 8) * Math.cos(a);
+        const y2 = GCY + (GR - 8) * Math.sin(a);
+        gc.beginPath();
+        gc.moveTo(x1, y1); gc.lineTo(x2, y2);
+        gc.strokeStyle = '#CBD5E1';
+        gc.lineWidth = 2;
+        gc.stroke();
+      }
 
-  // Centro
-  gc.beginPath(); gc.arc(GCX, GCY, 7, 0, 2 * Math.PI);
-  gc.fillStyle = '#0ea5e9'; gc.fill();
-  gc.beginPath(); gc.arc(GCX, GCY, 3, 0, 2 * Math.PI);
-  gc.fillStyle = '#fff'; gc.fill();
-}
-drawGauge(0);
+      // Aguja central (Oscura profesional)
+      const nx = GCX + (GR - 26) * Math.cos(curr);
+      const ny = GCY + (GR - 26) * Math.sin(curr);
+      gc.beginPath();
+      gc.moveTo(GCX, GCY); gc.lineTo(nx, ny);
+      gc.strokeStyle = '#334155';
+      gc.lineWidth = 3;
+      gc.lineCap = 'round';
+      gc.stroke();
 
-// ─── Gráfica canvas ───────────────────────────────────────
-const cc  = $('chartCanvas');
-const cctx = cc.getContext('2d');
+      // Pinche central (Blanco con borde oscuro)
+      gc.beginPath(); gc.arc(GCX, GCY, 8, 0, 2 * Math.PI);
+      gc.fillStyle = '#334155'; gc.fill();
+      gc.beginPath(); gc.arc(GCX, GCY, 4, 0, 2 * Math.PI);
+      gc.fillStyle = '#FFFFFF'; gc.fill();
+    }
+    drawGauge(0);
 
-function resizeChart() {
-  cc.width  = cc.offsetWidth;
-  cc.height = cc.offsetHeight;
-}
-window.addEventListener('resize', () => { resizeChart(); drawChart(); });
-resizeChart();
+    // ─── Chart Canvas (Modo Claro Moderno) ───────────────────
+    const cc = $('chartCanvas');
+    const cctx = cc.getContext('2d');
 
-function drawChart() {
-  const W = cc.width, H = cc.height;
-  cctx.clearRect(0, 0, W, H);
-  if (chartPoints.length < 2) return;
+    function resizeChart() {
+      const rect = cc.parentElement.getBoundingClientRect();
+      // Retina display fix
+      cc.width = rect.width * 2;
+      cc.height = rect.height * 2;
+      cc.style.width = rect.width + 'px';
+      cc.style.height = rect.height + 'px';
+      cctx.scale(2, 2);
+    }
+    window.addEventListener('resize', () => { resizeChart(); drawChart(); });
+    resizeChart();
 
-  const maxV = Math.max(...chartPoints, 1);
-  const pad  = { t: 10, b: 24, l: 8, r: 8 };
-  const iW   = W - pad.l - pad.r;
-  const iH   = H - pad.t - pad.b;
+    function drawChart() {
+      // Ajustar dimensiones virtuales
+      const W = cc.width / 2, H = cc.height / 2;
+      cctx.clearRect(0, 0, W, H);
+      if (chartPoints.length < 2) return;
 
-  // Líneas guía horizontales
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.t + iH - (i / 4) * iH;
-    cctx.beginPath();
-    cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y);
-    cctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    cctx.lineWidth = 1;
-    cctx.stroke();
-  }
+      const maxV = Math.max(...chartPoints, 1);
+      const pad = { t: 10, b: 24, l: 4, r: 4 };
+      const iW = W - pad.l - pad.r;
+      const iH = H - pad.t - pad.b;
 
-  // Área relleno
-  const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
-  const isDanger = chartColor === '#f87171';
-  grad.addColorStop(0, isDanger ? 'rgba(248,113,113,0.3)' : 'rgba(56,189,248,0.2)');
-  grad.addColorStop(1, isDanger ? 'rgba(248,113,113,0)' : 'rgba(56,189,248,0)');
+      // Grid Horizontal
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.t + iH - (i / 4) * iH;
+        cctx.beginPath();
+        cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y);
+        cctx.strokeStyle = '#F1F5F9';
+        cctx.lineWidth = 1;
+        cctx.stroke();
+      }
 
-  cctx.beginPath();
-  chartPoints.forEach((v, i) => {
-    const x = pad.l + (i / (chartPoints.length - 1)) * iW;
-    const y = pad.t + iH - (v / maxV) * iH;
-    i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
-  });
-  cctx.lineTo(pad.l + iW, pad.t + iH);
-  cctx.lineTo(pad.l, pad.t + iH);
-  cctx.closePath();
-  cctx.fillStyle = grad;
-  cctx.fill();
+      // Gradiente Sólido a Transparente
+      const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
+      const isDanger = chartColor === '#F43F5E';
 
-  // Línea principal
-  cctx.beginPath();
-  chartPoints.forEach((v, i) => {
-    const x = pad.l + (i / (chartPoints.length - 1)) * iW;
-    const y = pad.t + iH - (v / maxV) * iH;
-    i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
-  });
-  cctx.strokeStyle = chartColor;
-  cctx.lineWidth   = 2;
-  cctx.lineJoin    = 'round';
-  cctx.lineCap     = 'round';
-  cctx.stroke();
+      if (isDanger) {
+        grad.addColorStop(0, 'rgba(244, 63, 94, 0.15)');
+        grad.addColorStop(1, 'rgba(244, 63, 94, 0)');
+      } else {
+        grad.addColorStop(0, 'rgba(51, 102, 255, 0.15)');
+        grad.addColorStop(1, 'rgba(51, 102, 255, 0)');
+      }
 
-  // Punto actual (último)
-  const lastX = pad.l + iW;
-  const lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
-  cctx.beginPath();
-  cctx.arc(lastX, lastY, 4, 0, 2 * Math.PI);
-  cctx.fillStyle = chartColor;
-  cctx.fill();
-}
+      // Relleno suave bajo la linea
+      cctx.beginPath();
+      chartPoints.forEach((v, i) => {
+        const x = pad.l + (i / (chartPoints.length - 1)) * iW;
+        const y = pad.t + iH - (v / maxV) * iH;
+        i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
+      });
+      cctx.lineTo(pad.l + iW, pad.t + iH);
+      cctx.lineTo(pad.l, pad.t + iH);
+      cctx.closePath();
+      cctx.fillStyle = grad;
+      cctx.fill();
 
-// ─── Firebase listeners ───────────────────────────────────
+      // Línea gruesa
+      cctx.beginPath();
+      chartPoints.forEach((v, i) => {
+        const x = pad.l + (i / (chartPoints.length - 1)) * iW;
+        const y = pad.t + iH - (v / maxV) * iH;
+        i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
+      });
+      cctx.strokeStyle = chartColor;
+      cctx.lineWidth = 3; // Ligeramente más grueso
+      cctx.lineJoin = 'round';
+      cctx.lineCap = 'round';
+      cctx.stroke();
 
-// Datos en tiempo real
-db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-  const d = snap.val();
-  if (!d) return;
+      // Punto resaltado del dato final
+      const lastX = pad.l + iW;
+      const lastY = pad.t + iH - (chartPoints[chartPoints.length - 1] / maxV) * iH;
+      cctx.beginPath();
+      cctx.arc(lastX, lastY, 5, 0, 2 * Math.PI);
+      cctx.fillStyle = '#FFFFFF';
+      cctx.fill();
+      cctx.lineWidth = 2.5;
+      cctx.strokeStyle = chartColor;
+      cctx.stroke();
+    }
 
-  lastPing = Date.now();
-  setStatus(true);
-  $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
+    // ─── Firebase realtime events ────────────────────────────
 
-  // KPIs
-  $('kpiLPM').textContent    = fmt(d.caudal_lpm, 2);
-  $('kpiLPS').textContent    = fmt(d.caudal_lps, 3);
-  $('kpiSesion').textContent = fmt(d.litros_sesion, 3);
-  $('kpiTotal').textContent  = fmt(d.litros_totales, 2);
+    // 1. Datos del streaming
+    db.ref('/caudalimetro/tiempo_real').on('value', snap => {
+      const d = snap.val();
+      if (!d) return;
 
-  // Gauge
-  const lpm = d.caudal_lpm ?? 0;
-  drawGauge(lpm);
-  $('gaugeLPM').textContent = fmt(lpm, 2);
+      lastPing = Date.now();
+      setStatus(true);
+      $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
 
-  // Gráfica
-  if (chartPoints.length >= MAX_CHART) chartPoints.shift();
-  chartPoints.push(lpm);
-  drawChart();
+      // Asignar KPIs numéricos
+      $('kpiLPM').textContent = fmt(d.caudal_lpm, 2);
+      $('kpiLPS').textContent = fmt(d.caudal_lps, 3);
+      $('kpiSesion').textContent = fmt(d.litros_sesion, 2);
+      $('kpiTotal').textContent = fmt(d.litros_totales, 2);
 
-  // Banner anomalía
-  const on = d.anomalia ?? false;
-  const banner = $('anomaliaBanner');
-  banner.className = 'anomalia-banner' + (on ? ' on' : '');
-  $('anomaliaLabel').textContent = on ? 'absencia' : 'normal';
-  $('anomaliaEstado').textContent = d.estado ?? '—';
+      // Animar Gauge
+      const lpm = d.caudal_lpm ?? 0;
 
-  // Reflejar en la gráfica
-  chartColor = on ? '#f87171' : '#38bdf8';
-});
+      // Reflejar la gráfica de historial
+      if (chartPoints.length >= MAX_CHART) chartPoints.shift();
+      chartPoints.push(lpm);
 
-// Histórico
-db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
-  const d = snap.val();
-  const tbody = $('histBody');
-  if (!d) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Sin datos aún</td></tr>';
-    return;
-  }
+      // Manejar el estado del Banner de Anomalía Funcional
+      const on = d.anomalia ?? false;
+      chartColor = on ? '#F43F5E' : '#3366FF';
 
-  const rows = Object.entries(d)
-    .sort((a, b) => Number(b[0]) - Number(a[0]))
-    .slice(0, 25);
+      const banner = $('anomaliaBanner');
+      if (on) {
+        banner.className = 'anomalia-banner alert';
+        $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+        $('anomaliaTitle').textContent = 'Anomalía Detectada en Infraestructura';
+        $('anomaliaDesc').textContent = 'Atención: Se ha registrado una anomalía de flujo en los sensores periféricos. Requiere inspección de tuberías.';
+      } else {
+        banner.className = 'anomalia-banner normal';
+        $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+        $('anomaliaTitle').textContent = 'Suministro de red estable';
+        $('anomaliaDesc').textContent = 'El flujo de agua central opera bajo parámetros paramétricos completamente normales en vivo.';
+      }
 
-  tbody.innerHTML = rows.map(([, v]) => `
+      // Forzar repintado de grafos con nuevo color
+      drawGauge(lpm);
+      $('gaugeLPM').textContent = fmt(lpm, 2);
+      drawChart();
+    });
+
+    // 2. Histórico de Puntos
+    db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
+      const d = snap.val();
+      const tbody = $('histBody');
+      if (!d) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-mut);padding:32px">Iniciando recopilación de datos de telemetría...</td></tr>';
+        return;
+      }
+
+      const rows = Object.entries(d)
+        .sort((a, b) => Number(b[0]) - Number(a[0]))
+        .slice(0, 25);
+
+      tbody.innerHTML = rows.map(([, v]) => {
+        const isAnom = v.anomalia;
+        const dotColor = isAnom ? 'var(--red)' : 'var(--emerald)';
+        const textLabel = isAnom ? 'Crítico' : 'Normal';
+        const pillClass = isAnom ? 'red' : 'green';
+
+        return `
     <tr>
       <td class="td-muted">${formatHora(v.ts)}</td>
-      <td class="td-sky">${fmt(v.caudal_lpm, 3)}</td>
-      <td>${fmt(v.litros_sesion, 4)} L</td>
-      <td>${fmt(v.litros_totales, 3)} L</td>
-      <td><span class="status-dot" style="background:var(${v.anomalia ? '--red' : '--emerald'})"></span></td>
+      <td class="td-primary">${fmt(v.caudal_lpm, 3)}</td>
+      <td class="td-mono">${fmt(v.litros_sesion, 4)}</td>
+      <td class="td-mono">${fmt(v.litros_totales, 3)}</td>
+      <td>
+        <div class="status-pill ${pillClass}">
+           <span class="status-dot-inner" style="background:${dotColor}"></span>
+           ${textLabel}
+        </div>
+      </td>
     </tr>
-  `).join('');
-});
+  `}).join('');
+    });
 
-// Detector desconexión
-setInterval(() => {
-  if (lastPing && Date.now() - lastPing > 15000) setStatus(false);
-  if (!lastPing) setStatus(false);
-}, 5000);
-</script>
+    // Watchdog de latencia
+    setInterval(() => {
+      if (lastPing && Date.now() - lastPing > 15000) setStatus(false);
+      if (!lastPing) setStatus(false);
+    }, 5000);
+  </script>
 </body>
+
 </html>
