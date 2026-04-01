@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Custos · Home Analytics</title>
+  <title>Custos · Analytics (Enterprise)</title>
+  <link rel="icon" type="image/svg+xml" href="identidad%20marca/logo.svg">
+  
   <style>
     :root {
       --bg-dark: #000000;
-      
       /* Apple ecosystem standard font stack */
       --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
       
@@ -41,35 +42,16 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      /* Monospaced numbers to prevent jitter */
+      font-variant-numeric: tabular-nums;
     }
 
     /* ── Liquid Animated Background ── */
-    .liquid-bg {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: -1; overflow: hidden; background: #000;
-    }
-    .blob {
-      position: absolute; border-radius: 50%;
-      filter: blur(120px); opacity: 0.65;
-      mix-blend-mode: screen;
-      animation: float 25s infinite ease-in-out alternate;
-      will-change: transform;
-    }
-    .blob-1 {
-      top: -10%; left: -10%; width: 60vmin; height: 60vmin;
-      background: var(--liquid-emerald);
-      animation-duration: 20s;
-    }
-    .blob-2 {
-      bottom: -10%; right: -10%; width: 70vmin; height: 70vmin;
-      background: var(--liquid-cyan);
-      animation-delay: -5s; animation-duration: 28s;
-    }
-    .blob-3 {
-      top: 40%; left: 20%; width: 50vmin; height: 50vmin;
-      background: var(--liquid-mint);
-      animation-duration: 24s; animation-delay: -2s;
-    }
+    .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #000; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.65; mix-blend-mode: screen; animation: float 25s infinite ease-in-out alternate; will-change: transform; }
+    .blob-1 { top: -10%; left: -10%; width: 60vmin; height: 60vmin; background: var(--liquid-emerald); animation-duration: 20s; }
+    .blob-2 { bottom: -10%; right: -10%; width: 70vmin; height: 70vmin; background: var(--liquid-cyan); animation-delay: -5s; animation-duration: 28s; }
+    .blob-3 { top: 40%; left: 20%; width: 50vmin; height: 50vmin; background: var(--liquid-mint); animation-duration: 24s; animation-delay: -2s; }
     .blob.alert-mode { background: var(--liquid-red) !important; transition: background 2s ease; }
 
     @keyframes float {
@@ -81,112 +63,93 @@
     /* ── Glassmorphism Container ── */
     .glass-panel {
       background: var(--glass-bg);
-      -webkit-backdrop-filter: var(--glass-blur);
-      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
       border-radius: 28px;
       box-shadow: var(--glass-shadow);
       padding: 24px;
     }
 
-    /* ── Minimalist Header ── */
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 32px 48px 16px;
-      max-width: 1200px; margin: 0 auto;
-    }
-    .brand {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 1.5rem; font-weight: 700; letter-spacing: -0.04em;
-    }
-    .brand svg { color: var(--text-main); }
+    /* ── Header ── */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 32px 48px 16px; max-width: 1200px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 16px; font-size: 1.7rem; font-weight: 700; letter-spacing: -0.04em; }
+    .brand svg { fill: currentColor; height: 38px; width: auto; }
     
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px; border-radius: 999px;
-      font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em;
-      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-      border: 0.5px solid rgba(255, 255, 255, 0.15);
-      transition: all 0.3s ease;
-    }
+    .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 0.5px solid rgba(255, 255, 255, 0.15); transition: all 0.3s ease; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; }
     .is-online .status-dot { background: #34C759; box-shadow: 0 0 10px #34C759; animation: breathe 3s infinite; }
     .is-offline .status-dot { background: #FF3B30; box-shadow: 0 0 10px #FF3B30; }
+    .is-sim .status-pill { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); }
+    .is-sim .status-dot { background: #0A84FF; box-shadow: 0 0 10px #0A84FF; animation: breathe 2s infinite; }
     @keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
     /* ── Main Layout ── */
     main { max-width: 1200px; margin: 0 auto 80px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
 
-    /* ── Dynamic Island Banner ── */
-    .banner {
-      display: flex; align-items: center; gap: 20px;
-      padding: 20px 24px; border-radius: 24px;
-      background: rgba(44, 44, 46, 0.7); backdrop-filter: var(--glass-blur);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .banner.alert {
-      background: rgba(255, 59, 48, 0.2);
-      border-color: rgba(255, 59, 48, 0.4);
-    }
+    /* ── Banner ── */
+    .banner { display: flex; align-items: center; gap: 20px; padding: 20px 24px; border-radius: 24px; background: rgba(44, 44, 46, 0.7); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.1); transition: all 0.5s ease; }
+    .banner.alert { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.4); }
     .banner-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
     .normal .banner-icon { color: #34C759; }
     .alert .banner-icon { background: #FF3B30; color: #FFF; box-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
     .banner h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 2px; }
     .banner p { font-size: 0.95rem; color: var(--text-muted); opacity: 0.9; }
     
-    /* ── Health KPIs Grid ── */
+    /* ── KPIs Grid ── */
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 140px; position: relative; overflow: hidden; }
+    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
     .kpi-top { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); }
     .kpi-label { font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
     .kpi-icon { opacity: 0.7; }
-    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; }
+    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; transition: all 0.2s ease; }
     .kpi-unit { font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
 
-    /* ── Charts ── */
+    /* ── Charts Grid ── */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
     .chart-panel { display: flex; flex-direction: column; }
-    .chart-header { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; color: var(--text-main); }
+    .chart-header { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-main); }
     
-    /* Activity Ring Gauge */
     .gauge-wrap { position: relative; display: flex; justify-content: center; align-items: center; height: 100%; padding-bottom: 10px; }
     #gaugeCanvas { width: 220px; height: 220px; }
     .gauge-center { position: absolute; text-align: center; }
     .gauge-center .val { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
     .gauge-center .lbl { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
 
-    /* Line Chart */
     .line-chart-wrap { position: relative; width: 100%; height: 240px; flex-grow: 1; }
     #chartCanvas { width: 100%; height: 100%; display: block; }
 
-    /* ── Apple-style Table ── */
-    .table-wrap { overflow-x: auto; max-height: 350px; }
-    .table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
-    .table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-    
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
-    th { position: sticky; top: 0; background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); font-weight: 500; color: var(--text-dim); padding: 14px 16px; border-bottom: 0.5px solid var(--glass-border); z-index: 10; }
-    td { padding: 16px; border-bottom: 0.5px solid var(--glass-border); }
-    tr:last-child td { border-bottom: none; }
-    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    /* ── Simulation Panel (Demo Mode) ── */
+    .sim-panel { background: rgba(10, 132, 255, 0.15); border: 1px solid rgba(10, 132, 255, 0.4); margin-top: 10px; padding: 20px; border-radius: 20px; }
+    .sim-title { font-size: 0.9rem; font-weight: 600; color: #0A84FF; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .sim-btn {
+      background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFF; padding: 12px; border-radius: 12px; font-weight: 500; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.2s ease; font-family: var(--font-apple);
+    }
+    .sim-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.02); }
+    .sim-btn.danger { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.5); color: #FF453A; }
+    .sim-btn.danger:hover { background: rgba(255, 59, 48, 0.3); }
 
-    .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
-    .tag.ok { background: rgba(52, 199, 89, 0.15); color: #34C759; }
-    .tag.err { background: rgba(255, 59, 48, 0.15); color: #FF3B30; }
-
-    footer { text-align: center; padding: 0 24px 60px; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
-
-    @media (max-width: 900px) {
+    /* ── Media Queries (100% Responsive) ── */
+    @media (max-width: 950px) {
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .dashboard-grid { grid-template-columns: 1fr; }
       header { padding: 24px; }
+      #gaugeCanvas { width: 180px; height: 180px; }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; gap: 16px; }
+      header { flex-direction: column; gap: 16px; align-items: flex-start; padding: 20px; }
+      main { padding: 16px; gap: 16px; }
+      .banner { flex-direction: column; text-align: center; }
+      .sim-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- Fondos Fluidos "Liquid" -->
+<!-- Fondos Fluidos -->
 <div class="liquid-bg">
   <div class="blob blob-1" id="blob1"></div>
   <div class="blob blob-2" id="blob2"></div>
@@ -195,96 +158,88 @@
 
 <header>
   <div class="brand">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+    <!-- Custos Logo SVG incrustado nítido -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
+      <path fill="currentColor" d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z" />
     </svg>
-    Custos
+    Custos Cloud
   </div>
   <div class="status-pill is-offline" id="statusBadge">
     <div class="status-dot"></div>
-    <span id="statusText">Desconectado</span>
+    <span id="statusText">Buscando Hardware</span>
   </div>
 </header>
 
 <main>
   
-  <!-- Banner tipo "Notificación iOS" -->
   <div class="banner normal" id="anomaliaBanner">
     <div class="banner-icon" id="anomaliaIcon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
     </div>
     <div>
       <h2 id="anomaliaTitle">Monitoreo Saludable</h2>
-      <p id="anomaliaDesc">El ecosistema fluye correctamente. Ninguna anomalía estructural en el circuito acuático.</p>
+      <p id="anomaliaDesc">A nivel algorítmico, el ecosistema fluye correctamente. Ninguna interrupción reportada por el ESP32.</p>
     </div>
   </div>
 
-  <!-- Tarjetas KPI -->
   <div class="kpi-grid">
     <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">Caudal Vivo</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div></div>
-      <div><div class="kpi-val" id="kpiLPM">0.00</div><div class="kpi-unit">L/min actual</div></div>
+      <div class="kpi-top"><span class="kpi-label">CAUDAL INSTANTÁNEO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div></div>
+      <div><div class="kpi-val" id="kpiLPM">0.00</div><div class="kpi-unit">Litros / min</div></div>
     </div>
-    
     <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">Impulso</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div></div>
-      <div><div class="kpi-val" id="kpiLPS">0.00</div><div class="kpi-unit">L/seg preciso</div></div>
+      <div class="kpi-top"><span class="kpi-label">DENSIDAD DE FLUJO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div></div>
+      <div><div class="kpi-val" id="kpiLPS">0.00</div><div class="kpi-unit">Litros / seg</div></div>
     </div>
-    
     <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">Sesión Hoy</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div></div>
-      <div><div class="kpi-val" id="kpiSesion">0.00</div><div class="kpi-unit">Litros transitados</div></div>
+      <div class="kpi-top"><span class="kpi-label">CICLO ACTUAL</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div></div>
+      <div><div class="kpi-val" id="kpiSesion">0.00</div><div class="kpi-unit">Acumulación L</div></div>
     </div>
-    
     <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">Acumulado</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div></div>
-      <div><div class="kpi-val" id="kpiTotal">0.00</div><div class="kpi-unit">Total histórico aportado</div></div>
+      <div class="kpi-top"><span class="kpi-label">HUELLA GLOBAL</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div></div>
+      <div><div class="kpi-val" id="kpiTotal">0.00</div><div class="kpi-unit">Volumen L Total</div></div>
     </div>
   </div>
 
   <div class="dashboard-grid">
-    <!-- Activity Ring -->
     <div class="glass-panel chart-panel">
-      <div class="chart-header">Rendimiento Inmediato</div>
+      <div class="chart-header">Anillo de Eficiencia</div>
       <div class="gauge-wrap">
         <canvas id="gaugeCanvas"></canvas>
         <div class="gauge-center">
           <div class="val" id="gaugeLPM">0.00</div>
-          <div class="lbl">L / MIN</div>
+          <div class="lbl">L/M LIVE</div>
         </div>
       </div>
     </div>
     
-    <!-- Health Wave Line -->
     <div class="glass-panel chart-panel">
-      <div class="chart-header">Monitor Constante</div>
-      <div class="line-chart-wrap">
-        <canvas id="chartCanvas"></canvas>
-      </div>
+      <div class="chart-header">Curva de Consumo Reciente</div>
+      <div class="line-chart-wrap"><canvas id="chartCanvas"></canvas></div>
     </div>
   </div>
 
-  <div class="glass-panel">
-    <div class="chart-header" style="margin-bottom: 16px;">Vaciado Automático (Logs)</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Sincronización</th><th>Flujo (L/min)</th><th>Transitado Hoy</th><th>Total Vital</th><th>Diagnóstico</th></tr></thead>
-        <tbody id="histBody">
-          <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-dim)">A la espera del primer paquete de red...</td></tr>
-        </tbody>
-      </table>
+  <!-- CONSOLA DE SIMULACIÓN DIRECTIVA -->
+  <div class="glass-panel sim-panel">
+    <div class="sim-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Consola de Simulación Enterprise (Demo Pitch)</div>
+    <div class="sim-grid">
+      <button class="sim-btn" onclick="startSim(8.5)">🌊 Forzar Caudal Fuerte</button>
+      <button class="sim-btn" onclick="startSim(1.2)">💧 Forzar Goteo</button>
+      <button class="sim-btn" style="background: rgba(0,0,0,0.5)" onclick="startSim(0)">🛑 Detener Agua</button>
+      <button class="sim-btn danger" onclick="triggerAnomaly(true)">🚨 Romper Circuito (Anomalía)</button>
+      <button class="sim-btn" style="color: #34C759; border-color: #34C759" onclick="triggerAnomaly(false)">✅ Normalizar Red</button>
+      <button class="sim-btn" style="font-weight:700" onclick="stopSim()">🔌 Reconectar Hardware (Fin Demo)</button>
     </div>
+    <div style="font-size: 0.8rem; margin-top: 12px; color: var(--text-dim);">Modo Demo: Permite alterar la telemetría local de la web sin depender del Hardware ESP32 para impresionar en demostraciones financieras.</div>
   </div>
 
 </main>
 
-<footer>Custos Home · <span id="footerTime">—</span></footer>
-
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+/* ── Configuración Firebase ── */
 const firebaseConfig = {
   apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
   authDomain: "custos-database.firebaseapp.com",
@@ -297,210 +252,190 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const chartPoints = [];
-const MAX_CHART = 40; // Manteniendo el buffer pero se actualizará cada 1 segundo (40 segundos visibles)
+let chartPoints = Array(40).fill(0);
 let lastPing = null;
 let isAnomaly = false;
 
-const $ = id => document.getElementById(id);
-const fmt = (n, d=2) => (n ?? 0).toFixed(d);
+/* ── MODO SIMULACIÓN PARA INVERSORES ── */
+let isSimMode = false;
+let simInterval = null;
+let simLPM = 0;
+let simLitros = 459.2; // Base de inicio falsa
 
-function formatHora(ts) {
-  return new Date(ts * 1000).toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-}
-
-function setStatus(online) {
-  const badge = $('statusBadge');
-  if(online) {
-    badge.className = 'status-pill is-online';
-    $('statusText').textContent = 'Conectado';
+function renderData(d) {
+  $('kpiLPM').textContent = d.caudal_lpm.toFixed(2);
+  $('kpiLPS').textContent = d.caudal_lps.toFixed(3);
+  $('kpiSesion').textContent = d.litros_sesion.toFixed(2);
+  $('kpiTotal').textContent = d.litros_totales.toFixed(2);
+  
+  chartPoints.shift(); chartPoints.push(d.caudal_lpm);
+  
+  isAnomaly = d.anomalia;
+  applyLiquidAlert(isAnomaly);
+  
+  if(isAnomaly) {
+     $('anomaliaBanner').className = 'banner alert';
+     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+     $('anomaliaTitle').textContent = 'Anomalía Estructural';
+     $('anomaliaDesc').textContent = 'Se han violado los parámetros acústicos o ha existido una interrupción drástica de suministro.';
   } else {
-    badge.className = 'status-pill is-offline';
-    $('statusText').textContent = 'Señal Perdida';
+     $('anomaliaBanner').className = 'banner normal';
+     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+     $('anomaliaTitle').textContent = 'Monitoreo Saludable';
+     $('anomaliaDesc').textContent = 'El ecosistema fluye correctamente. Ninguna anomalía estructural detectada en la sensórica C3.';
   }
+  
+  drawGauge(d.caudal_lpm); $('gaugeLPM').textContent = d.caudal_lpm.toFixed(2); drawChart();
 }
 
-function applyLiquidAlert(on) {
-  const blobs = [$('blob1'), $('blob2'), $('blob3')];
-  blobs.forEach(b => {
-    if(on) b.classList.add('alert-mode');
-    else b.classList.remove('alert-mode');
+function startSim(lpm) {
+  isSimMode = true;
+  simLPM = lpm;
+  db.ref('/caudalimetro/tiempo_real').off('value'); // Desconectar hardware real
+  
+  $('statusBadge').className = 'status-pill is-sim';
+  $('statusText').textContent = 'MODO DEMO ACTIVO';
+  
+  if(simInterval) clearInterval(simInterval);
+  simInterval = setInterval(() => {
+    // Generar fluctuación realista del agua +/- 5%
+    let jitter = (simLPM > 0) ? (Math.random() * 0.4 - 0.2) : 0;
+    let actualLPM = Math.max(0, simLPM + jitter);
+    simLitros += (actualLPM / 60);
+    
+    renderData({
+      caudal_lpm: actualLPM,
+      caudal_lps: actualLPM / 60,
+      litros_sesion: simLitros * 0.3,
+      litros_totales: simLitros,
+      anomalia: isAnomaly
+    });
+  }, 1000);
+}
+
+function triggerAnomaly(state) {
+  isAnomaly = state;
+  // Si no estaba en simulación, conectamos simulación pero manteniendo el caudal actual.
+  if(!isSimMode) startSim(simLPM);
+}
+
+function stopSim() {
+  isSimMode = false;
+  if(simInterval) clearInterval(simInterval);
+  // Borrar gráfica para limpieza
+  chartPoints = Array(40).fill(0);
+  
+  $('statusBadge').className = 'status-pill is-offline';
+  $('statusText').textContent = 'Buscando Hardware';
+  
+  // Reconectar a Firebase
+  db.ref('/caudalimetro/tiempo_real').on('value', snap => {
+    if(isSimMode) return; // Salvaguarda
+    const d = snap.val(); if (!d) return; 
+    lastPing = Date.now(); 
+    $('statusBadge').className = 'status-pill is-online';
+    $('statusText').textContent = 'Conectado';
+    renderData({
+      caudal_lpm: d.caudal_lpm || 0, caudal_lps: d.caudal_lps || 0,
+      litros_sesion: d.litros_sesion || 0, litros_totales: d.litros_totales || 0,
+      anomalia: d.anomalia || false
+    });
   });
 }
 
-/* ── Actvity Ring Gauge (Apple Watch Style) ── */
+// Iniciar con Firebase Real
+stopSim();
+
+/* ── Utilidades UI ── */
+const $ = id => document.getElementById(id);
+function applyLiquidAlert(on) {
+  const blobs = [$('blob1'), $('blob2'), $('blob3')];
+  blobs.forEach(b => { if(on) b.classList.add('alert-mode'); else b.classList.remove('alert-mode'); });
+}
+
+/* ── Gráficas (Gauge y Líneas) ── */
 const gc = $('gaugeCanvas').getContext('2d');
 let gw, gh;
-
 function initGauge() {
-  const cvs = $('gaugeCanvas');
-  const dpr = window.devicePixelRatio || 1;
+  const cvs = $('gaugeCanvas'); const dpr = window.devicePixelRatio || 1;
   const rect = cvs.getBoundingClientRect();
-  cvs.width = rect.width * dpr;
-  cvs.height = rect.height * dpr;
-  gc.scale(dpr, dpr);
-  gw = rect.width; gh = rect.height;
+  cvs.width = rect.width * dpr; cvs.height = rect.height * dpr;
+  gc.scale(dpr, dpr); gw = rect.width; gh = rect.height;
 }
 initGauge();
 
 function drawGauge(val) {
   gc.clearRect(0, 0, gw, gh);
-  const cx = gw / 2, cy = gh / 2;
-  const r = (Math.min(gw, gh) / 2) - 16;
-  const maxVal = 20;
-  let frac = Math.min(Math.max(val, 0) / maxVal, 1);
-  if (frac < 0.01 && val > 0) frac = 0.01; // Tiny visualization for tiny flows
+  const cx = gw / 2, cy = gh / 2; const r = (Math.min(gw, gh) / 2) - 16;
+  let frac = Math.min(Math.max(val, 0) / 20, 1);
+  if (frac < 0.01 && val > 0) frac = 0.02; // Visibilidad mínima si hay goteo
+  const startAngle = -Math.PI / 2; const endAngle = startAngle + (frac * 2 * Math.PI);
 
-  const startAngle = -Math.PI / 2;
-  const endAngle = startAngle + (frac * 2 * Math.PI);
+  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI); gc.strokeStyle = 'rgba(255, 255, 255, 0.05)'; gc.lineWidth = 20; gc.stroke();
 
-  // Background Ring (Track)
-  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI);
-  gc.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-  gc.lineWidth = 20; gc.stroke();
-
-  if (frac > 0) { // Foreground Ring
+  if (frac > 0) {
     const grad = gc.createConicGradient(startAngle, cx, cy);
-    if(isAnomaly) {
-      grad.addColorStop(0, '#FF453A'); grad.addColorStop(1, '#FF9F0A');
-    } else {
-      // Teal to bright Green
-      grad.addColorStop(0, '#30D158'); grad.addColorStop(1, '#32ADE6');
-    }
+    if(isAnomaly) { grad.addColorStop(0, '#FF453A'); grad.addColorStop(1, '#FF9F0A'); } 
+    else { grad.addColorStop(0, '#30D158'); grad.addColorStop(1, '#32ADE6'); }
     
     gc.beginPath(); gc.arc(cx, cy, r, startAngle, endAngle);
-    gc.strokeStyle = grad;
-    gc.lineWidth = 20;
-    gc.lineCap = 'round';
-    
-    // Shadow for depth
-    gc.shadowColor = isAnomaly ? 'rgba(255,69,58,0.5)' : 'rgba(48,209,88,0.5)';
-    gc.shadowBlur = 10;
-    gc.stroke();
-    gc.shadowBlur = 0; // reset
+    gc.strokeStyle = grad; gc.lineWidth = 20; gc.lineCap = 'round';
+    gc.shadowColor = isAnomaly ? 'rgba(255,69,58,0.5)' : 'rgba(48,209,88,0.5)'; gc.shadowBlur = 12; gc.stroke(); gc.shadowBlur = 0;
   }
 }
 
-/* ── Smooth Wave Chart (Apple Health Style) ── */
 const cc = $('chartCanvas'), cctx = cc.getContext('2d');
 function resizeChart() {
-  const rect = cc.parentElement.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  const rect = cc.parentElement.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1;
   cc.width = rect.width * dpr; cc.height = rect.height * dpr;
-  cc.style.width = rect.width + 'px'; cc.style.height = rect.height + 'px';
-  cctx.scale(dpr, dpr);
+  cc.style.width = rect.width + 'px'; cc.style.height = rect.height + 'px'; cctx.scale(dpr, dpr);
 }
 window.addEventListener('resize', () => { resizeChart(); drawChart(); }); resizeChart();
 
 function drawChart() {
-  const rect = cc.parentElement.getBoundingClientRect();
-  const W = rect.width, H = rect.height;
+  const W = cc.parentElement.getBoundingClientRect().width, H = cc.parentElement.getBoundingClientRect().height;
   cctx.clearRect(0, 0, W, H);
-  if (chartPoints.length < 2) return;
+  const maxV = Math.max(...chartPoints, 2); 
+  const pad = { t: 5, b: 5 }; const iW = W, iH = H - pad.t - pad.b;
 
-  const maxV = Math.max(...chartPoints, 2); // Always show some scale
-  const pad = { t: 10, b: 24, l: 0, r: 0 };
-  const iW = W, iH = H - pad.t - pad.b;
-
-  // Subtle grid lines
   for (let i = 0; i <= 3; i++) {
     const y = pad.t + iH - (i / 3) * iH;
     cctx.beginPath(); cctx.moveTo(0, y); cctx.lineTo(W, y);
     cctx.strokeStyle = 'rgba(255,255,255,0.05)'; cctx.lineWidth = 1; cctx.stroke();
   }
 
-  // Smooth Curve matching Apple Health
-  cctx.beginPath();
-  cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
-  
+  cctx.beginPath(); cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
   for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = (i / (chartPoints.length - 1)) * iW;
-    const y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = ((i+1) / (chartPoints.length - 1)) * iW;
-    const y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    const x1 = (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const x2 = ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
     cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
   }
 
-  // Gradient Fill
   const gradientFill = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
-  gradientFill.addColorStop(0, isAnomaly ? 'rgba(255, 69, 58, 0.4)' : 'rgba(48, 209, 88, 0.4)');
-  gradientFill.addColorStop(1, 'rgba(0,0,0,0)');
-  
-  cctx.lineTo(W, pad.t + iH); cctx.lineTo(0, pad.t + iH);
-  cctx.closePath(); cctx.fillStyle = gradientFill; cctx.fill();
+  gradientFill.addColorStop(0, isAnomaly ? 'rgba(255, 69, 58, 0.4)' : 'rgba(48, 209, 88, 0.4)'); gradientFill.addColorStop(1, 'rgba(0,0,0,0)');
+  cctx.lineTo(W, pad.t + iH); cctx.lineTo(0, pad.t + iH); cctx.closePath(); cctx.fillStyle = gradientFill; cctx.fill();
 
-  // Glow Line
-  cctx.beginPath();
-  cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
+  cctx.beginPath(); cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
   for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = (i / (chartPoints.length - 1)) * iW;
-    const y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = ((i+1) / (chartPoints.length - 1)) * iW;
-    const y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    const x1 = (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const x2 = ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
     cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
   }
   
   const mainColor = isAnomaly ? '#FF453A' : '#30D158';
-  cctx.strokeStyle = mainColor; cctx.lineWidth = 3; 
-  cctx.lineJoin = 'round'; cctx.lineCap = 'round';
-  cctx.shadowColor = mainColor; cctx.shadowBlur = 8;
-  cctx.stroke(); cctx.shadowBlur = 0;
+  cctx.strokeStyle = mainColor; cctx.lineWidth = 3; cctx.lineJoin = 'round'; cctx.lineCap = 'round';
+  cctx.shadowColor = mainColor; cctx.shadowBlur = 8; cctx.stroke(); cctx.shadowBlur = 0;
 
-  // Pulse Point End
-  const lastX = W, lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
-  cctx.beginPath(); cctx.arc(lastX, lastY, 6, 0, 2 * Math.PI);
-  cctx.fillStyle = mainColor; cctx.fill();
-  cctx.lineWidth = 3; cctx.strokeStyle = '#000'; cctx.stroke();
+  const lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
+  cctx.beginPath(); cctx.arc(W, lastY, 6, 0, 2 * Math.PI); cctx.fillStyle = mainColor; cctx.fill();
 }
 
-/* ── Firebase Listener (Update every 1sec with new Arduino code) ── */
-db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-  const d = snap.val(); if (!d) return; 
-  lastPing = Date.now(); setStatus(true);
-  $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
-
-  $('kpiLPM').textContent = fmt(d.caudal_lpm, 2); $('kpiLPS').textContent = fmt(d.caudal_lps, 3);
-  $('kpiSesion').textContent = fmt(d.litros_sesion, 2); $('kpiTotal').textContent = fmt(d.litros_totales, 2);
-  
-  const lpm = d.caudal_lpm ?? 0;
-  if (chartPoints.length >= MAX_CHART) chartPoints.shift(); chartPoints.push(lpm);
-  
-  isAnomaly = d.anomalia ?? false;
-  applyLiquidAlert(isAnomaly);
-  
-  if(isAnomaly) {
-     $('anomaliaBanner').className = 'banner alert';
-     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-     $('anomaliaTitle').textContent = 'Anomalía Estructural';
-     $('anomaliaDesc').textContent = 'Se han violado los parámetros habituales de caudal o el circuito se encuentra inactivo forzosamente.';
-  } else {
-     $('anomaliaBanner').className = 'banner normal';
-     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-     $('anomaliaTitle').textContent = 'Monitoreo Saludable';
-     $('anomaliaDesc').textContent = 'El ecosistema fluye correctamente. Ninguna anomalía estructural en el circuito acuático ha sido detectada.';
-  }
-  
-  drawGauge(lpm); $('gaugeLPM').textContent = fmt(lpm, 2); drawChart();
-});
-
-db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
-  const d = snap.val(); const tbody = $('histBody');
-  if (!d) return;
-  const rows = Object.entries(d).sort((a, b) => Number(b[0]) - Number(a[0])).slice(0, 25);
-  tbody.innerHTML = rows.map(([, v]) => `<tr>
-    <td style="color:var(--text-muted)">${formatHora(v.ts)}</td>
-    <td class="sf-mono" style="color:${v.anomalia ? '#FF453A' : '#30D158'}; font-weight: 600;">${fmt(v.caudal_lpm, 3)}</td>
-    <td class="sf-mono">${fmt(v.litros_sesion, 4)}</td>
-    <td class="sf-mono">${fmt(v.litros_totales, 3)}</td>
-    <td><div class="tag ${v.anomalia ? 'err' : 'ok'}">${v.anomalia ? 'Critical' : 'Normal'}</div></td>
-  </tr>`).join('');
-});
-
-// Watchdog para latencia estricta (1.5 segundos para marcar Offline ya que enviamos cada 1s)
 setInterval(() => { 
-  if (lastPing && Date.now() - lastPing > 3500) setStatus(false); 
-  if (!lastPing) setStatus(false); 
-}, 1000);
+  if(!isSimMode) {
+    if (lastPing && Date.now() - lastPing > 32000) setStatus(false); 
+    if (!lastPing) setStatus(false); 
+  }
+}, 3000);
 </script>
 </body>
 </html>
