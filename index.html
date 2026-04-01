@@ -2,581 +2,871 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Custos — Intelligence Dashboard">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Custos — Plataforma de Inteligencia Hídrica">
   <title>Custos · Water Intelligence</title>
   <link rel="icon" type="image/svg+xml" href="identidad%20marca/logo.svg">
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* ═══════════════════════════════════════════════
-       CUSTOS  ·  Light Liquid Glass (Brand Palette)
-       Luminous · Flowing · Professional
+       CUSTOS  ·  High-End Liquid Glassmorphism
+       Human · Organic · Caring · Authoritative
     ═══════════════════════════════════════════════ */
 
     :root {
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      
-      /* CUSTOS BRAND PALETTE */
-      --c-dark: #085041;   /* Headings, depth, strong text */
-      --c-brand: #1D9E75;  /* Accents, interactive, charts */
-      --c-sage: #E1F5EE;   /* Gentle separation */
-      --c-base: #FAF7F2;   /* Warm background */
-      
-      /* Semantic & Effects */
-      --c-danger: #EF4444;
-      --c-danger-bg: #FEE2E2;
-      --c-white: #FFFFFF;
-      --text-muted: rgba(8, 80, 65, 0.55);
-      
-      /* Light Glass Properties */
-      --glass-bg: rgba(255, 255, 255, 0.45);
-      --glass-hover: rgba(255, 255, 255, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.6);
-      --glass-blur: blur(40px) saturate(150%);
-      --glass-shadow: 0 12px 40px rgba(8, 80, 65, 0.05);
-      
-      --radius-md: 24px;
-      --radius-lg: 32px;
+      --brand-dark:  #085041;
+      --brand-green: #1D9E75;
+      --brand-sage:  #E1F5EE;
+      --brand-base:  #FAF7F2;
+
+      --danger:      #DC4E41;
+      --danger-soft: rgba(220, 78, 65, 0.08);
+
+      --glass-bg:     rgba(255, 255, 255, 0.42);
+      --glass-bg-deep:rgba(255, 255, 255, 0.62);
+      --glass-border: rgba(255, 255, 255, 0.70);
+      --glass-blur:   blur(48px) saturate(160%);
+      --glass-shadow: 0 8px 32px rgba(8, 80, 65, 0.06), 0 2px 8px rgba(8, 80, 65, 0.04);
+      --glass-glow:   0 0 0 1px rgba(255,255,255,0.7) inset;
+
+      --text-head:  #085041;
+      --text-body:  #2D5A4A;
+      --text-muted: rgba(8, 80, 65, 0.50);
+      --text-label: #1D9E75;
+
+      --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+      --font-sans:  'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+
+      --r-sm:  16px;
+      --r-md:  24px;
+      --r-lg:  32px;
+      --r-xl:  40px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      background-color: var(--c-base);
-      color: var(--c-dark);
-      font-family: var(--font);
+      background-color: var(--brand-base);
+      color: var(--text-body);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       font-variant-numeric: tabular-nums;
-      line-height: 1.5;
-      min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
+      min-height: 100vh;
     }
 
-    h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; }
-
-    /* ── Light Liquid Background ── */
-    .liquid-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-    .orb { 
-      position: absolute; border-radius: 50%; filter: blur(120px); 
-      opacity: 0.18; mix-blend-mode: multiply;
-      animation: float 25s infinite ease-in-out alternate; will-change: transform; 
+    /* ── Organic Background Blobs ── */
+    .bg-stage {
+      position: fixed; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
     }
-    .orb-1 { width: 55vmax; height: 55vmax; top: -10%; left: -10%; background: var(--c-brand); animation-duration: 22s; }
-    .orb-2 { width: 45vmax; height: 45vmax; bottom: -10%; right: -5%; background: #60A5FA; animation-delay: -5s; animation-duration: 28s; } /* Cyan/Blue touch for water */
-    .orb-3 { width: 40vmax; height: 40vmax; top: 30%; left: 35%; background: var(--c-dark); opacity: 0.06; animation-duration: 30s; }
-    
-    .orb.danger-mode { background: var(--c-danger) !important; opacity: 0.15; transition: background 1.5s ease; }
-
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-      50% { transform: translate(10%, 15%) scale(1.05) rotate(45deg); }
-      100% { transform: translate(-10%, 8%) scale(0.95) rotate(90deg); }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px);
+      animation: morph 30s ease-in-out infinite alternate;
+      will-change: transform, border-radius;
+    }
+    .blob-a {
+      width: 60vmax; height: 60vmax;
+      top: -25%; left: -15%;
+      background: radial-gradient(circle, rgba(29,158,117,0.22) 0%, rgba(225,245,238,0.10) 70%);
+      animation-duration: 28s;
+    }
+    .blob-b {
+      width: 50vmax; height: 50vmax;
+      bottom: -20%; right: -10%;
+      background: radial-gradient(circle, rgba(96,200,180,0.18) 0%, rgba(225,245,238,0.08) 70%);
+      animation-duration: 35s; animation-delay: -8s;
+    }
+    .blob-c {
+      width: 38vmax; height: 38vmax;
+      top: 40%; left: 38%;
+      background: radial-gradient(circle, rgba(225,245,238,0.40) 0%, transparent 75%);
+      animation-duration: 22s; animation-delay: -3s;
+    }
+    .blob-a.alarm {
+      background: radial-gradient(circle, rgba(220,78,65,0.20) 0%, rgba(255,240,238,0.10) 70%);
+      transition: background 2s ease;
+    }
+    .blob-b.alarm {
+      background: radial-gradient(circle, rgba(220,78,65,0.14) 0%, transparent 70%);
+      transition: background 2s ease;
     }
 
-    /* ── App Wrap ── */
-    .app-wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px; display: flex; flex-direction: column; gap: 24px; }
+    @keyframes morph {
+      0%   { transform: translate(0,0) scale(1) rotate(0deg); border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%; }
+      33%  { transform: translate(6%, 10%) scale(1.06) rotate(25deg); border-radius: 55% 45% 40% 60% / 45% 60% 40% 55%; }
+      66%  { transform: translate(-5%, 6%) scale(0.96) rotate(-15deg); border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%; }
+      100% { transform: translate(3%, -4%) scale(1.02) rotate(10deg); border-radius: 50% 50% 45% 55% / 55% 45% 55% 45%; }
+    }
 
-    /* ── Glass Components ── */
-    .glass-card {
+    /* ── Page Shell ── */
+    .page { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 32px 28px 60px; }
+
+    /* ── Glass Card ── */
+    .glass {
       background: var(--glass-bg);
-      -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--glass-shadow);
-      padding: 24px; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: var(--r-lg);
+      box-shadow: var(--glass-shadow), var(--glass-glow);
+      transition: transform 0.35s cubic-bezier(0.2,0.8,0.2,1),
+                  box-shadow 0.35s ease,
+                  background 0.3s ease;
     }
-    .glass-card:hover {
-      background: var(--glass-hover); box-shadow: 0 20px 50px rgba(8, 80, 65, 0.08); transform: translateY(-3px);
+    .glass:hover {
+      transform: translateY(-3px);
+      background: var(--glass-bg-deep);
+      box-shadow: 0 20px 50px rgba(8,80,65,0.09), 0 4px 12px rgba(8,80,65,0.05), var(--glass-glow);
     }
 
     /* ── Header ── */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 20px; }
-    
-    .brand { display: flex; align-items: center; gap: 16px; }
-    .logo-svg { width: 52px; height: 52px; color: var(--c-brand); fill: currentColor; filter: drop-shadow(0 4px 12px rgba(29, 158, 117, 0.2)); }
-    .brand-text h1 { font-size: 1.8rem; color: var(--c-dark); line-height: 1.1; }
-    .brand-text p { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
-
-    .top-actions { display: flex; align-items: center; gap: 16px; }
-    .search-pill { 
-      display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); 
-      padding: 12px 20px; border-radius: 100px; border: 1px solid var(--c-white);
-      box-shadow: 0 4px 15px rgba(8, 80, 65, 0.03); backdrop-filter: blur(10px); width: 260px;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0 36px;
+      gap: 24px;
+      flex-wrap: wrap;
     }
-    .search-pill svg { color: var(--text-muted); width: 18px; }
-    .search-pill input { border: none; background: transparent; outline: none; font-family: var(--font); color: var(--c-dark); width: 100%; font-size: 0.95rem;}
-    .search-pill input::placeholder { color: var(--text-muted); }
 
-    .btn-icon {
-      width: 46px; height: 46px; border-radius: 50%;
-      background: rgba(255,255,255,0.7); border: 1px solid var(--c-white);
-      box-shadow: 0 4px 15px rgba(8, 80, 65, 0.03); backdrop-filter: blur(10px);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .brand-mark {
+      width: 54px; height: 54px;
+      background: var(--glass-bg-deep);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 9px;
+      box-shadow: var(--glass-shadow);
       display: flex; align-items: center; justify-content: center;
-      color: var(--c-dark); cursor: pointer; transition: all 0.3s; position: relative;
+      color: var(--brand-green);
+      flex-shrink: 0;
     }
-    .btn-icon:hover { background: var(--c-white); transform: scale(1.05); }
+    .brand-mark svg { fill: currentColor; width: 100%; height: 100%; }
 
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 100px; font-size: 0.85rem; font-weight: 600;
-      background: rgba(255,255,255,0.7); border: 1px solid var(--c-white);
-      box-shadow: 0 4px 15px rgba(8, 80, 65, 0.03); backdrop-filter: blur(10px);
+    .brand-words h1 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-head);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
     }
-    .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .status-pill.on .dot { background: var(--c-brand); box-shadow: 0 0 10px var(--c-brand); animation: pulse 2s infinite; }
-    .status-pill.off .dot { background: var(--c-danger); box-shadow: 0 0 10px var(--c-danger); }
-    .status-pill.demo .dot { background: #0284C7; box-shadow: 0 0 10px #0284C7; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform:scale(1);} 50% { opacity: 0.4; transform:scale(0.85);} }
+    .brand-words span {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--text-label);
+    }
 
-    /* ── Warning Banner ── */
-    .banner-danger { 
-      display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); 
-      padding: 16px 24px; border-radius: var(--radius-md); color: #B91C1C; 
-      align-items: center; gap: 16px; backdrop-filter: blur(20px); animation: slideDown 0.4s ease; 
+    .header-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+    .search-glass {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--glass-bg-deep);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 12px 20px;
+      box-shadow: var(--glass-shadow);
+      width: 230px;
+      transition: all 0.3s;
     }
-    .banner-danger p { font-size: 0.95rem; font-weight: 500; }
-    .banner-danger svg { stroke: #DC2626; flex-shrink: 0; width: 28px; height: 28px;}
-    @keyframes slideDown { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+    .search-glass:focus-within { width: 280px; box-shadow: 0 0 0 3px rgba(29,158,117,0.12), var(--glass-shadow); }
+    .search-glass svg { color: var(--text-muted); width: 17px; flex-shrink: 0; }
+    .search-glass input { border: none; background: transparent; outline: none; font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-body); width: 100%; }
+    .search-glass input::placeholder { color: var(--text-muted); }
+
+    /* Connection Pill */
+    .conn-pill {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 0.83rem; font-weight: 600;
+      background: var(--glass-bg-deep); border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow); backdrop-filter: blur(20px);
+      transition: all 0.4s ease; white-space: nowrap;
+    }
+    .conn-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .conn-pill.live .conn-dot   { background: var(--brand-green); box-shadow: 0 0 0 3px rgba(29,158,117,0.20); animation: heartbeat 2.2s ease-in-out infinite; }
+    .conn-pill.off .conn-dot    { background: var(--text-muted); }
+    .conn-pill.demo .conn-dot   { background: #2D8CFF; box-shadow: 0 0 0 3px rgba(45,140,255,0.20); animation: heartbeat 2s ease-in-out infinite; }
+    .conn-pill.alarm .conn-dot  { background: var(--danger); box-shadow: 0 0 0 4px rgba(220,78,65,0.25); animation: heartbeat 1s ease-in-out infinite; }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.6; }
+    }
+
+    /* ── Alert Banner ── */
+    .alert-banner {
+      display: none;
+      background: rgba(220,78,65,0.07);
+      border: 1px solid rgba(220,78,65,0.22);
+      border-radius: var(--r-md);
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      gap: 16px;
+      align-items: center;
+      backdrop-filter: blur(20px);
+      animation: bannerIn 0.4s cubic-bezier(0.2,0.8,0.2,1);
+    }
+    .alert-banner.show { display: flex; }
+    @keyframes bannerIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .alert-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(220,78,65,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--danger); }
+    .alert-body h4 { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; color: var(--danger); margin-bottom: 2px; }
+    .alert-body p { font-size: 0.85rem; color: rgba(220,78,65,0.8); }
+
+    /* ── Section Label ── */
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-label);
+      margin-bottom: 14px; display: block;
+    }
 
     /* ── KPI Grid ── */
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    
-    .kpi-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .kpi-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.6); color: var(--c-brand); box-shadow: 0 2px 10px rgba(8,80,65,0.03); }
-    .kpi-title { font-size: 1rem; font-weight: 600; color: var(--text-muted); }
-    
-    .kpi-val { font-size: 2.8rem; font-weight: 700; color: var(--c-dark); line-height: 1; letter-spacing: -0.04em; transition: color 0.3s; }
-    .kpi-val.alert { color: var(--c-danger); }
-    
-    .kpi-foot { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
-    .kpi-trend { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
-    .kpi-trend.up { background: rgba(29, 158, 117, 0.1); color: var(--c-brand); }
-    .kpi-trend.down { background: rgba(239, 68, 68, 0.1); color: var(--c-danger); }
-    .kpi-trend.neutral { background: rgba(8, 80, 65, 0.05); color: var(--c-dark); }
-
-    /* ── Charts Grid ── */
-    .charts-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 24px; }
-    
-    .chart-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-    .chart-infos h3 { font-size: 1.25rem; font-weight: 700; color: var(--c-dark); }
-    .chart-main-val { font-size: 2.2rem; font-weight: 700; color: var(--c-dark); margin-top: 4px; line-height: 1; }
-    
-    .filter-pill {
-      background: rgba(255,255,255,0.5); border: 1px solid var(--c-white); padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s;
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
     }
-    .filter-pill:hover { background: var(--c-white); color: var(--c-brand); transform: translateY(-1px); }
 
-    .canvas-box { position: relative; width: 100%; height: 260px; }
-    .canvas-box canvas { display: block; width: 100%; height: 100%; }
+    .kpi-card { padding: 26px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Semi-Circle Gauge (Reference detail) */
-    .gauge-wrap { width: 100%; aspect-ratio: 1.2/1; position: relative; margin-top: 20px; }
-    .gauge-wrap canvas { width: 100%; height: 100%; }
-    .gauge-center {
-      position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%);
-      text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;
+    .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .kpi-icon-wrap {
+      width: 46px; height: 46px; border-radius: 14px;
+      background: var(--brand-sage); color: var(--brand-green);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s ease;
     }
-    .gauge-center span { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: -4px;}
-    .gauge-center strong { font-size: 2.6rem; font-weight: 700; color: var(--c-dark); letter-spacing: -0.04em;}
-
-    /* ── Bottom Sim Panel ── */
-    .sim-panel { background: rgba(255, 255, 255, 0.4); } /* Slightly less opaque for the footer module */
-    .sim-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .sim-header h3 { font-size: 1.1rem; color: var(--c-dark); display: flex; align-items: center; gap: 10px; }
-    
-    .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-    .badge.demo { background: rgba(2, 132, 199, 0.1); color: #0284C7; }
-    .badge.live { background: rgba(29, 158, 117, 0.1); color: var(--c-brand); }
-
-    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    
-    .btn-sim {
-      display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
-      background: rgba(255,255,255,0.6); border: 1px solid var(--c-white);
-      padding: 16px; border-radius: 16px;
-      font-family: var(--font); color: var(--c-dark); text-align: left;
-      cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 4px 15px rgba(8, 80, 65, 0.03); backdrop-filter: blur(10px);
+    .kpi-card:hover .kpi-icon-wrap { transform: scale(1.08) rotate(-4deg); }
+    .kpi-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 100px;
+      letter-spacing: 0.04em;
     }
-    .btn-sim:hover { background: var(--c-white); transform: translateY(-4px); box-shadow: 0 12px 25px rgba(8, 80, 65, 0.06); }
-    .btn-sim:active { transform: scale(0.97); }
-    
-    .btn-sim .sim-ico { width: 36px; height: 36px; border-radius: 10px; background: var(--c-sage); color: var(--c-brand); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 2px;}
-    .btn-sim.danger:hover { border-color: rgba(239, 68, 68, 0.3); } .btn-sim.danger .sim-ico { background: var(--c-danger-bg); color: var(--c-danger); }
-    
-    .btn-sim strong { font-size: 0.95rem; font-weight: 600; }
-    .btn-sim span { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .kpi-badge.up   { background: rgba(29,158,117,0.10); color: var(--brand-green); }
+    .kpi-badge.flat { background: rgba(8,80,65,0.06); color: var(--text-muted); }
+    .kpi-badge.down { background: rgba(220,78,65,0.08); color: var(--danger); }
 
-    .btn-recon {
-      width: 100%; margin-top: 24px; padding: 16px;
-      background: var(--c-dark); color: var(--c-white); border: none; border-radius: 16px;
-      font-family: var(--font); font-size: 0.95rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 8px 24px rgba(8, 80, 65, 0.15); transition: all 0.3s;
+    .kpi-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.10em; color: var(--text-label);
     }
-    .btn-recon:hover { background: #064034; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(8, 80, 65, 0.2); }
+    .kpi-val {
+      font-family: var(--font-serif);
+      font-size: 3rem; font-weight: 700;
+      color: var(--text-head);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      transition: color 0.4s ease;
+    }
+    .kpi-val.danger { color: var(--danger); }
+    .kpi-unit { font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+
+    /* ── Charts Row ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .chart-card { padding: 28px; display: flex; flex-direction: column; }
+    .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+    .chart-title-group h2 { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 600; color: var(--text-head); }
+    .chart-live-val { font-family: var(--font-serif); font-size: 2rem; font-weight: 700; color: var(--text-head); line-height: 1.1; margin-top: 4px; }
+
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+      background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.8);
+      padding: 8px 14px; border-radius: 100px; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .filter-chip:hover { background: rgba(29,158,117,0.08); color: var(--brand-green); border-color: rgba(29,158,117,0.25); }
+
+    .canvas-area { position: relative; flex-grow: 1; min-height: 220px; }
+    .canvas-area canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    /* Bar Legend */
+    .chart-legend { display: flex; gap: 20px; margin-top: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ── Gauge (Semi-circle) ── */
+    .gauge-card { padding: 28px; display: flex; flex-direction: column; }
+    .gauge-canvas-wrap { position: relative; width: 100%; flex-grow: 1; min-height: 180px; }
+    .gauge-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+    .gauge-overlay {
+      position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%);
+      text-align: center; pointer-events: none;
+    }
+    .gauge-overlay .g-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-label); display: block; margin-bottom: -2px; }
+    .gauge-overlay .g-val { font-family: var(--font-serif); font-size: 2.4rem; font-weight: 700; color: var(--text-head); letter-spacing: -0.03em; display: block; }
+
+    .gauge-stats { display: flex; justify-content: space-between; margin-top: 16px; }
+    .gauge-stat { text-align: center; }
+    .gauge-stat .gs-val { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--text-head); }
+    .gauge-stat .gs-lbl { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-label); }
+    .gauge-divider { width: 1px; background: rgba(8,80,65,0.10); }
+
+    /* ── Simulation Panel ── */
+    .sim-panel { padding: 28px; background: rgba(255,255,255,0.35); }
+    .sim-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+    .sim-title-group h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text-head); }
+    .sim-title-group p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+    .mode-pill {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 6px 14px; border-radius: 100px; border: 1.5px solid;
+      transition: all 0.3s;
+    }
+    .mode-pill.live  { color: var(--brand-green); border-color: rgba(29,158,117,0.35); background: rgba(29,158,117,0.06); }
+    .mode-pill.demo  { color: #2D8CFF; border-color: rgba(45,140,255,0.35); background: rgba(45,140,255,0.06); }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .sim-btn {
+      background: var(--glass-bg-deep); border: 1px solid var(--glass-border);
+      border-radius: var(--r-md); padding: 18px;
+      text-align: left; cursor: pointer; font-family: var(--font-sans);
+      transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1);
+      box-shadow: 0 2px 10px rgba(8,80,65,0.03);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .sim-btn:hover {
+      background: rgba(255,255,255,0.85); transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(8,80,65,0.08);
+    }
+    .sim-btn:active { transform: scale(0.97); }
+
+    .sim-ico {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+      background: var(--brand-sage);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .sim-btn:hover .sim-ico { transform: scale(1.15) rotate(-6deg); }
+    .sim-btn.red .sim-ico  { background: rgba(220,78,65,0.10); }
+    .sim-btn.cyan .sim-ico { background: rgba(2,185,211,0.10); }
+    .sim-btn.ok .sim-ico   { background: rgba(29,158,117,0.15); }
+
+    .sim-name { font-size: 0.9rem; font-weight: 600; color: var(--text-head); }
+    .sim-desc { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+
+    .btn-reconnect {
+      width: 100%; margin-top: 20px; padding: 16px;
+      background: var(--brand-dark); color: #fff;
+      border: none; border-radius: var(--r-md);
+      font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.02em;
+      box-shadow: 0 8px 24px rgba(8,80,65,0.20);
+      transition: all 0.3s ease;
+    }
+    .btn-reconnect:hover { background: #064034; transform: translateY(-2px); box-shadow: 0 14px 30px rgba(8,80,65,0.25); }
+    .btn-reconnect:active { transform: scale(0.98); }
+
+    /* ── Footer ── */
+    footer { text-align: center; padding-top: 32px; font-size: 0.8rem; color: var(--text-muted); }
 
     /* ── Responsive ── */
-    @media (max-width: 1024px) { .charts-grid { grid-template-columns: 1fr; } .canvas-box { height: 300px; } .gauge-wrap { width: 60%; margin: 20px auto 0; } }
+    @media (max-width: 1100px) { .charts-row { grid-template-columns: 1fr; } .gauge-canvas-wrap { min-height: 260px; } }
     @media (max-width: 768px) {
-      header { flex-direction: column; align-items: flex-start; gap: 20px; }
-      .top-actions { width: 100%; flex-wrap: wrap; }
-      .search-pill { flex-grow: 1; }
-      .kpi-val { font-size: 2.2rem; }
-      .gauge-wrap { width: 100%; }
+      .page { padding: 20px 16px 48px; }
+      header { flex-direction: column; align-items: stretch; gap: 16px; }
+      .header-right { flex-direction: column; }
+      .search-glass, .search-glass:focus-within { width: 100%; }
+      .kpi-val { font-size: 2.5rem; }
+      .sim-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .sim-grid { grid-template-columns: 1fr; }
+      .brand-words h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Liquid Glass Flowing Background -->
-<div class="liquid-bg">
-  <div class="orb orb-1" id="orb1"></div>
-  <div class="orb orb-2" id="orb2"></div>
-  <div class="orb orb-3" id="orb3"></div>
+<!-- ── Organic Blobs ── -->
+<div class="bg-stage">
+  <div class="blob blob-a" id="blobA"></div>
+  <div class="blob blob-b" id="blobB"></div>
+  <div class="blob blob-c"></div>
 </div>
 
-<div class="app-wrap">
-  
+<div class="page">
+
   <!-- Header -->
   <header>
     <div class="brand">
-      <svg class="logo-svg" viewBox="0 0 1500 1500">
-        <path d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z" />
-      </svg>
-      <div class="brand-text">
-        <h1>Custos Analytics</h1>
-        <p>Inteligencia Hídrica Empresarial</p>
+      <div class="brand-mark">
+        <svg viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z"/>
+        </svg>
+      </div>
+      <div class="brand-words">
+        <h1>Custos</h1>
+        <span>Water Intelligence Platform</span>
       </div>
     </div>
-    
-    <div class="top-actions">
-      <div class="search-pill">
-        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+
+    <div class="header-right">
+      <div class="search-glass">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Buscar métrica...">
       </div>
-      <div class="btn-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
-      <div class="status-pill on" id="connStatus">
-        <div class="dot"></div> <span id="connString">Conectando...</span>
+      <div class="conn-pill live" id="connPill">
+        <div class="conn-dot"></div>
+        <span id="connText">Conectando...</span>
       </div>
     </div>
   </header>
 
-  <div class="banner-danger" id="alertBanner">
-    <svg fill="none" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <div>
-      <strong>Interrupción Detectada</strong>
-      <p>El circuito hídrico reporta un fallo o el botón de emergencia físico ha sido activado.</p>
+  <!-- Alert Banner -->
+  <div class="alert-banner" id="alertBanner">
+    <div class="alert-icon">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="alert-body">
+      <h4>Anomalía Detectada</h4>
+      <p>Interrupción crítica en el circuito hídrico. El sensor ESP32-C3 reporta flujo anormal.</p>
     </div>
   </div>
 
-  <!-- KPI Cards (Light Frosted Glass) -->
+  <!-- KPIs -->
+  <span class="section-label">Métricas en tiempo real</span>
   <div class="kpi-grid">
-    <div class="glass-card">
-      <div class="kpi-head">
-        <div class="kpi-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
-        <span class="kpi-title">Caudal Vivo</span>
+
+    <div class="glass kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 7.37 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10C22 7.37 17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="kpi-badge up" id="badgeLPM">↗ vivo</span>
       </div>
-      <div class="kpi-val" id="valLPM">0.00</div>
-      <div class="kpi-foot">
-        <span class="kpi-trend up" id="trendLPM">⇌</span> <span>Litros / minuto</span>
+      <div>
+        <div class="kpi-label">Caudal Instantáneo</div>
+        <div class="kpi-val" id="valLPM">0.00</div>
+        <div class="kpi-unit">Litros por minuto</div>
       </div>
     </div>
 
-    <div class="glass-card">
-      <div class="kpi-head">
-        <div class="kpi-icon" style="color:#0284C7; background:rgba(2, 132, 199, 0.1)"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-        <span class="kpi-title">Densidad de Flujo</span>
+    <div class="glass kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap" style="background:rgba(2,185,211,0.10); color:#0284C7;">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span class="kpi-badge flat" id="badgeLPS">≈ estable</span>
       </div>
-      <div class="kpi-val" id="valLPS">0.000</div>
-      <div class="kpi-foot">
-        <span class="kpi-trend neutral">≈</span> <span>Litros / segundo</span>
-      </div>
-    </div>
-
-    <div class="glass-card">
-      <div class="kpi-head">
-        <div class="kpi-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
-        <span class="kpi-title">Consumo Sesión</span>
-      </div>
-      <div class="kpi-val" id="valSes">0.00</div>
-      <div class="kpi-foot">
-        <span class="kpi-trend up">↗</span> <span>Acumulado actual</span>
+      <div>
+        <div class="kpi-label">Densidad de Flujo</div>
+        <div class="kpi-val" id="valLPS">0.000</div>
+        <div class="kpi-unit">Litros por segundo</div>
       </div>
     </div>
 
-    <div class="glass-card">
-      <div class="kpi-head">
-        <div class="kpi-icon" style="color:var(--c-dark); background:rgba(8, 80, 65, 0.08)"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div>
-        <span class="kpi-title">Volumen Total</span>
+    <div class="glass kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <span class="kpi-badge up">↗ sesión</span>
       </div>
-      <div class="kpi-val" id="valTot">0.0</div>
-      <div class="kpi-foot">
-        <span class="kpi-trend neutral">H.</span> <span>Histórico del sensor (L)</span>
+      <div>
+        <div class="kpi-label">Consumo Sesión</div>
+        <div class="kpi-val" id="valSes">0.00</div>
+        <div class="kpi-unit">Litros acumulados</div>
       </div>
     </div>
+
+    <div class="glass kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap" style="background:rgba(8,80,65,0.07); color:var(--brand-dark);">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <span class="kpi-badge flat">Hist.</span>
+      </div>
+      <div>
+        <div class="kpi-label">Volumen Total</div>
+        <div class="kpi-val" id="valTot">0.0</div>
+        <div class="kpi-unit">Litros históricos</div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Charts -->
-  <div class="charts-grid">
-    <!-- Wave Analysis -->
-    <div class="glass-card chart-container">
-      <div class="chart-head">
-        <div class="chart-infos">
-          <h3>Analíticas de Flujo Hídrico</h3>
-          <div class="chart-main-val" id="chartTopVal">0.00 L</div>
+  <div class="charts-row">
+
+    <!-- Area Chart -->
+    <div class="glass chart-card">
+      <div class="chart-header">
+        <div class="chart-title-group">
+          <div class="kpi-label">Curva de Distribución Hídrica</div>
+          <h2>Analítica de Flujo</h2>
+          <div class="chart-live-val" id="chartLiveVal">0.00 <small style="font-size:0.9rem; color:var(--text-muted); font-family:var(--font-sans); font-weight:500;">L/min</small></div>
         </div>
-        <button class="filter-pill"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Tiempo Real</button>
+        <button class="filter-chip">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Tiempo Real
+        </button>
       </div>
-      <div class="canvas-box"><canvas id="waveCanvas"></canvas></div>
+      <div class="canvas-area" style="min-height: 220px;">
+        <canvas id="areaCanvas"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--brand-green);"></div> Caudal L/min</div>
+        <div class="legend-item"><div class="legend-dot" style="background: rgba(8,80,65,0.15);"></div> Zona segura</div>
+      </div>
     </div>
 
-    <!-- Semi-Circle Gauge -->
-    <div class="glass-card">
-      <div class="chart-head" style="margin-bottom: 0;">
-        <h3 style="font-size: 1.15rem; color: var(--c-dark);">Capacidad</h3>
-        <button style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">⋮</button>
-      </div>
-      <div class="gauge-wrap">
+    <!-- Gauge Card -->
+    <div class="glass gauge-card">
+      <div class="kpi-label">Capacidad Global</div>
+      <h2 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-head); margin-top: 2px; margin-bottom: 0;">Eficiencia Hídrica</h2>
+      <div class="gauge-canvas-wrap">
         <canvas id="gaugeCanvas"></canvas>
-        <div class="gauge-center">
-          <span>Acumulado Global</span>
-          <strong id="gaugeValText">0.0+</strong>
+        <div class="gauge-overlay">
+          <span class="g-label">Acumulado</span>
+          <span class="g-val" id="gaugeVal">0</span>
+        </div>
+      </div>
+      <div class="gauge-stats">
+        <div class="gauge-stat">
+          <div class="gs-val" id="gSesVal">0.0</div>
+          <div class="gs-lbl">Sesión L</div>
+        </div>
+        <div class="gauge-divider"></div>
+        <div class="gauge-stat">
+          <div class="gs-val" id="gLpmVal">0.00</div>
+          <div class="gs-lbl">L/min</div>
+        </div>
+        <div class="gauge-divider"></div>
+        <div class="gauge-stat">
+          <div class="gs-val" id="gStateVal">OK</div>
+          <div class="gs-lbl">Estado</div>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- Sim Panel -->
-  <div class="glass-card sim-panel">
+  <div class="glass sim-panel">
     <div class="sim-header">
-      <h3>Panel de Simulaciones Empresariales</h3>
-      <div class="badge live" id="modeBadge">Hardware Activo</div>
+      <div class="sim-title-group">
+        <div class="kpi-label">Herramienta</div>
+        <h3>Panel de Demostración</h3>
+        <p>Inyecta datos locales sin consumir cuota Firebase</p>
+      </div>
+      <div class="mode-pill live" id="modePill">Hardware Activo</div>
     </div>
+
     <div class="sim-grid">
-      <button class="btn-sim" onclick="startSim(8.5)">
+      <button class="sim-btn" onclick="startSim(9.5)">
         <div class="sim-ico">🌊</div>
-        <strong>Caudal Intenso</strong>
-        <span>Forzar 8.5 L/min</span>
+        <div class="sim-name">Caudal Intenso</div>
+        <div class="sim-desc">Forzar 9.5 L/min</div>
       </button>
-      <button class="btn-sim" onclick="startSim(1.2)">
-        <div class="sim-ico" style="color:#0284C7; background:#E0F2FE;">💧</div>
-        <strong>Goteo Continuo</strong>
-        <span>Forzar 1.2 L/min</span>
+      <button class="sim-btn cyan" onclick="startSim(2.4)">
+        <div class="sim-ico" style="background:rgba(2,185,211,0.10);">💧</div>
+        <div class="sim-name">Goteo Continuo</div>
+        <div class="sim-desc">Forzar 2.4 L/min</div>
       </button>
-      <button class="btn-sim" onclick="startSim(0)">
-        <div class="sim-ico" style="color:var(--text-muted); background:rgba(8,80,65,0.05);">⏸</div>
-        <strong>Corte Suministro</strong>
-        <span>Detener flujo (0 L/min)</span>
+      <button class="sim-btn" onclick="startSim(0)" style="--sim-hover-bg: rgba(8,80,65,0.04);">
+        <div class="sim-ico" style="background:rgba(8,80,65,0.06);">⏸</div>
+        <div class="sim-name">Corte de Agua</div>
+        <div class="sim-desc">Detener flujo</div>
       </button>
-      <button class="btn-sim danger" onclick="triggerAnomaly(true)">
-        <div class="sim-ico">🚨</div>
-        <strong>Simular Fallo Crítico</strong>
-        <span>Desencadenar anomalía</span>
+      <button class="sim-btn red" onclick="triggerAnomaly(true)">
+        <div class="sim-ico">⚠️</div>
+        <div class="sim-name">Simular Fallo</div>
+        <div class="sim-desc">Activar anomalía</div>
       </button>
-      <button class="btn-sim" onclick="triggerAnomaly(false)">
-        <div class="sim-ico" style="background:var(--c-brand); color:white;">✓</div>
-        <strong>Restaurar Sistema</strong>
-        <span>Forzar estado OK</span>
+      <button class="sim-btn ok" onclick="triggerAnomaly(false)">
+        <div class="sim-ico">✓</div>
+        <div class="sim-name">Normalizar</div>
+        <div class="sim-desc">Restaurar OK</div>
       </button>
     </div>
-    <button class="btn-recon" onclick="stopSim()">Reconectar Hardware Telefónico (ESP32-C3)</button>
+
+    <button class="btn-reconnect" onclick="stopSim()">
+      Reconectar Telemetría Hardware (ESP32-C3)
+    </button>
   </div>
 
-</div>
+  <footer>
+    Custos Water Intelligence &nbsp;·&nbsp; <span id="clockEl">—</span>
+  </footer>
 
-<!-- Firebase SDK -->
+</div><!-- /page -->
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
-/* ── UI Helpers ── */
-const $ = id => document.getElementById(id);
-const fmt = (n, d = 2) => (n ?? 0).toFixed(d);
 
-function updateStatusUI(tx, type) {
-  const p = $('connStatus');
-  $('connString').textContent = tx;
-  p.className = 'status-pill ' + type;
+/* ─── Utilities ─── */
+const $  = id => document.getElementById(id);
+const f2 = n  => (+(n ?? 0)).toFixed(2);
+const f3 = n  => (+(n ?? 0)).toFixed(3);
+const f1 = n  => (+(n ?? 0)).toFixed(1);
+const f0 = n  => Math.round(+(n ?? 0)).toString();
+
+/* ─── Clock ─── */
+setInterval(() => { $('clockEl').textContent = new Date().toLocaleTimeString('es-ES'); }, 1000);
+
+/* ─── Connection pill ─── */
+function setConn(mode, text) {
+  const p = $('connPill');
+  p.className = 'conn-pill ' + mode;
+  $('connText').textContent = text;
 }
 
-function updateOrbsAlert(isAlert) {
-  const orbs = [$('orb1'), $('orb2'), $('orb3')];
-  orbs.forEach(o => { if(isAlert) o.classList.add('danger-mode'); else o.classList.remove('danger-mode'); });
+/* ─── Alert ─── */
+function setAlert(on) {
+  const b = $('alertBanner');
+  if (on) b.classList.add('show'); else b.classList.remove('show');
+  [$('blobA'), $('blobB')].forEach(el => {
+    if (on) el.classList.add('alarm'); else el.classList.remove('alarm');
+  });
 }
 
-/* ── Firebase Init ── */
-const firebaseConfig = {
+/* ─── Firebase ─── */
+firebase.initializeApp({
   apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
   authDomain: "custos-database.firebaseapp.com",
   databaseURL: "https://custos-database-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "custos-database"
-};
-firebase.initializeApp(firebaseConfig);
+});
 const db = firebase.database();
 
-/* ── App State ── */
-let points = Array(35).fill(0);
-let lastPing = null, anomaly = false;
-let isSim = false, simTimer = null, simV = 0, simTotal = 15302.5;
+/* ─── State ─── */
+let pts   = Array(40).fill(0);
+let anomaly = false;
+let isSim = false, simTimer = null, simV = 0, simTot = 15842.3;
+let lastPing = null;
 
+/* ─── Render ─── */
 function render(d) {
-  $('valLPM').textContent = fmt(d.caudal_lpm);
-  $('valLPS').textContent = fmt(d.caudal_lps, 3);
-  $('valSes').textContent = fmt(d.litros_sesion);
-  $('valTot').textContent = fmt(d.litros_totales, 1);
-  $('chartTopVal').textContent = fmt(d.caudal_lpm) + ' L/m';
-  $('gaugeValText').textContent = fmt(d.litros_totales, 0);
+  // KPIs
+  $('valLPM').textContent = f2(d.caudal_lpm);
+  $('valLPS').textContent = f3(d.caudal_lps);
+  $('valSes').textContent = f2(d.litros_sesion);
+  $('valTot').textContent = f1(d.litros_totales);
+  $('chartLiveVal').innerHTML = f2(d.caudal_lpm) + ' <small style="font-size:0.9rem; color:var(--text-muted); font-family:var(--font-sans); font-weight:500;">L/min</small>';
 
-  const vE = $('valLPM');
-  if (d.anomalia) {
-    vE.className = 'kpi-val alert';
-    $('alertBanner').style.display = 'flex';
-    $('trendLPM').className = 'kpi-trend down'; $('trendLPM').textContent = '↓ Crítico';
-  } else {
-    vE.className = 'kpi-val';
-    $('alertBanner').style.display = 'none';
-    if(d.caudal_lpm > 0.05) { $('trendLPM').className = 'kpi-trend up'; $('trendLPM').textContent = '↗ Elevando'; } 
-    else { $('trendLPM').className = 'kpi-trend neutral'; $('trendLPM').textContent = '⇌ Estable'; }
-  }
+  // Gauge stats
+  $('gaugeVal').textContent   = f0(d.litros_totales);
+  $('gSesVal').textContent    = f1(d.litros_sesion);
+  $('gLpmVal').textContent    = f2(d.caudal_lpm);
+  $('gStateVal').textContent  = d.anomalia ? '⚠' : 'OK';
+  $('gStateVal').style.color  = d.anomalia ? 'var(--danger)' : 'var(--brand-green)';
 
-  points.shift(); points.push(d.caudal_lpm);
+  // KPI coloring
+  const lpmEl = $('valLPM');
+  lpmEl.className = 'kpi-val' + (d.anomalia ? ' danger' : '');
+
+  // Badge
+  const b = $('badgeLPM');
+  if (d.anomalia)          { b.className='kpi-badge down'; b.textContent='⚠ crítico'; }
+  else if (d.caudal_lpm > 0.05) { b.className='kpi-badge up'; b.textContent='↗ vivo'; }
+  else                     { b.className='kpi-badge flat'; b.textContent='⇌ reposo'; }
+
   anomaly = d.anomalia;
-  updateOrbsAlert(anomaly);
+  setAlert(anomaly);
 
-  drawWave(); drawGauge(d.litros_totales);
+  pts.shift(); pts.push(d.caudal_lpm);
+  drawArea();
+  drawGauge(d.litros_totales, d.litros_sesion ? d.litros_sesion / (d.litros_totales || 1) : 0);
 }
 
-/* ── Simulation ── */
-function startSim(lpm) {
-  isSim = true; simV = lpm;
+/* ─── Sim ─── */
+function startSim(v) {
+  isSim = true; simV = v;
   db.ref('/caudalimetro/tiempo_real').off('value');
-  const b = $('modeBadge'); b.className = 'badge demo'; b.textContent = 'Simulación Local';
-  updateStatusUI('Modo Demo Activo', 'demo');
-  
+  $('modePill').className = 'mode-pill demo'; $('modePill').textContent = 'Demo Local';
+  setConn('demo', 'Simulación Activa');
   if (simTimer) clearInterval(simTimer);
   simTimer = setInterval(() => {
-    let j = simV > 0 ? (Math.random()*0.4 - 0.2) : 0;
-    let v = Math.max(0, simV + j);
-    simTotal += v/60;
-    render({ caudal_lpm: v, caudal_lps: v/60, litros_sesion: simTotal*0.05, litros_totales: simTotal, anomalia: anomaly });
+    const j = v > 0 ? (Math.random() * 0.5 - 0.25) : 0;
+    const a = Math.max(0, v + j);
+    simTot += a / 60;
+    render({ caudal_lpm: a, caudal_lps: a/60, litros_sesion: simTot * 0.03, litros_totales: simTot, anomalia: anomaly });
   }, 1000);
 }
-
-function triggerAnomaly(st) { anomaly = st; if(!isSim) startSim(simV); }
-
+function triggerAnomaly(s) { anomaly = s; if (!isSim) startSim(simV); }
 function stopSim() {
   isSim = false; if (simTimer) clearInterval(simTimer);
-  points = Array(35).fill(0);
-  const b = $('modeBadge'); b.className = 'badge live'; b.textContent = 'Hardware Activo';
-  updateStatusUI('Buscando telemetría...', 'off');
-  
+  pts = Array(40).fill(0);
+  $('modePill').className = 'mode-pill live'; $('modePill').textContent = 'Hardware Activo';
+  setConn('off', 'Reconectando...');
   db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-    if(isSim) return;
-    const d = snap.val(); if(!d) return;
+    if (isSim) return;
+    const d = snap.val(); if (!d) return;
     lastPing = Date.now();
-    updateStatusUI('Conexión Estable', 'on');
-    render({ caudal_lpm: d.caudal_lpm||0, caudal_lps: d.caudal_lps||0, litros_sesion: d.litros_sesion||0, litros_totales: d.litros_totales||0, anomalia: d.anomalia||false });
+    setConn('live', 'Hardware Conectado');
+    render({ caudal_lpm: d.caudal_lpm||0, caudal_lps: d.caudal_lps||0, litros_sesion: d.litros_sesion||0, litros_totales: d.litros_totales||0, anomalia: !!d.anomalia });
   });
 }
 stopSim();
 
 setInterval(() => {
-  if(!isSim && (!lastPing || Date.now() - lastPing > 35000)) updateStatusUI('Dispositivo Desconectado', 'off');
+  if (!isSim && (!lastPing || Date.now() - lastPing > 35000)) setConn('off', 'Sin señal');
 }, 5000);
 
-/* ═══ Canvas Gráficas de Degradado (Reference aesthetics) ═══ */
+/* ═══════════════════════════
+   CANVAS 1 — Liquid Area Chart
+═══════════════════════════ */
+const aC = $('areaCanvas');
+const ax = aC.getContext('2d');
 
-/* 1. Wave Area Chart con Gradiente de Barras ilusorio */
-const wC = $('waveCanvas'), wc = wC.getContext('2d');
-function drawWave() {
-  const dpr = devicePixelRatio || 1;
-  const W = wC.parentElement.clientWidth, H = wC.parentElement.clientHeight;
-  wC.width = W * dpr; wC.height = H * dpr; wc.scale(dpr, dpr);
+function drawArea() {
+  const wrap = aC.parentElement;
+  const dpr  = devicePixelRatio || 1;
+  const W    = wrap.clientWidth;
+  const H    = wrap.clientHeight;
+  aC.width   = W * dpr;
+  aC.height  = H * dpr;
+  ax.scale(dpr, dpr);
+  ax.clearRect(0, 0, W, H);
+  if (pts.length < 2) return;
 
-  wc.clearRect(0,0,W,H);
-  if(points.length < 2) return;
+  const maxV = Math.max(...pts, 2);
+  const pad  = { t: 12, b: 12, l: 0, r: 0 };
+  const iH   = H - pad.t - pad.b;
+  const iW   = W - pad.l - pad.r;
 
-  const max = Math.max(...points, 2);
-  const pt = 10, pb = 10; const hM = H - pt - pb;
+  const gx = i => pad.l + (i / (pts.length - 1)) * iW;
+  const gy = v => pad.t + iH - (v / maxV) * iH;
 
-  const gx = i => (i / (points.length - 1)) * W;
-  const gy = i => pt + hM - (points[i] / max) * hM;
-
-  // Background gradient fill (inspired by patterned reference)
-  wc.beginPath(); wc.moveTo(gx(0), gy(0));
-  for(let i=0; i<points.length-1; i++){
-    const mx = (gx(i)+gx(i+1))/2; wc.bezierCurveTo(mx, gy(i), mx, gy(i+1), gx(i+1), gy(i+1));
+  // ── Soft grid lines
+  ax.save();
+  for (let i = 1; i <= 3; i++) {
+    const y = pad.t + iH * (1 - i / 4);
+    ax.beginPath(); ax.moveTo(0, y); ax.lineTo(W, y);
+    ax.strokeStyle = 'rgba(8,80,65,0.05)'; ax.lineWidth = 1; ax.stroke();
   }
-  wc.lineTo(W, H); wc.lineTo(0, H); wc.closePath();
-  
-  const gFill = wc.createLinearGradient(0,0,0,H);
-  if(anomaly) {
-    gFill.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); gFill.addColorStop(1, 'rgba(239, 68, 68, 0.05)');
-  } else {
-    // Elegant emerald to cyan gradient fill
-    gFill.addColorStop(0, 'rgba(29, 158, 117, 0.35)'); 
-    gFill.addColorStop(0.5, 'rgba(96, 165, 250, 0.15)');
-    gFill.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-  }
-  wc.fillStyle = gFill; wc.fill();
+  ax.restore();
 
-  // Thick Line
-  wc.beginPath(); wc.moveTo(gx(0), gy(0));
-  for(let i=0; i<points.length-1; i++){
-    const mx = (gx(i)+gx(i+1))/2; wc.bezierCurveTo(mx, gy(i), mx, gy(i+1), gx(i+1), gy(i+1));
-  }
-  wc.strokeStyle = anomaly ? '#DC2626' : 'var(--c-brand)';
-  wc.lineWidth = 4; wc.lineJoin = 'round'; wc.lineCap = 'round';
-  wc.stroke();
-
-  // Highlight End Point
-  const ex = gx(points.length-1), ey = gy(points.length-1);
-  wc.beginPath(); wc.arc(ex, ey, 6, 0, Math.PI*2);
-  wc.fillStyle = '#fff'; wc.fill();
-  wc.lineWidth = 3; wc.strokeStyle = anomaly ? '#DC2626' : 'var(--c-brand)'; wc.stroke();
-  
-  // Outer soft glow for end point
-  wc.beginPath(); wc.arc(ex, ey, 14, 0, Math.PI*2);
-  wc.fillStyle = anomaly ? 'rgba(239, 68, 68, 0.2)' : 'rgba(29, 158, 117, 0.2)'; wc.fill();
-}
-
-/* 2. Semi-Circle Concentric Gradient Gauge */
-const gC = $('gaugeCanvas'), gc = gC.getContext('2d');
-function drawGauge(tot) {
-  const dpr = devicePixelRatio || 1;
-  const W = gC.parentElement.clientWidth, H = gC.parentElement.clientHeight;
-  gC.width = W * dpr; gC.height = H * dpr; gc.scale(dpr, dpr);
-
-  wc.clearRect(0,0,W,H);
-  const cx = W/2, cy = H * 0.85;
-  const r = Math.min(cx, cy) * 0.85;
-
-  // Background Arc
-  gc.beginPath(); gc.arc(cx, cy, r, Math.PI, 2*Math.PI);
-  gc.strokeStyle = 'rgba(255,255,255,0.8)'; gc.lineWidth = 32; gc.lineCap = 'round'; gc.stroke();
-
-  // Progress Arc Gradient
-  const perc = Math.min((tot % 15000) / 15000, 1) || 0; // Fake modulo for visual filling
-  const endA = Math.PI + (perc * Math.PI);
-
-  if (perc > 0) {
-    const lg = gc.createLinearGradient(cx - r, cy, cx + r, cy);
-    if(anomaly) {
-      lg.addColorStop(0, '#FCA5A5'); lg.addColorStop(1, '#DC2626');
-    } else {
-      lg.addColorStop(0, 'var(--c-brand)'); lg.addColorStop(1, '#38BDF8'); // Brand to light blue
+  // ── Build smooth path
+  const buildPath = () => {
+    ax.beginPath(); ax.moveTo(gx(0), gy(pts[0]));
+    for (let i = 0; i < pts.length - 1; i++) {
+      const mx = (gx(i) + gx(i+1)) / 2;
+      ax.bezierCurveTo(mx, gy(pts[i]), mx, gy(pts[i+1]), gx(i+1), gy(pts[i+1]));
     }
-    
-    gc.beginPath(); gc.arc(cx, cy, r, Math.PI, endA);
-    gc.strokeStyle = lg; gc.lineWidth = 32; gc.lineCap = 'round';
-    // Subtle shadow for depth
-    gc.shadowColor = anomaly ? 'rgba(220,38,38,0.4)' : 'rgba(29,158,117,0.3)';
-    gc.shadowBlur = 12; gc.shadowOffsetY = 4; gc.stroke(); gc.shadowBlur=0; gc.shadowOffsetY=0;
+  };
+
+  // ── Fill gradient
+  buildPath();
+  const grad = ax.createLinearGradient(0, pad.t, 0, pad.t + iH);
+  if (anomaly) {
+    grad.addColorStop(0, 'rgba(220,78,65,0.35)');
+    grad.addColorStop(0.55, 'rgba(220,78,65,0.12)');
+    grad.addColorStop(1,  'rgba(250,247,242,0)');
+  } else {
+    grad.addColorStop(0, 'rgba(29,158,117,0.32)');
+    grad.addColorStop(0.45, 'rgba(29,158,117,0.10)');
+    grad.addColorStop(1,  'rgba(250,247,242,0)');
   }
+  ax.lineTo(gx(pts.length - 1), pad.t + iH);
+  ax.lineTo(gx(0), pad.t + iH);
+  ax.closePath();
+  ax.fillStyle = grad; ax.fill();
+
+  // ── Stroke line
+  buildPath();
+  const lineCol = anomaly ? '#DC4E41' : '#1D9E75';
+  ax.strokeStyle = lineCol; ax.lineWidth = 3;
+  ax.lineJoin = 'round'; ax.lineCap = 'round';
+  ax.shadowColor = lineCol; ax.shadowBlur = 10; ax.shadowOffsetY = 2;
+  ax.stroke();
+  ax.shadowBlur = 0; ax.shadowOffsetY = 0;
+
+  // ── End pulse dot
+  const ex = gx(pts.length - 1), ey = gy(pts[pts.length - 1]);
+  // Outer glow ring
+  ax.beginPath(); ax.arc(ex, ey, 14, 0, Math.PI * 2);
+  ax.fillStyle = anomaly ? 'rgba(220,78,65,0.15)' : 'rgba(29,158,117,0.15)'; ax.fill();
+  // White core
+  ax.beginPath(); ax.arc(ex, ey, 6, 0, Math.PI * 2);
+  ax.fillStyle = '#fff'; ax.fill();
+  ax.lineWidth = 2.5; ax.strokeStyle = lineCol; ax.stroke();
 }
 
-window.addEventListener('resize', () => { drawWave(); drawGauge(simTotal); });
+/* ═══════════════════════════
+   CANVAS 2 — Semi-circle Gauge
+═══════════════════════════ */
+const gC = $('gaugeCanvas');
+const gx2 = gC.getContext('2d');
+
+function drawGauge(totVal, sesRatio) {
+  const wrap = gC.parentElement;
+  const dpr  = devicePixelRatio || 1;
+  const W    = wrap.clientWidth;
+  const H    = wrap.clientHeight;
+  gC.width   = W * dpr;
+  gC.height  = H * dpr;
+  gx2.scale(dpr, dpr);
+  gx2.clearRect(0, 0, W, H);
+
+  const cx    = W / 2, cy = H * 0.84;
+  const rOuter = Math.min(cx, cy) * 0.88;
+  const lw     = Math.max(20, rOuter * 0.22);
+
+  const SA = Math.PI, EA = 2 * Math.PI; // left → right semicircle
+
+  // ── Track (background arc)
+  gx2.beginPath(); gx2.arc(cx, cy, rOuter, SA, EA);
+  gx2.strokeStyle = 'rgba(8,80,65,0.07)'; gx2.lineWidth = lw; gx2.lineCap = 'round';
+  gx2.stroke();
+
+  // ── Progress arc
+  const frac = Math.min((totVal % 20000) / 20000, 1) || 0;
+  const ea2  = SA + frac * Math.PI;
+
+  if (frac > 0.005) {
+    const gl = gx2.createLinearGradient(cx - rOuter, 0, cx + rOuter, 0);
+    if (anomaly) {
+      gl.addColorStop(0, '#F87171'); gl.addColorStop(1, '#DC2626');
+    } else {
+      gl.addColorStop(0, '#1D9E75'); gl.addColorStop(1, '#5EEAD4');
+    }
+    gx2.beginPath(); gx2.arc(cx, cy, rOuter, SA, ea2);
+    gx2.strokeStyle = gl; gx2.lineWidth = lw; gx2.lineCap = 'round';
+    gx2.shadowColor = anomaly ? 'rgba(220,78,65,0.3)' : 'rgba(29,158,117,0.3)';
+    gx2.shadowBlur  = 16; gx2.shadowOffsetY = 4;
+    gx2.stroke(); gx2.shadowBlur = 0; gx2.shadowOffsetY = 0;
+  }
+
+  // ── Inner dashed ring detail
+  gx2.beginPath(); gx2.arc(cx, cy, rOuter - lw - 8, SA, EA);
+  gx2.strokeStyle  = 'rgba(8,80,65,0.06)'; gx2.lineWidth = 1.5;
+  gx2.setLineDash([3, 7]); gx2.stroke(); gx2.setLineDash([]);
+}
+
+/* ── Resize handler ── */
+window.addEventListener('resize', () => { drawArea(); drawGauge(simTot, 0); });
+
 </script>
 </body>
 </html>
