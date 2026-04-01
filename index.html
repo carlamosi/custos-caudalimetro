@@ -8,101 +8,325 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg:      #020810;
-    --card:    #0c1628;
-    --border:  rgba(56,189,248,0.1);
-    --sky:     #38bdf8;
-    --sky-dim: rgba(56,189,248,0.15);
-    --emerald: #34d399;
-    --red:     #f87171;
-    --amber:   #fbbf24;
-    --text:    #e2e8f0;
-    --muted:   #475569;
-    --mono:    'JetBrains Mono', monospace;
-    --sans:    'Sora', sans-serif;
-  }
-  body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; font-size:14px; }
-  body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(14,165,233,0.06) 0%,transparent 60%); pointer-events:none; }
 
-  /* Header */
-  header { position:sticky; top:0; z-index:10; background:rgba(8,15,30,0.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
-  .logo { display:flex; align-items:center; gap:10px; }
-  .logo-icon { width:32px; height:32px; background:var(--sky-dim); border:1px solid rgba(56,189,248,0.3); border-radius:8px; display:flex; align-items:center; justify-content:center; }
-  .logo-icon svg { width:16px; height:16px; fill:var(--sky); }
-  .logo-name { font-weight:600; font-size:0.9rem; letter-spacing:0.02em; }
-  .logo-sub  { font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:1px; }
-  .status-badge { display:flex; align-items:center; gap:7px; padding:5px 12px; border-radius:100px; border:1px solid transparent; font-family:var(--mono); font-size:0.68rem; letter-spacing:0.05em; transition:all 0.4s; }
-  .status-badge.online      { background:rgba(52,211,153,0.08);  border-color:rgba(52,211,153,0.25);  color:var(--emerald); }
-  .status-badge.offline     { background:rgba(248,113,113,0.08); border-color:rgba(248,113,113,0.25); color:var(--red); }
-  .status-badge.connecting  { background:rgba(251,191,36,0.08);  border-color:rgba(251,191,36,0.25);  color:var(--amber); }
-  .status-dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
-  .status-badge.online .status-dot    { animation:blink 2s ease-in-out infinite; }
-  .status-badge.connecting .status-dot{ animation:blink 0.8s ease-in-out infinite; }
+  :root {
+    --bg:       #020810;
+    --surface:  #080f1e;
+    --card:     #0c1628;
+    --border:   rgba(56,189,248,0.1);
+    --sky:      #38bdf8;
+    --sky-dim:  rgba(56,189,248,0.15);
+    --emerald:  #34d399;
+    --red:      #f87171;
+    --text:     #e2e8f0;
+    --muted:    #475569;
+    --mono:     'JetBrains Mono', monospace;
+    --sans:     'Sora', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* Fondo sutil */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(14,165,233,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── Header ── */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(8,15,30,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--sky-dim);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-icon svg { width: 16px; height: 16px; fill: var(--sky); }
+
+  .logo-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-top: 1px;
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid transparent;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    transition: all 0.4s;
+  }
+  .status-badge.online  { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.25); color: var(--emerald); }
+  .status-badge.offline { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.25); color: var(--red); }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status-badge.online .status-dot { animation: blink 2s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* Debug panel */
-  #debugPanel { background:rgba(251,191,36,0.05); border:1px solid rgba(251,191,36,0.2); border-radius:12px; padding:16px 20px; font-family:var(--mono); font-size:0.72rem; line-height:2; }
-  #debugPanel h3 { font-size:0.63rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:6px; }
-  .log-ok   { color:var(--emerald); }
-  .log-err  { color:var(--red); }
-  .log-warn { color:var(--amber); }
-  .log-info { color:var(--muted); }
-  .hide { display:none !important; }
+  /* ── Layout ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-  /* Layout */
-  main { max-width:1100px; margin:0 auto; padding:24px; position:relative; z-index:1; display:flex; flex-direction:column; gap:16px; }
+  /* ── Banner anomalía ── */
+  .anomalia-banner {
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.5s;
+  }
+  .anomalia-banner.on {
+    background: rgba(248,113,113,0.07);
+    border-color: rgba(248,113,113,0.25);
+  }
 
-  /* Banner bomba */
-  .bomba-banner { border-radius:12px; border:1px solid var(--border); background:var(--card); padding:14px 20px; display:flex; align-items:center; gap:12px; transition:all 0.5s; }
-  .bomba-banner.on { background:rgba(56,189,248,0.07); border-color:rgba(56,189,248,0.25); }
-  .bomba-led { width:10px; height:10px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:all 0.5s; }
-  .bomba-banner.on .bomba-led { background:var(--sky); box-shadow:0 0 10px rgba(56,189,248,0.6); animation:blink 1.5s ease-in-out infinite; }
-  .bomba-label { font-size:0.85rem; }
-  .bomba-label span { color:var(--muted); transition:color 0.4s; }
-  .bomba-banner.on .bomba-label span { color:var(--sky); }
-  .bomba-estado { margin-left:auto; font-family:var(--mono); font-size:0.65rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; }
+  .anomalia-led {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--emerald);
+    flex-shrink: 0;
+    transition: all 0.5s;
+    box-shadow: 0 0 5px rgba(52,211,153,0.4);
+  }
+  .anomalia-banner.on .anomalia-led {
+    background: var(--red);
+    box-shadow: 0 0 10px rgba(248,113,113,0.6);
+    animation: blink 0.8s ease-in-out infinite;
+  }
 
-  /* KPIs */
-  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-  .kpi { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:4px; }
-  .kpi.accent { background:rgba(56,189,248,0.06); border-color:rgba(56,189,248,0.2); }
-  .kpi-label { font-family:var(--mono); font-size:0.63rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
-  .kpi-value { font-family:var(--mono); font-size:2rem; font-weight:500; line-height:1.1; color:var(--text); }
-  .kpi.accent .kpi-value { color:var(--sky); }
-  .kpi-unit { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+  .anomalia-label { font-size: 0.85rem; color: var(--text); }
+  .anomalia-label span { color: var(--emerald); transition: color 0.4s; font-weight: 500; }
+  .anomalia-banner.on .anomalia-label span { color: var(--red); font-weight: 600; }
 
-  /* Mid grid */
-  .mid-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:24px; }
-  .card-title { font-family:var(--mono); font-size:0.63rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+  .anomalia-estado {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
 
-  /* Gauge */
-  .gauge-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  #gaugeCanvas { width:220px; height:130px; display:block; }
-  .gauge-reading { text-align:center; margin-top:4px; }
-  .gauge-big  { font-family:var(--mono); font-size:2.8rem; font-weight:500; color:var(--sky); line-height:1; }
-  .gauge-unit { font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:4px; }
+  /* ── KPI Grid ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
 
-  /* Chart */
-  .chart-area { position:relative; height:160px; }
-  #chartCanvas { width:100%; height:100%; display:block; }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.3s;
+  }
+  .kpi:hover { border-color: rgba(56,189,248,0.25); }
+  .kpi.accent { background: rgba(56,189,248,0.06); border-color: rgba(56,189,248,0.2); }
 
-  /* Tabla */
-  .hist-scroll { max-height:220px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(56,189,248,0.2) transparent; }
-  table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.75rem; }
-  thead th { text-align:left; padding:6px 8px; color:var(--muted); font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; border-bottom:1px solid var(--border); }
-  tbody td { padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.03); }
-  tbody tr:hover td { background:rgba(56,189,248,0.04); }
-  .td-sky   { color:var(--sky); }
-  .td-muted { color:var(--muted); }
-  .dot-on  { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--sky); }
-  .dot-off { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--muted); }
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
 
-  footer { text-align:center; padding:20px; font-family:var(--mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.05em; }
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--text);
+    transition: color 0.4s;
+  }
+  .kpi.accent .kpi-value { color: var(--sky); }
 
-  @media(max-width:900px) { .kpi-grid{grid-template-columns:repeat(2,1fr)} .mid-grid{grid-template-columns:1fr} }
-  @media(max-width:500px)  { .kpi-grid{grid-template-columns:1fr 1fr} }
+  .kpi-unit {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── Middle row ── */
+  .mid-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* ── Gauge ── */
+  .gauge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #gaugeCanvas {
+    width: 220px;
+    height: 130px;
+    display: block;
+  }
+
+  .gauge-reading {
+    text-align: center;
+    margin-top: 4px;
+  }
+  .gauge-big {
+    font-family: var(--mono);
+    font-size: 2.8rem;
+    font-weight: 500;
+    color: var(--sky);
+    line-height: 1;
+  }
+  .gauge-unit {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-top: 4px;
+  }
+
+  /* ── Gráfica manual ── */
+  .chart-area {
+    position: relative;
+    height: 160px;
+  }
+
+  #chartCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ── Tabla histórico ── */
+  .hist-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56,189,248,0.2) transparent;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 6px 8px;
+    color: var(--muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text);
+  }
+  tbody tr:hover td { background: rgba(56,189,248,0.04); }
+
+  .td-sky   { color: var(--sky); }
+  .td-muted { color: var(--muted); }
+
+  .dot-on  { display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sky); }
+  .dot-off { display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2,1fr); }
+    .mid-grid  { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 500px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -110,14 +334,16 @@
 <header>
   <div class="logo">
     <div class="logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+      </svg>
     </div>
     <div>
       <div class="logo-name">Custos · Caudalímetro</div>
       <div class="logo-sub">Monitor en tiempo real · Firebase</div>
     </div>
   </div>
-  <div class="status-badge connecting" id="statusBadge">
+  <div class="status-badge offline" id="statusBadge">
     <div class="status-dot"></div>
     <span id="statusText">Conectando…</span>
   </div>
@@ -125,17 +351,11 @@
 
 <main>
 
-  <!-- Panel de diagnóstico — se oculta automáticamente cuando conecta -->
-  <div id="debugPanel">
-    <h3>🔍 Diagnóstico de conexión</h3>
-    <div id="debugLog"></div>
-  </div>
-
-  <!-- Banner bomba -->
-  <div class="bomba-banner" id="bombaBanner">
-    <div class="bomba-led"></div>
-    <div class="bomba-label">Bomba de agua: <span id="bombaLabel">detenida</span></div>
-    <div class="bomba-estado" id="bombaEstado">—</div>
+  <!-- Banner anomalía -->
+  <div class="anomalia-banner" id="anomaliaBanner">
+    <div class="anomalia-led"></div>
+    <div class="anomalia-label">Suministro de agua: <span id="anomaliaLabel">normal</span></div>
+    <div class="anomalia-estado" id="anomaliaEstado">—</div>
   </div>
 
   <!-- KPIs -->
@@ -164,6 +384,7 @@
 
   <!-- Gauge + Gráfica -->
   <div class="mid-grid">
+
     <div class="card">
       <div class="card-title">Caudal en vivo</div>
       <div class="gauge-wrap">
@@ -174,12 +395,14 @@
         </div>
       </div>
     </div>
+
     <div class="card">
       <div class="card-title">Evolución del caudal</div>
       <div class="chart-area">
         <canvas id="chartCanvas"></canvas>
       </div>
     </div>
+
   </div>
 
   <!-- Histórico -->
@@ -188,10 +411,18 @@
     <div class="hist-scroll">
       <table>
         <thead>
-          <tr><th>Hora</th><th>Caudal L/min</th><th>Sesión (L)</th><th>Total (L)</th><th>Bomba</th></tr>
+          <tr>
+            <th>Hora</th>
+            <th>Caudal L/min</th>
+            <th>Sesión (L)</th>
+            <th>Total (L)</th>
+            <th>Anomalía</th>
+          </tr>
         </thead>
         <tbody id="histBody">
-          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Esperando datos…</td></tr>
+          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">
+            Esperando datos de Firebase…
+          </td></tr>
         </tbody>
       </table>
     </div>
@@ -201,40 +432,12 @@
 
 <footer>CUSTOS GUARDIAN · ESP32-C3 · Firebase Realtime Database · <span id="footerTime">—</span></footer>
 
-<!-- Firebase SDK v10 (última versión estable) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-// ── Helpers ──────────────────────────────────────────────
-const $   = id => document.getElementById(id);
-const fmt = (n, d=2) => (+(n ?? 0)).toFixed(d);
-
-function log(msg, tipo='log-info') {
-  const el = document.createElement('div');
-  el.className = tipo;
-  el.textContent = msg;
-  $('debugLog').appendChild(el);
-  console.log('[DEBUG]', msg);
-}
-
-function setStatus(estado) {
-  $('statusBadge').className = 'status-badge ' + estado;
-  $('statusText').textContent = { connecting:'Conectando…', online:'En línea', offline:'Sin señal — ver diagnóstico' }[estado] || estado;
-  if (estado === 'online') {
-    setTimeout(() => $('debugPanel').classList.add('hide'), 2000);
-  } else {
-    $('debugPanel').classList.remove('hide');
-  }
-}
-
-function formatHora(ts) {
-  return new Date(ts * 1000).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-// ── Firebase init ─────────────────────────────────────────
-log('⟳ Cargando Firebase SDK…', 'log-warn');
-
+// ─── Firebase ────────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
   authDomain:        "custos-database.firebaseapp.com",
@@ -244,200 +447,236 @@ const firebaseConfig = {
   messagingSenderId: "973520011818",
   appId:             "1:973520011818:web:a245d327ad157320227953"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-let db;
-try {
-  const app = firebase.initializeApp(firebaseConfig);
-  db = firebase.database(app);
-  log('✓ Firebase inicializado correctamente', 'log-ok');
-} catch(e) {
-  log('✗ Error al inicializar: ' + e.message, 'log-err');
-  setStatus('offline');
-}
+// ─── Estado ──────────────────────────────────────────────
+const chartPoints = [];   // historial del gráfico en memoria
+const MAX_CHART   = 40;   // máximo de puntos en la gráfica
+let   lastPing    = null;
+let   chartColor  = '#38bdf8';
 
-// ── Test conexión real con nodo especial .info/connected ──
-// Este nodo es interno de Firebase y SIEMPRE existe — no necesita datos
-if (db) {
-  db.ref('.info/connected').on('value', snap => {
-    if (snap.val() === true) {
-      log('✓ Conexión con Firebase establecida', 'log-ok');
-    } else {
-      log('✗ Sin conexión con Firebase', 'log-err');
-      log('  → Causa probable: reglas de seguridad bloqueando el acceso', 'log-warn');
-      log('  → Solución: Firebase Console → Realtime Database → Reglas', 'log-warn');
-      log('  → Cambia .read y .write a true y pulsa Publicar', 'log-warn');
-      setStatus('offline');
-    }
+// ─── Helpers ─────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = (n, d=2) => (n ?? 0).toFixed(d);
+
+function formatHora(ts) {
+  return new Date(ts * 1000).toLocaleTimeString('es-ES', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
   });
 }
 
-// ── Gauge ─────────────────────────────────────────────────
-const gc = $('gaugeCanvas').getContext('2d');
-const GCX = 110, GCY = 114, GR = 90, GMAX = 20;
+function setStatus(online) {
+  const badge = $('statusBadge');
+  badge.className = 'status-badge ' + (online ? 'online' : 'offline');
+  $('statusText').textContent = online ? 'En línea' : 'Sin señal';
+}
+
+// ─── Gauge canvas ─────────────────────────────────────────
+const gc   = $('gaugeCanvas').getContext('2d');
+const GW   = 220, GH = 130;
+const GCX  = GW / 2, GCY = GH - 16;
+const GR   = 90;
+const GMAX = 20; // L/min máximo en el gauge
 
 function drawGauge(val) {
-  gc.clearRect(0, 0, 220, 130);
-  const frac = Math.min(Math.max(val, 0) / GMAX, 1);
+  gc.clearRect(0, 0, GW, GH);
+  const frac  = Math.min(Math.max(val, 0) / GMAX, 1);
   const start = Math.PI;
+  const end   = 2 * Math.PI;
   const curr  = start + frac * Math.PI;
 
+  // Arco fondo
   gc.beginPath();
-  gc.arc(GCX, GCY, GR, Math.PI, 2*Math.PI);
+  gc.arc(GCX, GCY, GR, start, end);
   gc.strokeStyle = 'rgba(255,255,255,0.06)';
-  gc.lineWidth = 12; gc.lineCap = 'round'; gc.stroke();
+  gc.lineWidth = 12;
+  gc.lineCap   = 'round';
+  gc.stroke();
 
+  // Arco valor
   if (frac > 0) {
-    const g = gc.createLinearGradient(GCX-GR, GCY, GCX+GR, GCY);
-    g.addColorStop(0, '#0ea5e9'); g.addColorStop(1, '#38bdf8');
+    const grad = gc.createLinearGradient(GCX - GR, GCY, GCX + GR, GCY);
+    grad.addColorStop(0, '#0ea5e9');
+    grad.addColorStop(1, '#38bdf8');
     gc.beginPath();
     gc.arc(GCX, GCY, GR, start, curr);
-    gc.strokeStyle = g; gc.lineWidth = 12; gc.lineCap = 'round'; gc.stroke();
+    gc.strokeStyle = grad;
+    gc.lineWidth   = 12;
+    gc.lineCap     = 'round';
+    gc.stroke();
   }
 
+  // Marcas escala
   for (let i = 0; i <= 5; i++) {
-    const a = Math.PI + (i/5)*Math.PI;
+    const a  = Math.PI + (i / 5) * Math.PI;
+    const x1 = GCX + (GR - 18) * Math.cos(a);
+    const y1 = GCY + (GR - 18) * Math.sin(a);
+    const x2 = GCX + (GR - 6)  * Math.cos(a);
+    const y2 = GCY + (GR - 6)  * Math.sin(a);
     gc.beginPath();
-    gc.moveTo(GCX+(GR-18)*Math.cos(a), GCY+(GR-18)*Math.sin(a));
-    gc.lineTo(GCX+(GR-6)*Math.cos(a),  GCY+(GR-6)*Math.sin(a));
-    gc.strokeStyle = 'rgba(255,255,255,0.15)'; gc.lineWidth = 1.5; gc.stroke();
+    gc.moveTo(x1, y1); gc.lineTo(x2, y2);
+    gc.strokeStyle = 'rgba(255,255,255,0.15)';
+    gc.lineWidth = 1.5;
+    gc.stroke();
   }
 
+  // Aguja
+  const nx = GCX + (GR - 22) * Math.cos(curr);
+  const ny = GCY + (GR - 22) * Math.sin(curr);
   gc.beginPath();
-  gc.moveTo(GCX, GCY);
-  gc.lineTo(GCX+(GR-22)*Math.cos(curr), GCY+(GR-22)*Math.sin(curr));
-  gc.strokeStyle = 'rgba(255,255,255,0.9)'; gc.lineWidth = 2; gc.lineCap = 'round'; gc.stroke();
+  gc.moveTo(GCX, GCY); gc.lineTo(nx, ny);
+  gc.strokeStyle = 'rgba(255,255,255,0.9)';
+  gc.lineWidth   = 2;
+  gc.lineCap     = 'round';
+  gc.stroke();
 
-  gc.beginPath(); gc.arc(GCX, GCY, 7, 0, 2*Math.PI); gc.fillStyle = '#0ea5e9'; gc.fill();
-  gc.beginPath(); gc.arc(GCX, GCY, 3, 0, 2*Math.PI); gc.fillStyle = '#fff';    gc.fill();
+  // Centro
+  gc.beginPath(); gc.arc(GCX, GCY, 7, 0, 2 * Math.PI);
+  gc.fillStyle = '#0ea5e9'; gc.fill();
+  gc.beginPath(); gc.arc(GCX, GCY, 3, 0, 2 * Math.PI);
+  gc.fillStyle = '#fff'; gc.fill();
 }
 drawGauge(0);
 
-// ── Gráfica ───────────────────────────────────────────────
-const cc   = $('chartCanvas');
+// ─── Gráfica canvas ───────────────────────────────────────
+const cc  = $('chartCanvas');
 const cctx = cc.getContext('2d');
-const chartPts = [];
 
-function resizeChart() { cc.width = cc.offsetWidth; cc.height = cc.offsetHeight; }
+function resizeChart() {
+  cc.width  = cc.offsetWidth;
+  cc.height = cc.offsetHeight;
+}
 window.addEventListener('resize', () => { resizeChart(); drawChart(); });
 resizeChart();
 
 function drawChart() {
-  const W=cc.width, H=cc.height;
+  const W = cc.width, H = cc.height;
   cctx.clearRect(0, 0, W, H);
-  if (chartPts.length < 2) return;
-  const maxV = Math.max(...chartPts, 1);
-  const p = {t:10, b:4, l:8, r:8};
-  const iW = W-p.l-p.r, iH = H-p.t-p.b;
+  if (chartPoints.length < 2) return;
 
-  for (let i=0; i<=4; i++) {
-    const y = p.t + iH - (i/4)*iH;
-    cctx.beginPath(); cctx.moveTo(p.l, y); cctx.lineTo(W-p.r, y);
-    cctx.strokeStyle = 'rgba(255,255,255,0.04)'; cctx.lineWidth = 1; cctx.stroke();
+  const maxV = Math.max(...chartPoints, 1);
+  const pad  = { t: 10, b: 24, l: 8, r: 8 };
+  const iW   = W - pad.l - pad.r;
+  const iH   = H - pad.t - pad.b;
+
+  // Líneas guía horizontales
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + iH - (i / 4) * iH;
+    cctx.beginPath();
+    cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y);
+    cctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    cctx.lineWidth = 1;
+    cctx.stroke();
   }
 
-  const grad = cctx.createLinearGradient(0, p.t, 0, p.t+iH);
-  grad.addColorStop(0, 'rgba(56,189,248,0.2)');
-  grad.addColorStop(1, 'rgba(56,189,248,0)');
+  // Área relleno
+  const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
+  const isDanger = chartColor === '#f87171';
+  grad.addColorStop(0, isDanger ? 'rgba(248,113,113,0.3)' : 'rgba(56,189,248,0.2)');
+  grad.addColorStop(1, isDanger ? 'rgba(248,113,113,0)' : 'rgba(56,189,248,0)');
 
   cctx.beginPath();
-  chartPts.forEach((v,i) => {
-    const x = p.l + (i/(chartPts.length-1))*iW;
-    const y = p.t + iH - (v/maxV)*iH;
-    i===0 ? cctx.moveTo(x,y) : cctx.lineTo(x,y);
+  chartPoints.forEach((v, i) => {
+    const x = pad.l + (i / (chartPoints.length - 1)) * iW;
+    const y = pad.t + iH - (v / maxV) * iH;
+    i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
   });
-  cctx.lineTo(p.l+iW, p.t+iH); cctx.lineTo(p.l, p.t+iH); cctx.closePath();
-  cctx.fillStyle = grad; cctx.fill();
+  cctx.lineTo(pad.l + iW, pad.t + iH);
+  cctx.lineTo(pad.l, pad.t + iH);
+  cctx.closePath();
+  cctx.fillStyle = grad;
+  cctx.fill();
 
+  // Línea principal
   cctx.beginPath();
-  chartPts.forEach((v,i) => {
-    const x = p.l + (i/(chartPts.length-1))*iW;
-    const y = p.t + iH - (v/maxV)*iH;
-    i===0 ? cctx.moveTo(x,y) : cctx.lineTo(x,y);
+  chartPoints.forEach((v, i) => {
+    const x = pad.l + (i / (chartPoints.length - 1)) * iW;
+    const y = pad.t + iH - (v / maxV) * iH;
+    i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
   });
-  cctx.strokeStyle='#38bdf8'; cctx.lineWidth=2; cctx.lineJoin='round'; cctx.lineCap='round'; cctx.stroke();
+  cctx.strokeStyle = chartColor;
+  cctx.lineWidth   = 2;
+  cctx.lineJoin    = 'round';
+  cctx.lineCap     = 'round';
+  cctx.stroke();
 
-  const lx = p.l+iW;
-  const ly = p.t+iH - (chartPts[chartPts.length-1]/maxV)*iH;
-  cctx.beginPath(); cctx.arc(lx, ly, 4, 0, 2*Math.PI); cctx.fillStyle='#38bdf8'; cctx.fill();
+  // Punto actual (último)
+  const lastX = pad.l + iW;
+  const lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
+  cctx.beginPath();
+  cctx.arc(lastX, lastY, 4, 0, 2 * Math.PI);
+  cctx.fillStyle = chartColor;
+  cctx.fill();
 }
 
-// ── Listener datos tiempo real ────────────────────────────
-if (db) {
-  log('⟳ Suscribiéndose a /caudalimetro/tiempo_real…', 'log-warn');
+// ─── Firebase listeners ───────────────────────────────────
 
-  db.ref('/caudalimetro/tiempo_real').on(
-    'value',
-    snap => {
-      setStatus('online');
-      $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
+// Datos en tiempo real
+db.ref('/caudalimetro/tiempo_real').on('value', snap => {
+  const d = snap.val();
+  if (!d) return;
 
-      const d = snap.val();
+  lastPing = Date.now();
+  setStatus(true);
+  $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
 
-      if (!d) {
-        log('⚠ Nodo recibido pero vacío — añade datos en Firebase Console', 'log-warn');
-        // Poner ceros en pantalla
-        ['kpiLPM','kpiLPS','kpiSesion','kpiTotal'].forEach(id => $('kpiLPM') && ($( id).textContent = '0.00'));
-        drawGauge(0);
-        $('gaugeLPM').textContent = '0.00';
-        return;
-      }
+  // KPIs
+  $('kpiLPM').textContent    = fmt(d.caudal_lpm, 2);
+  $('kpiLPS').textContent    = fmt(d.caudal_lps, 3);
+  $('kpiSesion').textContent = fmt(d.litros_sesion, 3);
+  $('kpiTotal').textContent  = fmt(d.litros_totales, 2);
 
-      log('✓ Datos recibidos: caudal=' + fmt(d.caudal_lpm,2) + ' L/min', 'log-ok');
+  // Gauge
+  const lpm = d.caudal_lpm ?? 0;
+  drawGauge(lpm);
+  $('gaugeLPM').textContent = fmt(lpm, 2);
 
-      $('kpiLPM').textContent    = fmt(d.caudal_lpm,    2);
-      $('kpiLPS').textContent    = fmt(d.caudal_lps,    3);
-      $('kpiSesion').textContent = fmt(d.litros_sesion,  3);
-      $('kpiTotal').textContent  = fmt(d.litros_totales, 2);
+  // Gráfica
+  if (chartPoints.length >= MAX_CHART) chartPoints.shift();
+  chartPoints.push(lpm);
+  drawChart();
 
-      const lpm = +(d.caudal_lpm ?? 0);
-      drawGauge(lpm);
-      $('gaugeLPM').textContent = fmt(lpm, 2);
+  // Banner anomalía
+  const on = d.anomalia ?? false;
+  const banner = $('anomaliaBanner');
+  banner.className = 'anomalia-banner' + (on ? ' on' : '');
+  $('anomaliaLabel').textContent = on ? 'absencia' : 'normal';
+  $('anomaliaEstado').textContent = d.estado ?? '—';
 
-      if (chartPts.length >= 40) chartPts.shift();
-      chartPts.push(lpm);
-      drawChart();
+  // Reflejar en la gráfica
+  chartColor = on ? '#f87171' : '#38bdf8';
+});
 
-      const on = !!d.bomba_encendida;
-      $('bombaBanner').className  = 'bomba-banner' + (on ? ' on' : '');
-      $('bombaLabel').textContent  = on ? 'en funcionamiento' : 'detenida';
-      $('bombaEstado').textContent = d.estado ?? '—';
-    },
-    err => {
-      // Este callback solo se llama si hay error de PERMISOS
-      log('✗ Acceso denegado por Firebase: ' + err.message, 'log-err');
-      log('─────────────────────────────────────────', 'log-info');
-      log('SOLUCIÓN PASO A PASO:', 'log-warn');
-      log('1. Ve a console.firebase.google.com', 'log-info');
-      log('2. Proyecto custos-database', 'log-info');
-      log('3. Menú izquierdo → Realtime Database', 'log-info');
-      log('4. Pestaña "Reglas"', 'log-info');
-      log('5. Cambia el contenido por esto:', 'log-info');
-      log('   { "rules": { ".read": true, ".write": true } }', 'log-warn');
-      log('6. Haz clic en "Publicar"', 'log-info');
-      log('7. Recarga esta página', 'log-info');
-      setStatus('offline');
-    }
-  );
+// Histórico
+db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
+  const d = snap.val();
+  const tbody = $('histBody');
+  if (!d) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Sin datos aún</td></tr>';
+    return;
+  }
 
-  // ── Listener histórico ─────────────────────────────────
-  db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
-    const d = snap.val();
-    const tbody = $('histBody');
-    if (!d) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Sin histórico aún</td></tr>';
-      return;
-    }
-    const rows = Object.entries(d).sort((a,b) => Number(b[0])-Number(a[0])).slice(0,25);
-    tbody.innerHTML = rows.map(([,v]) => `
-      <tr>
-        <td class="td-muted">${v.ts ? formatHora(v.ts) : '—'}</td>
-        <td class="td-sky">${fmt(v.caudal_lpm, 3)}</td>
-        <td>${fmt(v.litros_sesion, 4)} L</td>
-        <td>${fmt(v.litros_totales, 3)} L</td>
-        <td><span class="${v.bomba ? 'dot-on' : 'dot-off'}"></span></td>
-      </tr>`).join('');
-  }, () => {});
-}
+  const rows = Object.entries(d)
+    .sort((a, b) => Number(b[0]) - Number(a[0]))
+    .slice(0, 25);
+
+  tbody.innerHTML = rows.map(([, v]) => `
+    <tr>
+      <td class="td-muted">${formatHora(v.ts)}</td>
+      <td class="td-sky">${fmt(v.caudal_lpm, 3)}</td>
+      <td>${fmt(v.litros_sesion, 4)} L</td>
+      <td>${fmt(v.litros_totales, 3)} L</td>
+      <td><span class="status-dot" style="background:var(${v.anomalia ? '--red' : '--emerald'})"></span></td>
+    </tr>
+  `).join('');
+});
+
+// Detector desconexión
+setInterval(() => {
+  if (lastPing && Date.now() - lastPing > 15000) setStatus(false);
+  if (!lastPing) setStatus(false);
+}, 5000);
 </script>
 </body>
 </html>
