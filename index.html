@@ -2,257 +2,275 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custos · Flow Analytics</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Custos · Home Analytics</title>
   <style>
     :root {
-      /* Dark Premium Theme */
-      --bg: #09090B;
-      --card: #18181B;
-      --border: #27272A;
-      --text: #FAFAFA;
-      --text-muted: #A1A1AA;
+      --bg-dark: #000000;
       
-      --accent: #10B981; /* Emerald 500 */
-      --accent-dim: rgba(16, 185, 129, 0.15);
+      /* Apple ecosystem standard font stack */
+      --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
       
-      --danger: #EF4444; /* Red 500 */
-      --danger-dim: rgba(239, 68, 68, 0.15);
+      /* Glowing Liquids */
+      --liquid-emerald: #10B981;
+      --liquid-cyan: #06B6D4;
+      --liquid-mint: #34D399;
+      --liquid-red: #EF4444;
       
-      --radius: 16px;
-      --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+      /* Glass properties */
+      --glass-bg: rgba(28, 28, 30, 0.55);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(40px) saturate(180%);
+      
+      /* Text */
+      --text-main: #FFFFFF;
+      --text-muted: #EBEBF5;
+      --text-dim: #8E8E93;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-apple);
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       line-height: 1.5;
       min-height: 100vh;
-      /* Soft top glow */
-      background-image: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+      overflow-x: hidden;
+      position: relative;
     }
 
-    /* ── Header ── */
+    /* ── Liquid Animated Background ── */
+    .liquid-bg {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; overflow: hidden; background: #000;
+    }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(120px); opacity: 0.65;
+      mix-blend-mode: screen;
+      animation: float 25s infinite ease-in-out alternate;
+      will-change: transform;
+    }
+    .blob-1 {
+      top: -10%; left: -10%; width: 60vmin; height: 60vmin;
+      background: var(--liquid-emerald);
+      animation-duration: 20s;
+    }
+    .blob-2 {
+      bottom: -10%; right: -10%; width: 70vmin; height: 70vmin;
+      background: var(--liquid-cyan);
+      animation-delay: -5s; animation-duration: 28s;
+    }
+    .blob-3 {
+      top: 40%; left: 20%; width: 50vmin; height: 50vmin;
+      background: var(--liquid-mint);
+      animation-duration: 24s; animation-delay: -2s;
+    }
+    .blob.alert-mode { background: var(--liquid-red) !important; transition: background 2s ease; }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(15%, 25%) scale(1.1) rotate(90deg); }
+      100% { transform: translate(-15%, 10%) scale(0.95) rotate(180deg); }
+    }
+
+    /* ── Glassmorphism Container ── */
+    .glass-panel {
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      box-shadow: var(--glass-shadow);
+      padding: 24px;
+    }
+
+    /* ── Minimalist Header ── */
     header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 40px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(9, 9, 11, 0.8);
-      backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 50;
+      padding: 32px 48px 16px;
+      max-width: 1200px; margin: 0 auto;
     }
     .brand {
       display: flex; align-items: center; gap: 12px;
-      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em;
+      font-size: 1.5rem; font-weight: 700; letter-spacing: -0.04em;
     }
-    .brand svg { color: var(--accent); }
-
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 16px; border-radius: 99px;
-      font-size: 0.85rem; font-weight: 600;
-      background: var(--card); border: 1px solid var(--border);
-    }
-    .status-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .status-online { border-color: var(--accent-dim); background: rgba(16,185,129,0.05); }
-    .status-online .dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s infinite; }
-    .status-offline { border-color: var(--danger-dim); background: rgba(239,68,68,0.05); }
-    .status-offline .dot { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+    .brand svg { color: var(--text-main); }
     
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* ── Layout ── */
-    main {
-      max-width: 1200px; margin: 40px auto; padding: 0 24px;
-      display: flex; flex-direction: column; gap: 24px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    /* ── Anomaly Banner ── */
-    .banner {
-      display: flex; gap: 20px; align-items: flex-start;
-      border-left: 4px solid transparent;
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em;
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+      border: 0.5px solid rgba(255, 255, 255, 0.15);
       transition: all 0.3s ease;
     }
-    .banner.normal { border-left-color: var(--accent); }
-    .banner.alert { 
-      border-left-color: var(--danger); 
-      background: rgba(239, 68, 68, 0.05);
-      border: 1px solid var(--danger-dim);
-      border-left: 4px solid var(--danger);
-    }
-    .banner-icon { margin-top: 2px; }
-    .normal .banner-icon { color: var(--accent); }
-    .alert .banner-icon { color: var(--danger); }
-    
-    .banner h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 4px; }
-    .banner p { color: var(--text-muted); font-size: 0.95rem; }
-    .alert h2 { color: #FCA5A5; }
-    .alert p { color: #F87171; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .is-online .status-dot { background: #34C759; box-shadow: 0 0 10px #34C759; animation: breathe 3s infinite; }
+    .is-offline .status-dot { background: #FF3B30; box-shadow: 0 0 10px #FF3B30; }
+    @keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    /* ── KPIs ── */
-    .kpi-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-    }
-    .kpi-card {
-      display: flex; flex-direction: column; gap: 12px;
-      position: relative; overflow: hidden;
-    }
-    /* Subtle glow on hover */
-    .kpi-card:hover { border-color: #3F3F46; }
-    
-    .kpi-title {
-      font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.05em;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .kpi-title svg { color: #52525B; }
-    
-    .kpi-val {
-      font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;
-    }
-    .kpi-unit { font-size: 0.85rem; color: var(--text-muted); }
+    /* ── Main Layout ── */
+    main { max-width: 1200px; margin: 0 auto 80px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
 
-    /* ── Charts Grid ── */
-    .charts-grid {
-      display: grid; grid-template-columns: 1fr 2fr; gap: 24px;
+    /* ── Dynamic Island Banner ── */
+    .banner {
+      display: flex; align-items: center; gap: 20px;
+      padding: 20px 24px; border-radius: 24px;
+      background: rgba(44, 44, 46, 0.7); backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    .chart-header {
-      font-size: 1rem; font-weight: 600; margin-bottom: 24px;
-      display: flex; align-items: center; gap: 8px;
+    .banner.alert {
+      background: rgba(255, 59, 48, 0.2);
+      border-color: rgba(255, 59, 48, 0.4);
     }
-    .gauge-container {
-      display: flex; flex-direction: column; align-items: center;
-      position: relative; padding-bottom: 10px;
-    }
-    .gauge-text {
-      position: absolute; bottom: 10px; text-align: center;
-    }
-    .gauge-val { font-size: 2rem; font-weight: 700; line-height: 1; }
-    .gauge-lbl { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .banner-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
+    .normal .banner-icon { color: #34C759; }
+    .alert .banner-icon { background: #FF3B30; color: #FFF; box-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
+    .banner h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 2px; }
+    .banner p { font-size: 0.95rem; color: var(--text-muted); opacity: 0.9; }
     
-    canvas { width: 100%; display: block; }
-    #gaugeCanvas { width: 240px; height: 140px; }
-    .line-chart-wrap { position: relative; width: 100%; height: 260px; }
+    /* ── Health KPIs Grid ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 140px; position: relative; overflow: hidden; }
+    .kpi-top { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); }
+    .kpi-label { font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi-icon { opacity: 0.7; }
+    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; }
+    .kpi-unit { font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
 
-    /* ── Table ── */
-    .table-wrap { overflow-x: auto; max-height: 350px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-    th {
-      position: sticky; top: 0; background: var(--card); z-index: 10;
-      padding: 16px; font-weight: 500; color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-    td { padding: 16px; border-bottom: 1px solid var(--border); }
+    /* ── Charts ── */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
+    .chart-panel { display: flex; flex-direction: column; }
+    .chart-header { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; color: var(--text-main); }
+    
+    /* Activity Ring Gauge */
+    .gauge-wrap { position: relative; display: flex; justify-content: center; align-items: center; height: 100%; padding-bottom: 10px; }
+    #gaugeCanvas { width: 220px; height: 220px; }
+    .gauge-center { position: absolute; text-align: center; }
+    .gauge-center .val { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    .gauge-center .lbl { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
+
+    /* Line Chart */
+    .line-chart-wrap { position: relative; width: 100%; height: 240px; flex-grow: 1; }
+    #chartCanvas { width: 100%; height: 100%; display: block; }
+
+    /* ── Apple-style Table ── */
+    .table-wrap { overflow-x: auto; max-height: 350px; }
+    .table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+    th { position: sticky; top: 0; background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); font-weight: 500; color: var(--text-dim); padding: 14px 16px; border-bottom: 0.5px solid var(--glass-border); z-index: 10; }
+    td { padding: 16px; border-bottom: 0.5px solid var(--glass-border); }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-    .tnum { font-variant-numeric: tabular-nums; font-family: monospace; font-size: 1rem; }
+    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
-    .badge-status-sm {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
-    }
-    .badge-status-sm.ok { background: var(--accent-dim); color: var(--accent); }
-    .badge-status-sm.err { background: var(--danger-dim); color: #FCA5A5; }
+    .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+    .tag.ok { background: rgba(52, 199, 89, 0.15); color: #34C759; }
+    .tag.err { background: rgba(255, 59, 48, 0.15); color: #FF3B30; }
 
-    footer {
-      text-align: center; padding: 40px; color: var(--text-muted);
-      font-size: 0.85rem; font-weight: 500;
-    }
+    footer { text-align: center; padding: 0 24px 60px; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
 
     @media (max-width: 900px) {
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-      .charts-grid { grid-template-columns: 1fr; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      header { padding: 24px; }
     }
   </style>
 </head>
 <body>
 
+<!-- Fondos Fluidos "Liquid" -->
+<div class="liquid-bg">
+  <div class="blob blob-1" id="blob1"></div>
+  <div class="blob blob-2" id="blob2"></div>
+  <div class="blob blob-3" id="blob3"></div>
+</div>
+
 <header>
   <div class="brand">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
     </svg>
     Custos
   </div>
-  <div class="status-badge status-offline" id="statusBadge">
-    <div class="dot"></div>
+  <div class="status-pill is-offline" id="statusBadge">
+    <div class="status-dot"></div>
     <span id="statusText">Desconectado</span>
   </div>
 </header>
 
 <main>
   
-  <div class="card banner normal" id="anomaliaBanner">
+  <!-- Banner tipo "Notificación iOS" -->
+  <div class="banner normal" id="anomaliaBanner">
     <div class="banner-icon" id="anomaliaIcon">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
     </div>
     <div>
-      <h2 id="anomaliaTitle">Sistema Operativo</h2>
-      <p id="anomaliaDesc">El flujo de datos telemétricos y el caudal de agua funcionan correctamente sin anomalías detectadas.</p>
+      <h2 id="anomaliaTitle">Monitoreo Saludable</h2>
+      <p id="anomaliaDesc">El ecosistema fluye correctamente. Ninguna anomalía estructural en el circuito acuático.</p>
     </div>
   </div>
 
+  <!-- Tarjetas KPI -->
   <div class="kpi-grid">
-    <div class="card kpi-card">
-      <div class="kpi-title">Caudal LPM <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
-      <div><div class="kpi-val" id="kpiLPM">0.00</div><div class="kpi-unit">Litros / minuto</div></div>
+    <div class="glass-panel kpi-card">
+      <div class="kpi-top"><span class="kpi-label">Caudal Vivo</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div></div>
+      <div><div class="kpi-val" id="kpiLPM">0.00</div><div class="kpi-unit">L/min actual</div></div>
     </div>
-    <div class="card kpi-card">
-      <div class="kpi-title">Caudal LPS <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-      <div><div class="kpi-val" id="kpiLPS">0.00</div><div class="kpi-unit">Litros / segundo</div></div>
+    
+    <div class="glass-panel kpi-card">
+      <div class="kpi-top"><span class="kpi-label">Impulso</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div></div>
+      <div><div class="kpi-val" id="kpiLPS">0.00</div><div class="kpi-unit">L/seg preciso</div></div>
     </div>
-    <div class="card kpi-card">
-      <div class="kpi-title">Vol. Sesión <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div>
-      <div><div class="kpi-val" id="kpiSesion">0.00</div><div class="kpi-unit">Litros acumulados</div></div>
+    
+    <div class="glass-panel kpi-card">
+      <div class="kpi-top"><span class="kpi-label">Sesión Hoy</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div></div>
+      <div><div class="kpi-val" id="kpiSesion">0.00</div><div class="kpi-unit">Litros transitados</div></div>
     </div>
-    <div class="card kpi-card">
-      <div class="kpi-title">Vol. Total <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div>
-      <div><div class="kpi-val" id="kpiTotal">0.00</div><div class="kpi-unit">Histórico acumulado</div></div>
+    
+    <div class="glass-panel kpi-card">
+      <div class="kpi-top"><span class="kpi-label">Acumulado</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div></div>
+      <div><div class="kpi-val" id="kpiTotal">0.00</div><div class="kpi-unit">Total histórico aportado</div></div>
     </div>
   </div>
 
-  <div class="charts-grid">
-    <div class="card">
-      <div class="chart-header">Monitor en Vivo</div>
-      <div class="gauge-container">
+  <div class="dashboard-grid">
+    <!-- Activity Ring -->
+    <div class="glass-panel chart-panel">
+      <div class="chart-header">Rendimiento Inmediato</div>
+      <div class="gauge-wrap">
         <canvas id="gaugeCanvas"></canvas>
-        <div class="gauge-text">
-          <div class="gauge-val" id="gaugeLPM">0.00</div>
-          <div class="gauge-lbl">L / MIN</div>
+        <div class="gauge-center">
+          <div class="val" id="gaugeLPM">0.00</div>
+          <div class="lbl">L / MIN</div>
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="chart-header">Análisis de Tendencia</div>
-      <div class="line-chart-wrap"><canvas id="chartCanvas"></canvas></div>
+    
+    <!-- Health Wave Line -->
+    <div class="glass-panel chart-panel">
+      <div class="chart-header">Monitor Constante</div>
+      <div class="line-chart-wrap">
+        <canvas id="chartCanvas"></canvas>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="chart-header" style="margin-bottom:0;">Registro de Eventos</div>
+  <div class="glass-panel">
+    <div class="chart-header" style="margin-bottom: 16px;">Vaciado Automático (Logs)</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Timestamp</th><th>L/min</th><th>Sesión</th><th>Total Acum.</th><th>Estado</th></tr></thead>
+        <thead><tr><th>Sincronización</th><th>Flujo (L/min)</th><th>Transitado Hoy</th><th>Total Vital</th><th>Diagnóstico</th></tr></thead>
         <tbody id="histBody">
-          <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted)">Esperando conexión con Firebase...</td></tr>
+          <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-dim)">A la espera del primer paquete de red...</td></tr>
         </tbody>
       </table>
     </div>
@@ -260,7 +278,7 @@
 
 </main>
 
-<footer>Custos IoT Dashboard · <span id="footerTime">—</span></footer>
+<footer>Custos Home · <span id="footerTime">—</span></footer>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -280,12 +298,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const chartPoints = [];
-const MAX_CHART = 40;
+const MAX_CHART = 40; // Manteniendo el buffer pero se actualizará cada 1 segundo (40 segundos visibles)
 let lastPing = null;
 let isAnomaly = false;
-
-const accentColor = '#10B981';
-const dangerColor = '#EF4444';
 
 const $ = id => document.getElementById(id);
 const fmt = (n, d=2) => (n ?? 0).toFixed(d);
@@ -297,111 +312,148 @@ function formatHora(ts) {
 function setStatus(online) {
   const badge = $('statusBadge');
   if(online) {
-    badge.className = 'status-badge status-online';
+    badge.className = 'status-pill is-online';
     $('statusText').textContent = 'Conectado';
   } else {
-    badge.className = 'status-badge status-offline';
-    $('statusText').textContent = 'Desconectado';
+    badge.className = 'status-pill is-offline';
+    $('statusText').textContent = 'Señal Perdida';
   }
 }
 
-/* ── Canvas Gauge ── */
+function applyLiquidAlert(on) {
+  const blobs = [$('blob1'), $('blob2'), $('blob3')];
+  blobs.forEach(b => {
+    if(on) b.classList.add('alert-mode');
+    else b.classList.remove('alert-mode');
+  });
+}
+
+/* ── Actvity Ring Gauge (Apple Watch Style) ── */
 const gc = $('gaugeCanvas').getContext('2d');
-const GW = 240, GH = 140;
-$('gaugeCanvas').width = GW * 2;
-$('gaugeCanvas').height = GH * 2;
-gc.scale(2, 2);
+let gw, gh;
+
+function initGauge() {
+  const cvs = $('gaugeCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  gc.scale(dpr, dpr);
+  gw = rect.width; gh = rect.height;
+}
+initGauge();
 
 function drawGauge(val) {
-  gc.clearRect(0, 0, GW, GH);
+  gc.clearRect(0, 0, gw, gh);
+  const cx = gw / 2, cy = gh / 2;
+  const r = (Math.min(gw, gh) / 2) - 16;
   const maxVal = 20;
-  const frac = Math.min(Math.max(val, 0) / maxVal, 1);
-  const start = Math.PI, end = 2 * Math.PI, curr = start + frac * Math.PI;
-  const cx = GW/2, cy = GH - 10, r = 100;
+  let frac = Math.min(Math.max(val, 0) / maxVal, 1);
+  if (frac < 0.01 && val > 0) frac = 0.01; // Tiny visualization for tiny flows
 
-  // Background arc
-  gc.beginPath(); gc.arc(cx, cy, r, start, end);
-  gc.strokeStyle = '#27272A'; gc.lineWidth = 14; gc.lineCap = 'round'; gc.stroke();
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + (frac * 2 * Math.PI);
 
-  // Value arc
-  if (frac > 0) {
-    gc.beginPath(); gc.arc(cx, cy, r, start, curr);
-    gc.strokeStyle = isAnomaly ? dangerColor : accentColor;
-    // Add glow
-    gc.shadowColor = isAnomaly ? dangerColor : accentColor;
-    gc.shadowBlur = 15;
-    gc.lineWidth = 14; gc.lineCap = 'round'; gc.stroke();
+  // Background Ring (Track)
+  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI);
+  gc.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  gc.lineWidth = 20; gc.stroke();
+
+  if (frac > 0) { // Foreground Ring
+    const grad = gc.createConicGradient(startAngle, cx, cy);
+    if(isAnomaly) {
+      grad.addColorStop(0, '#FF453A'); grad.addColorStop(1, '#FF9F0A');
+    } else {
+      // Teal to bright Green
+      grad.addColorStop(0, '#30D158'); grad.addColorStop(1, '#32ADE6');
+    }
+    
+    gc.beginPath(); gc.arc(cx, cy, r, startAngle, endAngle);
+    gc.strokeStyle = grad;
+    gc.lineWidth = 20;
+    gc.lineCap = 'round';
+    
+    // Shadow for depth
+    gc.shadowColor = isAnomaly ? 'rgba(255,69,58,0.5)' : 'rgba(48,209,88,0.5)';
+    gc.shadowBlur = 10;
+    gc.stroke();
     gc.shadowBlur = 0; // reset
   }
-
-  // Needle
-  const nx = cx + (r - 20) * Math.cos(curr), ny = cy + (r - 20) * Math.sin(curr);
-  gc.beginPath(); gc.moveTo(cx, cy); gc.lineTo(nx, ny);
-  gc.strokeStyle = '#FAFAFA'; gc.lineWidth = 4; gc.lineCap = 'round'; gc.stroke();
-  
-  // Center pin
-  gc.beginPath(); gc.arc(cx, cy, 8, 0, 2*Math.PI); gc.fillStyle = '#FAFAFA'; gc.fill();
-  gc.beginPath(); gc.arc(cx, cy, 3, 0, 2*Math.PI); gc.fillStyle = '#09090B'; gc.fill();
 }
-drawGauge(0);
 
-/* ── Canvas Chart ── */
+/* ── Smooth Wave Chart (Apple Health Style) ── */
 const cc = $('chartCanvas'), cctx = cc.getContext('2d');
 function resizeChart() {
   const rect = cc.parentElement.getBoundingClientRect();
-  cc.width = rect.width * 2; cc.height = rect.height * 2;
+  const dpr = window.devicePixelRatio || 1;
+  cc.width = rect.width * dpr; cc.height = rect.height * dpr;
   cc.style.width = rect.width + 'px'; cc.style.height = rect.height + 'px';
-  cctx.scale(2, 2);
+  cctx.scale(dpr, dpr);
 }
 window.addEventListener('resize', () => { resizeChart(); drawChart(); }); resizeChart();
 
 function drawChart() {
-  const W = cc.width / 2, H = cc.height / 2; cctx.clearRect(0, 0, W, H);
+  const rect = cc.parentElement.getBoundingClientRect();
+  const W = rect.width, H = rect.height;
+  cctx.clearRect(0, 0, W, H);
   if (chartPoints.length < 2) return;
 
-  const maxV = Math.max(...chartPoints, 1);
+  const maxV = Math.max(...chartPoints, 2); // Always show some scale
   const pad = { t: 10, b: 24, l: 0, r: 0 };
-  const iW = W - pad.l - pad.r, iH = H - pad.t - pad.b;
+  const iW = W, iH = H - pad.t - pad.b;
 
-  // Grid Horizontal
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.t + iH - (i / 4) * iH;
-    cctx.beginPath(); cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y);
-    cctx.strokeStyle = '#27272A'; cctx.lineWidth = 1; cctx.stroke();
+  // Subtle grid lines
+  for (let i = 0; i <= 3; i++) {
+    const y = pad.t + iH - (i / 3) * iH;
+    cctx.beginPath(); cctx.moveTo(0, y); cctx.lineTo(W, y);
+    cctx.strokeStyle = 'rgba(255,255,255,0.05)'; cctx.lineWidth = 1; cctx.stroke();
   }
 
-  const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
-  grad.addColorStop(0, isAnomaly ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)');
-  grad.addColorStop(1, 'transparent');
-
-  // Fill
-  cctx.beginPath(); cctx.moveTo(pad.l, pad.t + iH - (chartPoints[0]/maxV)*iH);
-  for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = pad.l + (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = pad.l + ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
-    cctx.bezierCurveTo((x1+x2)/2, y1, (x1+x2)/2, y2, x2, y2);
-  }
-  cctx.lineTo(pad.l + iW, pad.t + iH); cctx.lineTo(pad.l, pad.t + iH); cctx.closePath();
-  cctx.fillStyle = grad; cctx.fill();
-
-  // Line
-  cctx.beginPath(); cctx.moveTo(pad.l, pad.t + iH - (chartPoints[0]/maxV)*iH);
-  for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = pad.l + (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = pad.l + ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
-    cctx.bezierCurveTo((x1 + x2) / 2, y1, (x1 + x2) / 2, y2, x2, y2);
-  }
-  const color = isAnomaly ? dangerColor : accentColor;
-  cctx.strokeStyle = color; cctx.lineWidth = 3; cctx.lineJoin = 'round'; cctx.lineCap = 'round';
-  cctx.shadowColor = color; cctx.shadowBlur = 10; cctx.stroke(); cctx.shadowBlur = 0;
+  // Smooth Curve matching Apple Health
+  cctx.beginPath();
+  cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
   
-  // Point
-  const lastX = pad.l + iW, lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
-  cctx.beginPath(); cctx.arc(lastX, lastY, 5, 0, 2 * Math.PI); cctx.fillStyle = color; cctx.fill();
-  cctx.lineWidth = 2; cctx.strokeStyle = '#FAFAFA'; cctx.stroke();
+  for (let i = 0; i < chartPoints.length - 1; i++) {
+    const x1 = (i / (chartPoints.length - 1)) * iW;
+    const y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const x2 = ((i+1) / (chartPoints.length - 1)) * iW;
+    const y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
+  }
+
+  // Gradient Fill
+  const gradientFill = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
+  gradientFill.addColorStop(0, isAnomaly ? 'rgba(255, 69, 58, 0.4)' : 'rgba(48, 209, 88, 0.4)');
+  gradientFill.addColorStop(1, 'rgba(0,0,0,0)');
+  
+  cctx.lineTo(W, pad.t + iH); cctx.lineTo(0, pad.t + iH);
+  cctx.closePath(); cctx.fillStyle = gradientFill; cctx.fill();
+
+  // Glow Line
+  cctx.beginPath();
+  cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
+  for (let i = 0; i < chartPoints.length - 1; i++) {
+    const x1 = (i / (chartPoints.length - 1)) * iW;
+    const y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const x2 = ((i+1) / (chartPoints.length - 1)) * iW;
+    const y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
+  }
+  
+  const mainColor = isAnomaly ? '#FF453A' : '#30D158';
+  cctx.strokeStyle = mainColor; cctx.lineWidth = 3; 
+  cctx.lineJoin = 'round'; cctx.lineCap = 'round';
+  cctx.shadowColor = mainColor; cctx.shadowBlur = 8;
+  cctx.stroke(); cctx.shadowBlur = 0;
+
+  // Pulse Point End
+  const lastX = W, lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
+  cctx.beginPath(); cctx.arc(lastX, lastY, 6, 0, 2 * Math.PI);
+  cctx.fillStyle = mainColor; cctx.fill();
+  cctx.lineWidth = 3; cctx.strokeStyle = '#000'; cctx.stroke();
 }
 
-/* ── Firebase Listeners ── */
+/* ── Firebase Listener (Update every 1sec with new Arduino code) ── */
 db.ref('/caudalimetro/tiempo_real').on('value', snap => {
   const d = snap.val(); if (!d) return; 
   lastPing = Date.now(); setStatus(true);
@@ -414,18 +466,20 @@ db.ref('/caudalimetro/tiempo_real').on('value', snap => {
   if (chartPoints.length >= MAX_CHART) chartPoints.shift(); chartPoints.push(lpm);
   
   isAnomaly = d.anomalia ?? false;
+  applyLiquidAlert(isAnomaly);
   
   if(isAnomaly) {
-     $('anomaliaBanner').className = 'card banner alert';
-     $('anomaliaIcon').innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-     $('anomaliaTitle').textContent = 'Anomalía Detectada';
-     $('anomaliaDesc').textContent = 'Se ha detectado una interrupción en el circuito de agua. Por favor, revisa el sistema de bombeo.';
+     $('anomaliaBanner').className = 'banner alert';
+     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+     $('anomaliaTitle').textContent = 'Anomalía Estructural';
+     $('anomaliaDesc').textContent = 'Se han violado los parámetros habituales de caudal o el circuito se encuentra inactivo forzosamente.';
   } else {
-     $('anomaliaBanner').className = 'card banner normal';
-     $('anomaliaIcon').innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-     $('anomaliaTitle').textContent = 'Sistema Operativo';
-     $('anomaliaDesc').textContent = 'El flujo de datos telemétricos y el caudal de agua funcionan correctamente sin anomalías detectadas.';
+     $('anomaliaBanner').className = 'banner normal';
+     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+     $('anomaliaTitle').textContent = 'Monitoreo Saludable';
+     $('anomaliaDesc').textContent = 'El ecosistema fluye correctamente. Ninguna anomalía estructural en el circuito acuático ha sido detectada.';
   }
+  
   drawGauge(lpm); $('gaugeLPM').textContent = fmt(lpm, 2); drawChart();
 });
 
@@ -435,17 +489,18 @@ db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
   const rows = Object.entries(d).sort((a, b) => Number(b[0]) - Number(a[0])).slice(0, 25);
   tbody.innerHTML = rows.map(([, v]) => `<tr>
     <td style="color:var(--text-muted)">${formatHora(v.ts)}</td>
-    <td class="tnum" style="color:${v.anomalia ? 'var(--danger)' : 'var(--accent)'}; font-weight: 600;">${fmt(v.caudal_lpm, 3)}</td>
-    <td class="tnum">${fmt(v.litros_sesion, 4)}</td>
-    <td class="tnum">${fmt(v.litros_totales, 3)}</td>
-    <td><div class="badge-status-sm ${v.anomalia ? 'err' : 'ok'}">${v.anomalia ? 'Alerta' : 'Normal'}</div></td>
+    <td class="sf-mono" style="color:${v.anomalia ? '#FF453A' : '#30D158'}; font-weight: 600;">${fmt(v.caudal_lpm, 3)}</td>
+    <td class="sf-mono">${fmt(v.litros_sesion, 4)}</td>
+    <td class="sf-mono">${fmt(v.litros_totales, 3)}</td>
+    <td><div class="tag ${v.anomalia ? 'err' : 'ok'}">${v.anomalia ? 'Critical' : 'Normal'}</div></td>
   </tr>`).join('');
 });
 
+// Watchdog para latencia estricta (1.5 segundos para marcar Offline ya que enviamos cada 1s)
 setInterval(() => { 
-  if (lastPing && Date.now() - lastPing > 15000) setStatus(false); 
+  if (lastPing && Date.now() - lastPing > 3500) setStatus(false); 
   if (!lastPing) setStatus(false); 
-}, 5000);
+}, 1000);
 </script>
 </body>
 </html>
