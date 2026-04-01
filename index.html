@@ -42,13 +42,12 @@
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
-      /* Monospaced numbers to prevent jitter */
       font-variant-numeric: tabular-nums;
     }
 
     /* ── Liquid Animated Background ── */
     .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #000; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.65; mix-blend-mode: screen; animation: float 25s infinite ease-in-out alternate; will-change: transform; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.65; mix-blend-mode: screen; animation: float 25s infinite ease-in-out alternate; will-change: transform; pointer-events: none;}
     .blob-1 { top: -10%; left: -10%; width: 60vmin; height: 60vmin; background: var(--liquid-emerald); animation-duration: 20s; }
     .blob-2 { bottom: -10%; right: -10%; width: 70vmin; height: 70vmin; background: var(--liquid-cyan); animation-delay: -5s; animation-duration: 28s; }
     .blob-3 { top: 40%; left: 20%; width: 50vmin; height: 50vmin; background: var(--liquid-mint); animation-duration: 24s; animation-delay: -2s; }
@@ -79,29 +78,30 @@
     .status-dot { width: 8px; height: 8px; border-radius: 50%; }
     .is-online .status-dot { background: #34C759; box-shadow: 0 0 10px #34C759; animation: breathe 3s infinite; }
     .is-offline .status-dot { background: #FF3B30; box-shadow: 0 0 10px #FF3B30; }
-    .is-sim .status-pill { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); }
+    .is-sim .status-pill { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); box-shadow: 0 0 20px rgba(10, 132, 255, 0.3); }
     .is-sim .status-dot { background: #0A84FF; box-shadow: 0 0 10px #0A84FF; animation: breathe 2s infinite; }
-    @keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    @keyframes breathe { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
 
     /* ── Main Layout ── */
     main { max-width: 1200px; margin: 0 auto 80px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
 
     /* ── Banner ── */
     .banner { display: flex; align-items: center; gap: 20px; padding: 20px 24px; border-radius: 24px; background: rgba(44, 44, 46, 0.7); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.1); transition: all 0.5s ease; }
-    .banner.alert { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.4); }
-    .banner-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
+    .banner.alert { background: rgba(255, 59, 48, 0.15); border-color: rgba(255, 59, 48, 0.4); box-shadow: 0 12px 30px rgba(255, 59, 48, 0.2); }
+    .banner-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); transition: all 0.3s; }
     .normal .banner-icon { color: #34C759; }
-    .alert .banner-icon { background: #FF3B30; color: #FFF; box-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
+    .alert .banner-icon { background: #FF3B30; color: #FFF; box-shadow: 0 0 20px rgba(255, 59, 48, 0.8); transform: scale(1.1); }
     .banner h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 2px; }
     .banner p { font-size: 0.95rem; color: var(--text-muted); opacity: 0.9; }
     
     /* ── KPIs Grid ── */
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
+    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; transition: transform 0.3s ease; }
+    .kpi-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.25); }
     .kpi-top { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); }
     .kpi-label { font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
     .kpi-icon { opacity: 0.7; }
-    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; transition: all 0.2s ease; }
+    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; transition: color 0.3s ease; }
     .kpi-unit { font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
 
     /* ── Charts Grid ── */
@@ -118,18 +118,72 @@
     .line-chart-wrap { position: relative; width: 100%; height: 240px; flex-grow: 1; }
     #chartCanvas { width: 100%; height: 100%; display: block; }
 
-    /* ── Simulation Panel (Demo Mode) ── */
-    .sim-panel { background: rgba(10, 132, 255, 0.15); border: 1px solid rgba(10, 132, 255, 0.4); margin-top: 10px; padding: 20px; border-radius: 20px; }
-    .sim-title { font-size: 0.9rem; font-weight: 600; color: #0A84FF; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
-    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    /* ── Simulation Panel (Micro-Animations iOS Style) ── */
+    .sim-panel { background: rgba(28, 28, 30, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); padding: 28px; border-radius: 32px; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .sim-panel:hover { background: rgba(28, 28, 30, 0.65); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 16px 40px rgba(0,0,0,0.5); transform: translateY(-2px); }
+    .sim-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin-bottom: 24px; letter-spacing: -0.01em; }
+    .sim-title svg { stroke: var(--text-dim); transition: transform 0.5s ease; }
+    .sim-panel:hover .sim-title svg { transform: rotate(180deg); stroke: var(--text-main); }
+    
+    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
+    
     .sim-btn {
-      background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #FFF; padding: 12px; border-radius: 12px; font-weight: 500; font-size: 0.9rem;
-      cursor: pointer; transition: all 0.2s ease; font-family: var(--font-apple);
+      display: flex; gap: 14px; align-items: center; padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.04); border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px; color: var(--text-main); text-align: left;
+      cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0);
+      font-family: var(--font-apple);
     }
-    .sim-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.02); }
-    .sim-btn.danger { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.5); color: #FF453A; }
-    .sim-btn.danger:hover { background: rgba(255, 59, 48, 0.3); }
+    .sim-btn:hover {
+      background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+    }
+    .sim-btn:active { transform: scale(0.96); opacity: 0.8; }
+    
+    .sim-btn.danger:hover { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.5); color: #FF453A; }
+    .sim-btn.danger:hover .sim-icon { background: rgba(255, 59, 48, 0.3); }
+    .sim-btn.primary:hover { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); color: #82C2FF;}
+    .sim-btn.primary:hover .sim-icon { background: rgba(10, 132, 255, 0.3); }
+    
+    .sim-icon {
+      width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0;
+    }
+    .sim-btn:hover .sim-icon { transform: scale(1.15) rotate(-8deg); background: rgba(255,255,255,0.2); }
+    
+    .sim-text { display: flex; flex-direction: column; gap: 2px; }
+    .sim-text span { font-weight: 600; font-size: 0.95rem; }
+    .sim-text small { font-weight: 500; font-size: 0.75rem; color: var(--text-dim); }
+    
+    .sim-main-btn {
+      width: 100%; margin-top: 24px; padding: 18px; border-radius: 20px;
+      font-size: 0.95rem; font-weight: 700; color: #34C759;
+      background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.3);
+      cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      font-family: var(--font-apple);
+    }
+    .sim-main-btn:hover { background: rgba(52, 199, 89, 0.2); transform: translateY(-2px) scale(1.01); box-shadow: 0 10px 25px rgba(52, 199, 89, 0.2); border-color: rgba(52, 199, 89, 0.6); }
+    .sim-main-btn:active { transform: scale(0.98); background: rgba(52, 199, 89, 0.25); }
+
+    /* ── Apple-style Table ── */
+    .table-wrap { overflow-x: auto; max-height: 350px; }
+    .table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+    th { position: sticky; top: 0; background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); font-weight: 500; color: var(--text-dim); padding: 14px 16px; border-bottom: 0.5px solid var(--glass-border); z-index: 10; }
+    td { padding: 16px; border-bottom: 0.5px solid var(--glass-border); }
+    tr:last-child td { border-bottom: none; }
+    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+    .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+    .tag.ok { background: rgba(52, 199, 89, 0.15); color: #34C759; }
+    .tag.err { background: rgba(255, 59, 48, 0.15); color: #FF3B30; }
+
+    footer { text-align: center; padding: 0 24px 60px; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
 
     /* ── Media Queries (100% Responsive) ── */
     @media (max-width: 950px) {
@@ -143,7 +197,7 @@
       header { flex-direction: column; gap: 16px; align-items: flex-start; padding: 20px; }
       main { padding: 16px; gap: 16px; }
       .banner { flex-direction: column; text-align: center; }
-      .sim-grid { grid-template-columns: 1fr 1fr; }
+      .sim-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -158,11 +212,10 @@
 
 <header>
   <div class="brand">
-    <!-- Custos Logo SVG incrustado nítido -->
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
       <path fill="currentColor" d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z" />
     </svg>
-    Custos Cloud
+    Custos Enterprise
   </div>
   <div class="status-pill is-offline" id="statusBadge">
     <div class="status-dot"></div>
@@ -171,7 +224,6 @@
 </header>
 
 <main>
-  
   <div class="banner normal" id="anomaliaBanner">
     <div class="banner-icon" id="anomaliaIcon">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
@@ -185,7 +237,7 @@
   <div class="kpi-grid">
     <div class="glass-panel kpi-card">
       <div class="kpi-top"><span class="kpi-label">CAUDAL INSTANTÁNEO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div></div>
-      <div><div class="kpi-val" id="kpiLPM">0.00</div><div class="kpi-unit">Litros / min</div></div>
+      <div><div class="kpi-val" id="kpiLPM" style="color:#FFF">0.00</div><div class="kpi-unit">Litros / min</div></div>
     </div>
     <div class="glass-panel kpi-card">
       <div class="kpi-top"><span class="kpi-label">DENSIDAD DE FLUJO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div></div>
@@ -212,25 +264,41 @@
         </div>
       </div>
     </div>
-    
     <div class="glass-panel chart-panel">
       <div class="chart-header">Curva de Consumo Reciente</div>
       <div class="line-chart-wrap"><canvas id="chartCanvas"></canvas></div>
     </div>
   </div>
 
-  <!-- CONSOLA DE SIMULACIÓN DIRECTIVA -->
-  <div class="glass-panel sim-panel">
-    <div class="sim-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Consola de Simulación Enterprise (Demo Pitch)</div>
-    <div class="sim-grid">
-      <button class="sim-btn" onclick="startSim(8.5)">🌊 Forzar Caudal Fuerte</button>
-      <button class="sim-btn" onclick="startSim(1.2)">💧 Forzar Goteo</button>
-      <button class="sim-btn" style="background: rgba(0,0,0,0.5)" onclick="startSim(0)">🛑 Detener Agua</button>
-      <button class="sim-btn danger" onclick="triggerAnomaly(true)">🚨 Romper Circuito (Anomalía)</button>
-      <button class="sim-btn" style="color: #34C759; border-color: #34C759" onclick="triggerAnomaly(false)">✅ Normalizar Red</button>
-      <button class="sim-btn" style="font-weight:700" onclick="stopSim()">🔌 Reconectar Hardware (Fin Demo)</button>
+  <!-- CONSOLA DE SIMULACIÓN DIRECTIVA (iOS Glass Styled) -->
+  <div class="sim-panel">
+    <div class="sim-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4M4 12h16"></path></svg>
+      Panel de Demostración (Pitch Mode)
     </div>
-    <div style="font-size: 0.8rem; margin-top: 12px; color: var(--text-dim);">Modo Demo: Permite alterar la telemetría local de la web sin depender del Hardware ESP32 para impresionar en demostraciones financieras.</div>
+    <div class="sim-grid">
+      <button class="sim-btn primary" onclick="startSim(8.5)">
+        <div class="sim-icon">🌊</div>
+        <div class="sim-text"><span>Caudal Fuerte</span><small>Inyectar 8.5 L/m</small></div>
+      </button>
+      <button class="sim-btn" onclick="startSim(1.2)">
+        <div class="sim-icon">💧</div>
+        <div class="sim-text"><span>Goteo Lento</span><small>Inyectar 1.2 L/m</small></div>
+      </button>
+      <button class="sim-btn" onclick="startSim(0)">
+        <div class="sim-icon" style="opacity:0.6">🛑</div>
+        <div class="sim-text"><span>Corte de Agua</span><small>Detener el flujo</small></div>
+      </button>
+      <button class="sim-btn danger" onclick="triggerAnomaly(true)">
+        <div class="sim-icon">🚨</div>
+        <div class="sim-text"><span>Simular Falla</span><small>Romper Circuito</small></div>
+      </button>
+      <button class="sim-btn" style="border-color: rgba(52, 199, 89, 0.4);" onclick="triggerAnomaly(false)">
+        <div class="sim-icon" style="background: rgba(52, 199, 89, 0.2); color: #34C759;">✓</div>
+        <div class="sim-text"><span style="color:#34C759">Normalizar</span><small>Restaurar Sistema</small></div>
+      </button>
+    </div>
+    <button class="sim-main-btn" onclick="stopSim()">🔌 Reconectar Telemetría de Hardware Real</button>
   </div>
 
 </main>
@@ -260,7 +328,7 @@ let isAnomaly = false;
 let isSimMode = false;
 let simInterval = null;
 let simLPM = 0;
-let simLitros = 459.2; // Base de inicio falsa
+let simLitros = 459.2; // Base de inicio falsa para impresionar
 
 function renderData(d) {
   $('kpiLPM').textContent = d.caudal_lpm.toFixed(2);
@@ -268,6 +336,10 @@ function renderData(d) {
   $('kpiSesion').textContent = d.litros_sesion.toFixed(2);
   $('kpiTotal').textContent = d.litros_totales.toFixed(2);
   
+  if(d.caudal_lpm > 0.1 && !d.anomalia) { $('kpiLPM').style.color = '#32ADE6'; } 
+  else if(d.anomalia) { $('kpiLPM').style.color = '#FF453A'; } 
+  else { $('kpiLPM').style.color = '#FFF'; }
+
   chartPoints.shift(); chartPoints.push(d.caudal_lpm);
   
   isAnomaly = d.anomalia;
@@ -277,64 +349,47 @@ function renderData(d) {
      $('anomaliaBanner').className = 'banner alert';
      $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
      $('anomaliaTitle').textContent = 'Anomalía Estructural';
-     $('anomaliaDesc').textContent = 'Se han violado los parámetros acústicos o ha existido una interrupción drástica de suministro.';
+     $('anomaliaDesc').textContent = 'Insuficiencia de flujo prolongada o pulsación manual de emergencia activada en módulo.';
   } else {
      $('anomaliaBanner').className = 'banner normal';
      $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
      $('anomaliaTitle').textContent = 'Monitoreo Saludable';
-     $('anomaliaDesc').textContent = 'El ecosistema fluye correctamente. Ninguna anomalía estructural detectada en la sensórica C3.';
+     $('anomaliaDesc').textContent = 'A nivel algorítmico, el ecosistema fluye correctamente. Ninguna interrupción reportada por el ESP32.';
   }
   
   drawGauge(d.caudal_lpm); $('gaugeLPM').textContent = d.caudal_lpm.toFixed(2); drawChart();
 }
 
 function startSim(lpm) {
-  isSimMode = true;
-  simLPM = lpm;
-  db.ref('/caudalimetro/tiempo_real').off('value'); // Desconectar hardware real
-  
-  $('statusBadge').className = 'status-pill is-sim';
-  $('statusText').textContent = 'MODO DEMO ACTIVO';
+  isSimMode = true; simLPM = lpm;
+  db.ref('/caudalimetro/tiempo_real').off('value'); 
+  $('statusBadge').className = 'status-pill is-sim'; $('statusText').textContent = 'Modo Demo Activo';
   
   if(simInterval) clearInterval(simInterval);
   simInterval = setInterval(() => {
-    // Generar fluctuación realista del agua +/- 5%
     let jitter = (simLPM > 0) ? (Math.random() * 0.4 - 0.2) : 0;
     let actualLPM = Math.max(0, simLPM + jitter);
     simLitros += (actualLPM / 60);
-    
-    renderData({
-      caudal_lpm: actualLPM,
-      caudal_lps: actualLPM / 60,
-      litros_sesion: simLitros * 0.3,
-      litros_totales: simLitros,
-      anomalia: isAnomaly
-    });
+    renderData({ caudal_lpm: actualLPM, caudal_lps: actualLPM / 60, litros_sesion: simLitros * 0.3, litros_totales: simLitros, anomalia: isAnomaly });
   }, 1000);
 }
 
 function triggerAnomaly(state) {
   isAnomaly = state;
-  // Si no estaba en simulación, conectamos simulación pero manteniendo el caudal actual.
   if(!isSimMode) startSim(simLPM);
 }
 
 function stopSim() {
   isSimMode = false;
   if(simInterval) clearInterval(simInterval);
-  // Borrar gráfica para limpieza
   chartPoints = Array(40).fill(0);
+  $('statusBadge').className = 'status-pill is-offline'; $('statusText').textContent = 'Buscando Hardware';
   
-  $('statusBadge').className = 'status-pill is-offline';
-  $('statusText').textContent = 'Buscando Hardware';
-  
-  // Reconectar a Firebase
   db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-    if(isSimMode) return; // Salvaguarda
+    if(isSimMode) return; 
     const d = snap.val(); if (!d) return; 
     lastPing = Date.now(); 
-    $('statusBadge').className = 'status-pill is-online';
-    $('statusText').textContent = 'Conectado';
+    $('statusBadge').className = 'status-pill is-online'; $('statusText').textContent = 'Hardware Conectado';
     renderData({
       caudal_lpm: d.caudal_lpm || 0, caudal_lps: d.caudal_lps || 0,
       litros_sesion: d.litros_sesion || 0, litros_totales: d.litros_totales || 0,
@@ -342,8 +397,6 @@ function stopSim() {
     });
   });
 }
-
-// Iniciar con Firebase Real
 stopSim();
 
 /* ── Utilidades UI ── */
@@ -353,13 +406,12 @@ function applyLiquidAlert(on) {
   blobs.forEach(b => { if(on) b.classList.add('alert-mode'); else b.classList.remove('alert-mode'); });
 }
 
-/* ── Gráficas (Gauge y Líneas) ── */
+/* ── Gráficas ── */
 const gc = $('gaugeCanvas').getContext('2d');
 let gw, gh;
 function initGauge() {
   const cvs = $('gaugeCanvas'); const dpr = window.devicePixelRatio || 1;
-  const rect = cvs.getBoundingClientRect();
-  cvs.width = rect.width * dpr; cvs.height = rect.height * dpr;
+  const rect = cvs.getBoundingClientRect(); cvs.width = rect.width * dpr; cvs.height = rect.height * dpr;
   gc.scale(dpr, dpr); gw = rect.width; gh = rect.height;
 }
 initGauge();
@@ -368,18 +420,17 @@ function drawGauge(val) {
   gc.clearRect(0, 0, gw, gh);
   const cx = gw / 2, cy = gh / 2; const r = (Math.min(gw, gh) / 2) - 16;
   let frac = Math.min(Math.max(val, 0) / 20, 1);
-  if (frac < 0.01 && val > 0) frac = 0.02; // Visibilidad mínima si hay goteo
+  if (frac < 0.01 && val > 0) frac = 0.02; 
   const startAngle = -Math.PI / 2; const endAngle = startAngle + (frac * 2 * Math.PI);
 
-  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI); gc.strokeStyle = 'rgba(255, 255, 255, 0.05)'; gc.lineWidth = 20; gc.stroke();
+  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI); gc.strokeStyle = 'rgba(255, 255, 255, 0.05)'; gc.lineWidth = 18; gc.stroke();
 
   if (frac > 0) {
     const grad = gc.createConicGradient(startAngle, cx, cy);
     if(isAnomaly) { grad.addColorStop(0, '#FF453A'); grad.addColorStop(1, '#FF9F0A'); } 
     else { grad.addColorStop(0, '#30D158'); grad.addColorStop(1, '#32ADE6'); }
-    
     gc.beginPath(); gc.arc(cx, cy, r, startAngle, endAngle);
-    gc.strokeStyle = grad; gc.lineWidth = 20; gc.lineCap = 'round';
+    gc.strokeStyle = grad; gc.lineWidth = 18; gc.lineCap = 'round';
     gc.shadowColor = isAnomaly ? 'rgba(255,69,58,0.5)' : 'rgba(48,209,88,0.5)'; gc.shadowBlur = 12; gc.stroke(); gc.shadowBlur = 0;
   }
 }
