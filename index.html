@@ -3,311 +3,394 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Custos · Analytics (Enterprise)</title>
+  <meta name="description" content="Custos — Monitorización inteligente de recursos hídricos en tiempo real.">
+  <title>Custos · Water Intelligence</title>
   <link rel="icon" type="image/svg+xml" href="identidad%20marca/logo.svg">
   
   <style>
+    /* ═══════════════════════════════════════════════
+       CUSTOS  ·  iOS Liquid Glass Design System
+       Warm · Human · Alive
+    ═══════════════════════════════════════════════ */
+
     :root {
-      --bg-dark: #000000;
-      /* Apple ecosystem standard font stack */
-      --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      
-      /* Glowing Liquids */
-      --liquid-emerald: #10B981;
-      --liquid-cyan: #06B6D4;
-      --liquid-mint: #34D399;
-      --liquid-red: #EF4444;
-      
-      /* Glass properties */
-      --glass-bg: rgba(28, 28, 30, 0.55);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-      --glass-blur: blur(40px) saturate(180%);
-      
-      /* Text */
-      --text-main: #FFFFFF;
-      --text-muted: #EBEBF5;
-      --text-dim: #8E8E93;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+      /* Organic Palette */
+      --emerald: #34D399;
+      --teal: #2DD4BF;
+      --cyan: #22D3EE;
+      --red: #FF6B6B;
+      --amber: #FBBF24;
+      --blue: #60A5FA;
+
+      /* Glass */
+      --glass: rgba(22, 22, 24, 0.5);
+      --glass-hover: rgba(32, 32, 36, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-border-hover: rgba(255, 255, 255, 0.12);
+      --blur: blur(40px) saturate(180%);
+
+      /* Text Hierarchy */
+      --t1: #FFFFFF;
+      --t2: rgba(255, 255, 255, 0.7);
+      --t3: rgba(255, 255, 255, 0.4);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-apple);
+      background: #0A0A0C;
+      color: var(--t1);
+      font-family: var(--font);
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      font-variant-numeric: tabular-nums;
       line-height: 1.5;
       min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
-      font-variant-numeric: tabular-nums;
     }
 
-    /* ── Liquid Animated Background ── */
-    .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #000; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.65; mix-blend-mode: screen; animation: float 25s infinite ease-in-out alternate; will-change: transform; pointer-events: none;}
-    .blob-1 { top: -10%; left: -10%; width: 60vmin; height: 60vmin; background: var(--liquid-emerald); animation-duration: 20s; }
-    .blob-2 { bottom: -10%; right: -10%; width: 70vmin; height: 70vmin; background: var(--liquid-cyan); animation-delay: -5s; animation-duration: 28s; }
-    .blob-3 { top: 40%; left: 20%; width: 50vmin; height: 50vmin; background: var(--liquid-mint); animation-duration: 24s; animation-delay: -2s; }
-    .blob.alert-mode { background: var(--liquid-red) !important; transition: background 2s ease; }
+    /* ── Liquid Background ── */
+    .liquid { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.5;
+      animation: drift 30s ease-in-out infinite alternate;
+      will-change: transform; pointer-events: none;
+    }
+    .orb-1 { width: 50vmax; height: 50vmax; top: -20%; left: -15%; background: rgba(16, 185, 129, 0.6); animation-duration: 22s; }
+    .orb-2 { width: 45vmax; height: 45vmax; bottom: -15%; right: -10%; background: rgba(6, 182, 212, 0.5); animation-delay: -7s; animation-duration: 28s; }
+    .orb-3 { width: 35vmax; height: 35vmax; top: 50%; left: 40%; background: rgba(52, 211, 153, 0.4); animation-delay: -3s; animation-duration: 25s; }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-      50% { transform: translate(15%, 25%) scale(1.1) rotate(90deg); }
-      100% { transform: translate(-15%, 10%) scale(0.95) rotate(180deg); }
+    .orb.danger { background: rgba(255, 107, 107, 0.5) !important; transition: background 1.5s ease; }
+
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(8%, 12%) scale(1.05); }
+      66%  { transform: translate(-6%, 8%) scale(0.97); }
+      100% { transform: translate(4%, -5%) scale(1.02); }
     }
 
-    /* ── Glassmorphism Container ── */
-    .glass-panel {
-      background: var(--glass-bg);
-      -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    /* ── Glass Card ── */
+    .card {
+      background: var(--glass);
+      -webkit-backdrop-filter: var(--blur);
+      backdrop-filter: var(--blur);
       border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      box-shadow: var(--glass-shadow);
+      border-radius: 24px;
       padding: 24px;
+      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
     }
+    .card:hover {
+      border-color: var(--glass-border-hover);
+      background: var(--glass-hover);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    /* ── Layout ── */
+    .shell { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
 
     /* ── Header ── */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 32px 48px 16px; max-width: 1200px; margin: 0 auto; }
-    .brand { display: flex; align-items: center; gap: 16px; font-size: 1.7rem; font-weight: 700; letter-spacing: -0.04em; }
-    .brand svg { fill: currentColor; height: 38px; width: auto; }
-    
-    .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 0.5px solid rgba(255, 255, 255, 0.15); transition: all 0.3s ease; }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .is-online .status-dot { background: #34C759; box-shadow: 0 0 10px #34C759; animation: breathe 3s infinite; }
-    .is-offline .status-dot { background: #FF3B30; box-shadow: 0 0 10px #FF3B30; }
-    .is-sim .status-pill { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); box-shadow: 0 0 20px rgba(10, 132, 255, 0.3); }
-    .is-sim .status-dot { background: #0A84FF; box-shadow: 0 0 10px #0A84FF; animation: breathe 2s infinite; }
-    @keyframes breathe { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+    header { padding: 36px 0 20px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo svg { height: 34px; width: auto; fill: var(--t1); opacity: 0.9; }
+    .logo span { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
 
-    /* ── Main Layout ── */
-    main { max-width: 1200px; margin: 0 auto 80px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 14px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.4s ease;
+    }
+    .pill .dot { width: 7px; height: 7px; border-radius: 50%; transition: all 0.4s ease; }
+    .pill.on .dot { background: var(--emerald); box-shadow: 0 0 8px var(--emerald); animation: pulse 3s infinite; }
+    .pill.off .dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    .pill.demo { border-color: rgba(96, 165, 250, 0.3); background: rgba(96, 165, 250, 0.08); }
+    .pill.demo .dot { background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-    /* ── Banner ── */
-    .banner { display: flex; align-items: center; gap: 20px; padding: 20px 24px; border-radius: 24px; background: rgba(44, 44, 46, 0.7); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.1); transition: all 0.5s ease; }
-    .banner.alert { background: rgba(255, 59, 48, 0.15); border-color: rgba(255, 59, 48, 0.4); box-shadow: 0 12px 30px rgba(255, 59, 48, 0.2); }
-    .banner-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); transition: all 0.3s; }
-    .normal .banner-icon { color: #34C759; }
-    .alert .banner-icon { background: #FF3B30; color: #FFF; box-shadow: 0 0 20px rgba(255, 59, 48, 0.8); transform: scale(1.1); }
-    .banner h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 2px; }
-    .banner p { font-size: 0.95rem; color: var(--text-muted); opacity: 0.9; }
-    
-    /* ── KPIs Grid ── */
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; transition: transform 0.3s ease; }
-    .kpi-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.25); }
-    .kpi-top { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); }
-    .kpi-label { font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
-    .kpi-icon { opacity: 0.7; }
-    .kpi-val { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: -4px; transition: color 0.3s ease; }
-    .kpi-unit { font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
+    /* ── Status Banner ── */
+    .notice {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 20px; border-radius: 18px; margin-top: 24px;
+      background: rgba(52, 211, 153, 0.06);
+      border: 1px solid rgba(52, 211, 153, 0.12);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .notice.warn {
+      background: rgba(255, 107, 107, 0.08);
+      border-color: rgba(255, 107, 107, 0.25);
+    }
+    .notice-icon {
+      width: 38px; height: 38px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: rgba(52, 211, 153, 0.12); color: var(--emerald);
+      transition: all 0.4s ease;
+    }
+    .notice.warn .notice-icon { background: rgba(255, 107, 107, 0.15); color: var(--red); }
+    .notice h3 { font-size: 0.95rem; font-weight: 600; }
+    .notice p { font-size: 0.85rem; color: var(--t2); margin-top: 2px; }
 
-    /* ── Charts Grid ── */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
-    .chart-panel { display: flex; flex-direction: column; }
-    .chart-header { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-main); }
-    
-    .gauge-wrap { position: relative; display: flex; justify-content: center; align-items: center; height: 100%; padding-bottom: 10px; }
-    #gaugeCanvas { width: 220px; height: 220px; }
-    .gauge-center { position: absolute; text-align: center; }
-    .gauge-center .val { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-    .gauge-center .lbl { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
+    /* ── Metrics Grid ── */
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+    .metric { padding: 20px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+    .metric:hover { transform: translateY(-3px); }
+    .metric-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--t3); }
+    .metric-value { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; transition: color 0.4s ease; }
+    .metric-unit { font-size: 0.8rem; color: var(--t3); font-weight: 500; margin-top: 4px; }
 
-    .line-chart-wrap { position: relative; width: 100%; height: 240px; flex-grow: 1; }
-    #chartCanvas { width: 100%; height: 100%; display: block; }
+    /* ── Charts ── */
+    .charts { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-top: 16px; }
 
-    /* ── Simulation Panel (Micro-Animations iOS Style) ── */
-    .sim-panel { background: rgba(28, 28, 30, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); padding: 28px; border-radius: 32px; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .sim-panel:hover { background: rgba(28, 28, 30, 0.65); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 16px 40px rgba(0,0,0,0.5); transform: translateY(-2px); }
-    .sim-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin-bottom: 24px; letter-spacing: -0.01em; }
-    .sim-title svg { stroke: var(--text-dim); transition: transform 0.5s ease; }
-    .sim-panel:hover .sim-title svg { transform: rotate(180deg); stroke: var(--text-main); }
-    
-    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
-    
+    .gauge-box { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    .gauge-box canvas { width: 200px; height: 200px; }
+    .gauge-label { position: absolute; text-align: center; }
+    .gauge-label .num { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    .gauge-label .txt { font-size: 0.72rem; font-weight: 600; color: var(--t3); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .wave-box { position: relative; min-height: 220px; }
+    .wave-box canvas { width: 100%; height: 100%; display: block; }
+
+    /* ── Simulation Panel (Refined iOS) ── */
+    .sim {
+      margin-top: 16px; padding: 28px;
+      background: rgba(22, 22, 24, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 28px;
+      transition: all 0.4s ease;
+    }
+
+    .sim-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+    }
+    .sim-header h3 { font-size: 0.95rem; font-weight: 600; color: var(--t2); letter-spacing: -0.01em; }
+    .sim-badge {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 3px 10px; border-radius: 6px;
+      background: rgba(96, 165, 250, 0.1); color: var(--blue);
+    }
+
+    .sim-actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+
     .sim-btn {
-      display: flex; gap: 14px; align-items: center; padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.04); border: 0.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px; color: var(--text-main); text-align: left;
-      cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0);
-      font-family: var(--font-apple);
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--t1); cursor: pointer;
+      font-family: var(--font); font-size: 0.88rem; font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .sim-btn:hover {
-      background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
-    .sim-btn:active { transform: scale(0.96); opacity: 0.8; }
-    
-    .sim-btn.danger:hover { background: rgba(255, 59, 48, 0.2); border-color: rgba(255, 59, 48, 0.5); color: #FF453A; }
-    .sim-btn.danger:hover .sim-icon { background: rgba(255, 59, 48, 0.3); }
-    .sim-btn.primary:hover { border-color: #0A84FF; background: rgba(10, 132, 255, 0.15); color: #82C2FF;}
-    .sim-btn.primary:hover .sim-icon { background: rgba(10, 132, 255, 0.3); }
-    
-    .sim-icon {
-      width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.08);
-      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0;
+    .sim-btn:active { transform: scale(0.97); }
+
+    .sim-btn .ico {
+      width: 34px; height: 34px; border-radius: 10px;
+      display: grid; place-items: center; flex-shrink: 0;
+      font-size: 1.1rem;
+      background: rgba(255,255,255,0.05);
+      transition: all 0.25s ease;
     }
-    .sim-btn:hover .sim-icon { transform: scale(1.15) rotate(-8deg); background: rgba(255,255,255,0.2); }
-    
-    .sim-text { display: flex; flex-direction: column; gap: 2px; }
-    .sim-text span { font-weight: 600; font-size: 0.95rem; }
-    .sim-text small { font-weight: 500; font-size: 0.75rem; color: var(--text-dim); }
-    
-    .sim-main-btn {
-      width: 100%; margin-top: 24px; padding: 18px; border-radius: 20px;
-      font-size: 0.95rem; font-weight: 700; color: #34C759;
-      background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.3);
-      cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      font-family: var(--font-apple);
+    .sim-btn:hover .ico { transform: scale(1.08); }
+
+    .sim-btn .label { display: flex; flex-direction: column; text-align: left; }
+    .sim-btn .label small { font-size: 0.7rem; color: var(--t3); font-weight: 500; }
+
+    /* Variant colors on hover */
+    .sim-btn[data-kind="flow"]:hover { border-color: rgba(34, 211, 238, 0.3); }
+    .sim-btn[data-kind="flow"]:hover .ico { background: rgba(34, 211, 238, 0.15); }
+    .sim-btn[data-kind="drip"]:hover { border-color: rgba(52, 211, 153, 0.3); }
+    .sim-btn[data-kind="drip"]:hover .ico { background: rgba(52, 211, 153, 0.15); }
+    .sim-btn[data-kind="stop"]:hover { border-color: rgba(255,255,255,0.15); }
+    .sim-btn[data-kind="alert"]:hover { border-color: rgba(255, 107, 107, 0.4); color: var(--red); }
+    .sim-btn[data-kind="alert"]:hover .ico { background: rgba(255, 107, 107, 0.15); }
+    .sim-btn[data-kind="ok"]:hover { border-color: rgba(52, 211, 153, 0.4); color: var(--emerald); }
+    .sim-btn[data-kind="ok"]:hover .ico { background: rgba(52, 211, 153, 0.15); }
+
+    .sim-reconnect {
+      width: 100%; margin-top: 16px; padding: 14px;
+      border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--t2); font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.3s ease;
     }
-    .sim-main-btn:hover { background: rgba(52, 199, 89, 0.2); transform: translateY(-2px) scale(1.01); box-shadow: 0 10px 25px rgba(52, 199, 89, 0.2); border-color: rgba(52, 199, 89, 0.6); }
-    .sim-main-btn:active { transform: scale(0.98); background: rgba(52, 199, 89, 0.25); }
+    .sim-reconnect:hover { background: rgba(255,255,255,0.08); color: var(--t1); transform: translateY(-1px); }
+    .sim-reconnect:active { transform: scale(0.98); }
 
-    /* ── Apple-style Table ── */
-    .table-wrap { overflow-x: auto; max-height: 350px; }
-    .table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
-    .table-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-    
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
-    th { position: sticky; top: 0; background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); font-weight: 500; color: var(--text-dim); padding: 14px 16px; border-bottom: 0.5px solid var(--glass-border); z-index: 10; }
-    td { padding: 16px; border-bottom: 0.5px solid var(--glass-border); }
-    tr:last-child td { border-bottom: none; }
-    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    /* ── Footer ── */
+    footer { text-align: center; padding: 40px 24px 60px; font-size: 0.8rem; color: var(--t3); }
 
-    .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
-    .tag.ok { background: rgba(52, 199, 89, 0.15); color: #34C759; }
-    .tag.err { background: rgba(255, 59, 48, 0.15); color: #FF3B30; }
-
-    footer { text-align: center; padding: 0 24px 60px; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
-
-    /* ── Media Queries (100% Responsive) ── */
-    @media (max-width: 950px) {
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-      .dashboard-grid { grid-template-columns: 1fr; }
-      header { padding: 24px; }
-      #gaugeCanvas { width: 180px; height: 180px; }
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .charts { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 12px; align-items: flex-start; }
     }
-    @media (max-width: 600px) {
-      .kpi-grid { grid-template-columns: 1fr; gap: 16px; }
-      header { flex-direction: column; gap: 16px; align-items: flex-start; padding: 20px; }
-      main { padding: 16px; gap: 16px; }
-      .banner { flex-direction: column; text-align: center; }
-      .sim-grid { grid-template-columns: 1fr; }
+    @media (max-width: 550px) {
+      .metrics { grid-template-columns: 1fr; gap: 12px; }
+      .sim-actions { grid-template-columns: 1fr 1fr; }
+      .notice { flex-direction: column; text-align: center; }
+      .shell { padding: 0 16px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Fondos Fluidos -->
-<div class="liquid-bg">
-  <div class="blob blob-1" id="blob1"></div>
-  <div class="blob blob-2" id="blob2"></div>
-  <div class="blob blob-3" id="blob3"></div>
+<div class="liquid">
+  <div class="orb orb-1" id="orb1"></div>
+  <div class="orb orb-2" id="orb2"></div>
+  <div class="orb orb-3" id="orb3"></div>
 </div>
 
-<header>
-  <div class="brand">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
-      <path fill="currentColor" d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z" />
-    </svg>
-    Custos Enterprise
-  </div>
-  <div class="status-pill is-offline" id="statusBadge">
-    <div class="status-dot"></div>
-    <span id="statusText">Buscando Hardware</span>
-  </div>
-</header>
+<div class="shell">
+  <header>
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
+        <path d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z" />
+      </svg>
+      <span>Custos</span>
+    </div>
+    <div class="pill off" id="pill">
+      <div class="dot"></div>
+      <span id="pillText">Sin conexión</span>
+    </div>
+  </header>
 
-<main>
-  <div class="banner normal" id="anomaliaBanner">
-    <div class="banner-icon" id="anomaliaIcon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+  <main>
+    <!-- Status Notice -->
+    <div class="notice" id="notice">
+      <div class="notice-icon" id="noticeIcon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <h3 id="noticeTitle">Sistema en reposo</h3>
+        <p id="noticeDesc">El circuito hídrico está inactivo. Abre un grifo o usa el simulador para ver datos en vivo.</p>
+      </div>
     </div>
-    <div>
-      <h2 id="anomaliaTitle">Monitoreo Saludable</h2>
-      <p id="anomaliaDesc">A nivel algorítmico, el ecosistema fluye correctamente. Ninguna interrupción reportada por el ESP32.</p>
-    </div>
-  </div>
 
-  <div class="kpi-grid">
-    <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">CAUDAL INSTANTÁNEO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div></div>
-      <div><div class="kpi-val" id="kpiLPM" style="color:#FFF">0.00</div><div class="kpi-unit">Litros / min</div></div>
-    </div>
-    <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">DENSIDAD DE FLUJO</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div></div>
-      <div><div class="kpi-val" id="kpiLPS">0.00</div><div class="kpi-unit">Litros / seg</div></div>
-    </div>
-    <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">CICLO ACTUAL</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div></div>
-      <div><div class="kpi-val" id="kpiSesion">0.00</div><div class="kpi-unit">Acumulación L</div></div>
-    </div>
-    <div class="glass-panel kpi-card">
-      <div class="kpi-top"><span class="kpi-label">HUELLA GLOBAL</span><div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div></div>
-      <div><div class="kpi-val" id="kpiTotal">0.00</div><div class="kpi-unit">Volumen L Total</div></div>
-    </div>
-  </div>
-
-  <div class="dashboard-grid">
-    <div class="glass-panel chart-panel">
-      <div class="chart-header">Anillo de Eficiencia</div>
-      <div class="gauge-wrap">
-        <canvas id="gaugeCanvas"></canvas>
-        <div class="gauge-center">
-          <div class="val" id="gaugeLPM">0.00</div>
-          <div class="lbl">L/M LIVE</div>
+    <!-- KPIs -->
+    <div class="metrics">
+      <div class="card metric">
+        <div class="metric-label">Caudal</div>
+        <div>
+          <div class="metric-value" id="vLPM">0.00</div>
+          <div class="metric-unit">litros / min</div>
+        </div>
+      </div>
+      <div class="card metric">
+        <div class="metric-label">Flujo</div>
+        <div>
+          <div class="metric-value" id="vLPS">0.000</div>
+          <div class="metric-unit">litros / seg</div>
+        </div>
+      </div>
+      <div class="card metric">
+        <div class="metric-label">Sesión</div>
+        <div>
+          <div class="metric-value" id="vSes">0.00</div>
+          <div class="metric-unit">litros hoy</div>
+        </div>
+      </div>
+      <div class="card metric">
+        <div class="metric-label">Acumulado</div>
+        <div>
+          <div class="metric-value" id="vTot">0.00</div>
+          <div class="metric-unit">litros totales</div>
         </div>
       </div>
     </div>
-    <div class="glass-panel chart-panel">
-      <div class="chart-header">Curva de Consumo Reciente</div>
-      <div class="line-chart-wrap"><canvas id="chartCanvas"></canvas></div>
-    </div>
-  </div>
 
-  <!-- CONSOLA DE SIMULACIÓN DIRECTIVA (iOS Glass Styled) -->
-  <div class="sim-panel">
-    <div class="sim-title">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4M4 12h16"></path></svg>
-      Panel de Demostración (Pitch Mode)
+    <!-- Charts -->
+    <div class="charts">
+      <div class="card gauge-box">
+        <canvas id="gaugeCanvas"></canvas>
+        <div class="gauge-label">
+          <div class="num" id="gaugeNum">0.00</div>
+          <div class="txt">l / min</div>
+        </div>
+      </div>
+      <div class="card wave-box">
+        <canvas id="waveCanvas"></canvas>
+      </div>
     </div>
-    <div class="sim-grid">
-      <button class="sim-btn primary" onclick="startSim(8.5)">
-        <div class="sim-icon">🌊</div>
-        <div class="sim-text"><span>Caudal Fuerte</span><small>Inyectar 8.5 L/m</small></div>
-      </button>
-      <button class="sim-btn" onclick="startSim(1.2)">
-        <div class="sim-icon">💧</div>
-        <div class="sim-text"><span>Goteo Lento</span><small>Inyectar 1.2 L/m</small></div>
-      </button>
-      <button class="sim-btn" onclick="startSim(0)">
-        <div class="sim-icon" style="opacity:0.6">🛑</div>
-        <div class="sim-text"><span>Corte de Agua</span><small>Detener el flujo</small></div>
-      </button>
-      <button class="sim-btn danger" onclick="triggerAnomaly(true)">
-        <div class="sim-icon">🚨</div>
-        <div class="sim-text"><span>Simular Falla</span><small>Romper Circuito</small></div>
-      </button>
-      <button class="sim-btn" style="border-color: rgba(52, 199, 89, 0.4);" onclick="triggerAnomaly(false)">
-        <div class="sim-icon" style="background: rgba(52, 199, 89, 0.2); color: #34C759;">✓</div>
-        <div class="sim-text"><span style="color:#34C759">Normalizar</span><small>Restaurar Sistema</small></div>
-      </button>
+
+    <!-- Simulation -->
+    <div class="sim">
+      <div class="sim-header">
+        <h3>Simulador Interactivo</h3>
+        <div class="sim-badge">Modo Local</div>
+      </div>
+      <div class="sim-actions">
+        <button class="sim-btn" data-kind="flow" onclick="startSim(8.5)">
+          <div class="ico">💧</div>
+          <div class="label"><span>Caudal alto</span><small>8.5 L/min</small></div>
+        </button>
+        <button class="sim-btn" data-kind="drip" onclick="startSim(1.2)">
+          <div class="ico">🫧</div>
+          <div class="label"><span>Goteo suave</span><small>1.2 L/min</small></div>
+        </button>
+        <button class="sim-btn" data-kind="stop" onclick="startSim(0)">
+          <div class="ico">⏸</div>
+          <div class="label"><span>Cortar agua</span><small>0 L/min</small></div>
+        </button>
+        <button class="sim-btn" data-kind="alert" onclick="triggerAnomaly(true)">
+          <div class="ico">⚠️</div>
+          <div class="label"><span>Anomalía</span><small>Simular fallo</small></div>
+        </button>
+        <button class="sim-btn" data-kind="ok" onclick="triggerAnomaly(false)">
+          <div class="ico">✓</div>
+          <div class="label"><span>Normalizar</span><small>Estado OK</small></div>
+        </button>
+      </div>
+      <button class="sim-reconnect" onclick="stopSim()">Reconectar hardware real</button>
     </div>
-    <button class="sim-main-btn" onclick="stopSim()">🔌 Reconectar Telemetría de Hardware Real</button>
-  </div>
+  </main>
 
-</main>
+  <footer>Custos · Water Intelligence · <span id="clock">—</span></footer>
+</div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-/* ── Configuración Firebase ── */
+/* ── Helpers (defined FIRST to avoid reference errors) ── */
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 2) => (n ?? 0).toFixed(d);
+
+function setStatus(mode) {
+  const p = $('pill'), t = $('pillText');
+  p.className = 'pill ' + mode;
+  if (mode === 'on')   t.textContent = 'Conectado';
+  if (mode === 'off')  t.textContent = 'Sin conexión';
+  if (mode === 'demo') t.textContent = 'Simulación';
+}
+
+function setNotice(warn, title, desc) {
+  const n = $('notice');
+  n.className = 'notice' + (warn ? ' warn' : '');
+  $('noticeTitle').textContent = title;
+  $('noticeDesc').textContent = desc;
+  $('noticeIcon').innerHTML = warn
+    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+}
+
+function setOrbs(danger) {
+  ['orb1','orb2','orb3'].forEach(id => {
+    $(id).classList.toggle('danger', danger);
+  });
+}
+
+/* ── Firebase ── */
 const firebaseConfig = {
   apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
   authDomain: "custos-database.firebaseapp.com",
@@ -320,173 +403,192 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let chartPoints = Array(40).fill(0);
+/* ── State ── */
+let points = Array(40).fill(0);
 let lastPing = null;
-let isAnomaly = false;
-
-/* ── MODO SIMULACIÓN PARA INVERSORES ── */
-let isSimMode = false;
-let simInterval = null;
+let anomaly = false;
+let simMode = false;
+let simTimer = null;
 let simLPM = 0;
-let simLitros = 459.2; // Base de inicio falsa para impresionar
+let simL = 459.2;
 
-function renderData(d) {
-  $('kpiLPM').textContent = d.caudal_lpm.toFixed(2);
-  $('kpiLPS').textContent = d.caudal_lps.toFixed(3);
-  $('kpiSesion').textContent = d.litros_sesion.toFixed(2);
-  $('kpiTotal').textContent = d.litros_totales.toFixed(2);
-  
-  if(d.caudal_lpm > 0.1 && !d.anomalia) { $('kpiLPM').style.color = '#32ADE6'; } 
-  else if(d.anomalia) { $('kpiLPM').style.color = '#FF453A'; } 
-  else { $('kpiLPM').style.color = '#FFF'; }
+/* ── Render Pipeline ── */
+function render(d) {
+  $('vLPM').textContent = fmt(d.lpm);
+  $('vLPS').textContent = fmt(d.lps, 3);
+  $('vSes').textContent = fmt(d.ses);
+  $('vTot').textContent = fmt(d.tot);
 
-  chartPoints.shift(); chartPoints.push(d.caudal_lpm);
-  
-  isAnomaly = d.anomalia;
-  applyLiquidAlert(isAnomaly);
-  
-  if(isAnomaly) {
-     $('anomaliaBanner').className = 'banner alert';
-     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-     $('anomaliaTitle').textContent = 'Anomalía Estructural';
-     $('anomaliaDesc').textContent = 'Insuficiencia de flujo prolongada o pulsación manual de emergencia activada en módulo.';
+  // Subtle color feedback on primary metric
+  $('vLPM').style.color = d.anomaly ? 'var(--red)' : (d.lpm > 0.1 ? 'var(--cyan)' : 'var(--t1)');
+
+  points.shift(); points.push(d.lpm);
+  anomaly = d.anomaly;
+  setOrbs(anomaly);
+
+  if (anomaly) {
+    setNotice(true, 'Anomalía detectada', 'El sensor reporta una interrupción anómala en el circuito hídrico.');
+  } else if (d.lpm > 0.1) {
+    setNotice(false, 'Flujo activo', 'El agua circula con normalidad a ' + fmt(d.lpm) + ' L/min.');
   } else {
-     $('anomaliaBanner').className = 'banner normal';
-     $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-     $('anomaliaTitle').textContent = 'Monitoreo Saludable';
-     $('anomaliaDesc').textContent = 'A nivel algorítmico, el ecosistema fluye correctamente. Ninguna interrupción reportada por el ESP32.';
+    setNotice(false, 'Sistema en reposo', 'El circuito hídrico está inactivo. Todo funciona correctamente.');
   }
-  
-  drawGauge(d.caudal_lpm); $('gaugeLPM').textContent = d.caudal_lpm.toFixed(2); drawChart();
+
+  drawGauge(d.lpm);
+  $('gaugeNum').textContent = fmt(d.lpm);
+  drawWave();
+  $('clock').textContent = new Date().toLocaleTimeString('es-ES');
 }
 
+/* ── Simulation ── */
 function startSim(lpm) {
-  isSimMode = true; simLPM = lpm;
-  db.ref('/caudalimetro/tiempo_real').off('value'); 
-  $('statusBadge').className = 'status-pill is-sim'; $('statusText').textContent = 'Modo Demo Activo';
-  
-  if(simInterval) clearInterval(simInterval);
-  simInterval = setInterval(() => {
-    let jitter = (simLPM > 0) ? (Math.random() * 0.4 - 0.2) : 0;
-    let actualLPM = Math.max(0, simLPM + jitter);
-    simLitros += (actualLPM / 60);
-    renderData({ caudal_lpm: actualLPM, caudal_lps: actualLPM / 60, litros_sesion: simLitros * 0.3, litros_totales: simLitros, anomalia: isAnomaly });
+  simMode = true; simLPM = lpm;
+  db.ref('/caudalimetro/tiempo_real').off('value');
+  setStatus('demo');
+  if (simTimer) clearInterval(simTimer);
+
+  simTimer = setInterval(() => {
+    const jitter = simLPM > 0 ? (Math.random() * 0.3 - 0.15) : 0;
+    const actual = Math.max(0, simLPM + jitter);
+    simL += actual / 60;
+    render({ lpm: actual, lps: actual / 60, ses: simL * 0.3, tot: simL, anomaly });
   }, 1000);
 }
 
 function triggerAnomaly(state) {
-  isAnomaly = state;
-  if(!isSimMode) startSim(simLPM);
+  anomaly = state;
+  if (!simMode) startSim(simLPM);
 }
 
 function stopSim() {
-  isSimMode = false;
-  if(simInterval) clearInterval(simInterval);
-  chartPoints = Array(40).fill(0);
-  $('statusBadge').className = 'status-pill is-offline'; $('statusText').textContent = 'Buscando Hardware';
-  
+  simMode = false;
+  if (simTimer) clearInterval(simTimer);
+  points = Array(40).fill(0);
+  setStatus('off');
+  connectFirebase();
+}
+
+function connectFirebase() {
   db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-    if(isSimMode) return; 
-    const d = snap.val(); if (!d) return; 
-    lastPing = Date.now(); 
-    $('statusBadge').className = 'status-pill is-online'; $('statusText').textContent = 'Hardware Conectado';
-    renderData({
-      caudal_lpm: d.caudal_lpm || 0, caudal_lps: d.caudal_lps || 0,
-      litros_sesion: d.litros_sesion || 0, litros_totales: d.litros_totales || 0,
-      anomalia: d.anomalia || false
+    if (simMode) return;
+    const d = snap.val();
+    if (!d) return;
+    lastPing = Date.now();
+    setStatus('on');
+    render({
+      lpm: d.caudal_lpm || 0, lps: d.caudal_lps || 0,
+      ses: d.litros_sesion || 0, tot: d.litros_totales || 0,
+      anomaly: d.anomalia || false
     });
   });
 }
-stopSim();
 
-/* ── Utilidades UI ── */
-const $ = id => document.getElementById(id);
-function applyLiquidAlert(on) {
-  const blobs = [$('blob1'), $('blob2'), $('blob3')];
-  blobs.forEach(b => { if(on) b.classList.add('alert-mode'); else b.classList.remove('alert-mode'); });
-}
+connectFirebase();
 
-/* ── Gráficas ── */
-const gc = $('gaugeCanvas').getContext('2d');
+/* ── Watchdog ── */
+setInterval(() => {
+  if (!simMode) {
+    if (!lastPing || Date.now() - lastPing > 35000) setStatus('off');
+  }
+}, 4000);
+
+/* ═══ Canvas: Activity Ring ═══ */
+const gCanvas = $('gaugeCanvas');
+const gc = gCanvas.getContext('2d');
 let gw, gh;
-function initGauge() {
-  const cvs = $('gaugeCanvas'); const dpr = window.devicePixelRatio || 1;
-  const rect = cvs.getBoundingClientRect(); cvs.width = rect.width * dpr; cvs.height = rect.height * dpr;
-  gc.scale(dpr, dpr); gw = rect.width; gh = rect.height;
+
+function sizeGauge() {
+  const dpr = devicePixelRatio || 1;
+  const r = gCanvas.getBoundingClientRect();
+  gCanvas.width = r.width * dpr; gCanvas.height = r.height * dpr;
+  gc.scale(dpr, dpr);
+  gw = r.width; gh = r.height;
 }
-initGauge();
+sizeGauge();
 
 function drawGauge(val) {
   gc.clearRect(0, 0, gw, gh);
-  const cx = gw / 2, cy = gh / 2; const r = (Math.min(gw, gh) / 2) - 16;
-  let frac = Math.min(Math.max(val, 0) / 20, 1);
-  if (frac < 0.01 && val > 0) frac = 0.02; 
-  const startAngle = -Math.PI / 2; const endAngle = startAngle + (frac * 2 * Math.PI);
+  const cx = gw / 2, cy = gh / 2, r = Math.min(gw, gh) / 2 - 14;
+  const frac = Math.min(Math.max(val, 0) / 20, 1) || 0;
+  const s = -Math.PI / 2, e = s + frac * Math.PI * 2;
 
-  gc.beginPath(); gc.arc(cx, cy, r, 0, 2 * Math.PI); gc.strokeStyle = 'rgba(255, 255, 255, 0.05)'; gc.lineWidth = 18; gc.stroke();
+  // Track
+  gc.beginPath(); gc.arc(cx, cy, r, 0, Math.PI * 2);
+  gc.strokeStyle = 'rgba(255,255,255,0.04)'; gc.lineWidth = 16; gc.stroke();
 
-  if (frac > 0) {
-    const grad = gc.createConicGradient(startAngle, cx, cy);
-    if(isAnomaly) { grad.addColorStop(0, '#FF453A'); grad.addColorStop(1, '#FF9F0A'); } 
-    else { grad.addColorStop(0, '#30D158'); grad.addColorStop(1, '#32ADE6'); }
-    gc.beginPath(); gc.arc(cx, cy, r, startAngle, endAngle);
-    gc.strokeStyle = grad; gc.lineWidth = 18; gc.lineCap = 'round';
-    gc.shadowColor = isAnomaly ? 'rgba(255,69,58,0.5)' : 'rgba(48,209,88,0.5)'; gc.shadowBlur = 12; gc.stroke(); gc.shadowBlur = 0;
+  if (frac > 0.005) {
+    const g = gc.createConicGradient(s, cx, cy);
+    if (anomaly) { g.addColorStop(0, '#FF6B6B'); g.addColorStop(1, '#FBBF24'); }
+    else { g.addColorStop(0, '#34D399'); g.addColorStop(1, '#22D3EE'); }
+    gc.beginPath(); gc.arc(cx, cy, r, s, e);
+    gc.strokeStyle = g; gc.lineWidth = 16; gc.lineCap = 'round';
+    gc.shadowColor = anomaly ? 'rgba(255,107,107,0.4)' : 'rgba(52,211,153,0.4)';
+    gc.shadowBlur = 10; gc.stroke(); gc.shadowBlur = 0;
   }
 }
 
-const cc = $('chartCanvas'), cctx = cc.getContext('2d');
-function resizeChart() {
-  const rect = cc.parentElement.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1;
-  cc.width = rect.width * dpr; cc.height = rect.height * dpr;
-  cc.style.width = rect.width + 'px'; cc.style.height = rect.height + 'px'; cctx.scale(dpr, dpr);
+/* ═══ Canvas: Wave Chart ═══ */
+const wCanvas = $('waveCanvas');
+const wc = wCanvas.getContext('2d');
+
+function sizeWave() {
+  const r = wCanvas.parentElement.getBoundingClientRect();
+  const dpr = devicePixelRatio || 1;
+  wCanvas.width = r.width * dpr; wCanvas.height = r.height * dpr;
+  wCanvas.style.width = r.width + 'px'; wCanvas.style.height = r.height + 'px';
+  wc.scale(dpr, dpr);
 }
-window.addEventListener('resize', () => { resizeChart(); drawChart(); }); resizeChart();
+sizeWave();
+window.addEventListener('resize', () => { sizeGauge(); sizeWave(); drawWave(); });
 
-function drawChart() {
-  const W = cc.parentElement.getBoundingClientRect().width, H = cc.parentElement.getBoundingClientRect().height;
-  cctx.clearRect(0, 0, W, H);
-  const maxV = Math.max(...chartPoints, 2); 
-  const pad = { t: 5, b: 5 }; const iW = W, iH = H - pad.t - pad.b;
+function drawWave() {
+  const W = wCanvas.parentElement.clientWidth;
+  const H = wCanvas.parentElement.clientHeight;
+  wc.clearRect(0, 0, W, H);
+  if (points.length < 2) return;
 
+  const maxV = Math.max(...points, 1.5);
+  const pt = 8, pb = 8;
+  const iH = H - pt - pb;
+
+  // Grid
   for (let i = 0; i <= 3; i++) {
-    const y = pad.t + iH - (i / 3) * iH;
-    cctx.beginPath(); cctx.moveTo(0, y); cctx.lineTo(W, y);
-    cctx.strokeStyle = 'rgba(255,255,255,0.05)'; cctx.lineWidth = 1; cctx.stroke();
+    const y = pt + iH - (i / 3) * iH;
+    wc.beginPath(); wc.moveTo(0, y); wc.lineTo(W, y);
+    wc.strokeStyle = 'rgba(255,255,255,0.04)'; wc.lineWidth = 1; wc.stroke();
   }
 
-  cctx.beginPath(); cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
-  for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
-    cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
+  const getX = i => (i / (points.length - 1)) * W;
+  const getY = i => pt + iH - (points[i] / maxV) * iH;
+
+  // Fill
+  wc.beginPath(); wc.moveTo(getX(0), getY(0));
+  for (let i = 0; i < points.length - 1; i++) {
+    const mx = (getX(i) + getX(i+1)) / 2;
+    wc.bezierCurveTo(mx, getY(i), mx, getY(i+1), getX(i+1), getY(i+1));
   }
+  wc.lineTo(W, pt + iH); wc.lineTo(0, pt + iH); wc.closePath();
+  const gf = wc.createLinearGradient(0, pt, 0, pt + iH);
+  gf.addColorStop(0, anomaly ? 'rgba(255,107,107,0.3)' : 'rgba(52,211,153,0.25)');
+  gf.addColorStop(1, 'transparent');
+  wc.fillStyle = gf; wc.fill();
 
-  const gradientFill = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
-  gradientFill.addColorStop(0, isAnomaly ? 'rgba(255, 69, 58, 0.4)' : 'rgba(48, 209, 88, 0.4)'); gradientFill.addColorStop(1, 'rgba(0,0,0,0)');
-  cctx.lineTo(W, pad.t + iH); cctx.lineTo(0, pad.t + iH); cctx.closePath(); cctx.fillStyle = gradientFill; cctx.fill();
-
-  cctx.beginPath(); cctx.moveTo(0, pad.t + iH - (chartPoints[0]/maxV)*iH);
-  for (let i = 0; i < chartPoints.length - 1; i++) {
-    const x1 = (i / (chartPoints.length - 1)) * iW, y1 = pad.t + iH - (chartPoints[i] / maxV) * iH;
-    const x2 = ((i+1) / (chartPoints.length - 1)) * iW, y2 = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
-    cctx.bezierCurveTo((x1 + x2)/2, y1, (x1 + x2)/2, y2, x2, y2);
+  // Line
+  wc.beginPath(); wc.moveTo(getX(0), getY(0));
+  for (let i = 0; i < points.length - 1; i++) {
+    const mx = (getX(i) + getX(i+1)) / 2;
+    wc.bezierCurveTo(mx, getY(i), mx, getY(i+1), getX(i+1), getY(i+1));
   }
-  
-  const mainColor = isAnomaly ? '#FF453A' : '#30D158';
-  cctx.strokeStyle = mainColor; cctx.lineWidth = 3; cctx.lineJoin = 'round'; cctx.lineCap = 'round';
-  cctx.shadowColor = mainColor; cctx.shadowBlur = 8; cctx.stroke(); cctx.shadowBlur = 0;
+  const col = anomaly ? '#FF6B6B' : '#34D399';
+  wc.strokeStyle = col; wc.lineWidth = 2.5; wc.lineJoin = 'round'; wc.lineCap = 'round';
+  wc.shadowColor = col; wc.shadowBlur = 6; wc.stroke(); wc.shadowBlur = 0;
 
-  const lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
-  cctx.beginPath(); cctx.arc(W, lastY, 6, 0, 2 * Math.PI); cctx.fillStyle = mainColor; cctx.fill();
+  // End dot
+  const ly = getY(points.length - 1);
+  wc.beginPath(); wc.arc(W, ly, 5, 0, Math.PI * 2);
+  wc.fillStyle = col; wc.shadowColor = col; wc.shadowBlur = 8; wc.fill(); wc.shadowBlur = 0;
+  wc.lineWidth = 2; wc.strokeStyle = 'rgba(10,10,12,0.6)'; wc.stroke();
 }
-
-setInterval(() => { 
-  if(!isSimMode) {
-    if (lastPing && Date.now() - lastPing > 32000) setStatus(false); 
-    if (!lastPing) setStatus(false); 
-  }
-}, 3000);
 </script>
 </body>
 </html>
