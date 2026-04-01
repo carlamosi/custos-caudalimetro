@@ -1,900 +1,380 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custos · Caudalímetro</title>
+  <title>Custos · Cuidando tu Refugio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #F5F7FA;
-      --surface: #FFFFFF;
-      --border: #E2E8F0;
-      --primary: #3366FF;
-      --primary-light: #EBF0FF;
-      --text-main: #0F172A;
-      --text-mut: #64748B;
-      --emerald: #10B981;
-      --red: #F43F5E;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-
-      --font-sans: 'Inter', Arial, Helvetica, sans-serif;
-      --font-mono: 'Fira Mono', monospace;
+      /* Brand Palette */
+      --warm-white: #FAF7F2;
+      --light-sage: #E1F5EE;
+      --brand-green: #1D9E75;
+      --dark-green: #085041;
+      
+      --text-main: var(--dark-green);
+      --text-muted: #5C7A70;
+      --sage-darker: #CFE8DF;
+      --alert-soft: #D97A5E;
+      --alert-bg: #FDF4F0;
+      
+      --font-heading: 'Fraunces', serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --shadow-warm: 0 10px 40px -8px rgba(8, 80, 65, 0.08), 0 4px 12px rgba(8, 80, 65, 0.03);
+      --shadow-alert: 0 12px 40px -8px rgba(217, 122, 94, 0.15);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg);
+      background-color: var(--warm-white);
       color: var(--text-main);
-      font-family: var(--font-sans);
+      font-family: var(--font-body);
       -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      position: relative;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ── Header ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    body::after {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .flow-bg {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; pointer-events: none; opacity: 0.3; overflow: hidden;
+    }
+    .flow-wave {
+      position: absolute; width: 200%; height: 200%;
+      top: -50%; left: -50%;
+      background: radial-gradient(circle at center, rgba(29, 158, 117, 0.04) 0%, transparent 50%);
+      animation: waterBreath 25s ease-in-out infinite alternate;
+    }
+    .flow-wave-2 {
+      position: absolute; width: 150%; height: 150%;
+      top: 20%; left: -20%;
+      background: radial-gradient(circle at center, rgba(8, 80, 65, 0.03) 0%, transparent 60%);
+      animation: waterBreath 18s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes waterBreath {
+      0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+      50% { transform: scale(1.05) translate(30px, 15px) rotate(2deg); }
+      100% { transform: scale(0.95) translate(-20px, -10px) rotate(-1deg); }
     }
 
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--primary-light);
-      border-radius: 8px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--dark-green); font-weight: 500; line-height: 1.2; }
+    .accent-label { font-size: 0.75rem; font-weight: 600; color: var(--brand-green); text-transform: uppercase; letter-spacing: 0.12em; font-family: var(--font-body); }
+    .text-muted { color: var(--text-muted); }
+
+    /* Header */
+    header { padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 50; }
+    .brand-logo { display: flex; align-items: center; gap: 14px; font-family: var(--font-heading); font-size: 1.6rem; font-weight: 500; color: var(--dark-green); }
+    .badge-status {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 24px; border-radius: var(--radius-pill);
+      font-size: 0.85rem; font-weight: 500; font-family: var(--font-body);
+      transition: all 0.5s ease; background: var(--light-sage); color: var(--dark-green); box-shadow: 0 4px 12px rgba(8,80,65,0.03);
     }
+    .badge-status.offline { background: var(--alert-bg); color: #8C4731; box-shadow: none; }
+    
+    .badge-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .badge-status.online .badge-dot { background: var(--brand-green); animation: breath 3s ease-in-out infinite; }
+    .badge-status.offline .badge-dot { background: var(--alert-soft); }
+    @keyframes breath { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
 
-    .logo-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
-    }
+    /* Layout */
+    main { max-width: 1080px; margin: 20px auto 80px; padding: 0 32px; display: flex; flex-direction: column; gap: 32px; }
+    .card { background: var(--light-sage); border-radius: var(--radius-card); padding: 36px; box-shadow: var(--shadow-warm); border: 1px solid rgba(255, 255, 255, 0.4); }
 
-    .logo-sub {
-      font-size: 0.75rem;
-      color: var(--text-mut);
-      margin-top: 1px;
-      font-weight: 500;
-    }
+    /* Banner */
+    .status-banner { display: flex; gap: 24px; align-items: flex-start; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .status-banner.alert { background: var(--alert-bg); box-shadow: var(--shadow-alert); border-color: rgba(217, 122, 94, 0.2); }
+    .status-icon svg { width: 32px; height: 32px; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .normal .status-icon svg { stroke: var(--brand-green); }
+    .alert .status-icon svg { stroke: var(--alert-soft); }
 
-    .badge-online {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: #F0FDF4;
-      color: #166534;
-      border: 1px solid #BBF7D0;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+    .status-content h2 { font-size: 1.5rem; margin-bottom: 6px; }
+    .status-content p { font-size: 1.05rem; line-height: 1.6; margin: 0; }
+    .alert .status-content h2 { color: #8F523E; }
+    .alert .status-content p { color: #A66854; }
 
-    .badge-offline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: #FEF2F2;
-      color: #991B1B;
-      border: 1px solid #FECACA;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+    /* KPIs */
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .kpi-card { display: flex; flex-direction: column; gap: 16px; padding: 32px 24px; }
+    .kpi-top { display: flex; justify-content: space-between; align-items: center; }
+    .kpi-icon { opacity: 0.8; }
+    .kpi-icon svg { width: 28px; height: 28px; stroke: var(--brand-green); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
+    .kpi-value { font-family: var(--font-heading); font-size: 2.75rem; font-weight: 500; color: var(--dark-green); line-height: 1; margin-bottom: 4px; }
+    .kpi-unit { font-size: 0.95rem; color: var(--text-muted); }
 
-    .badge-online .dot {
-      animation: pulse 2s infinite;
-    }
+    /* Charts */
+    .charts-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; }
+    .gauge-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; position: relative; padding-top: 10px; }
+    .gauge-reading { margin-top:-14px; text-align:center; }
+    .gauge-value { font-family: var(--font-heading); font-size: 3rem; font-weight: 500; color: var(--dark-green); line-height: 1; }
+    .gauge-unit { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
 
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-      }
+    canvas { width: 100%; display: block; }
+    #gaugeCanvas { width: 220px; height: 130px; }
+    .chart-container { position: relative; height: 220px; width: 100%; margin-top: 16px; }
 
-      70% {
-        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
-      }
+    /* Table */
+    .table-wrap { overflow-x: auto; max-height: 400px; scrollbar-width: thin; scrollbar-color: var(--sage-darker) transparent; margin-top: 16px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 0.95rem; }
+    th { position: sticky; top: 0; background: var(--light-sage); font-weight: 500; color: var(--text-muted); padding: 16px; border-bottom: 2px solid var(--sage-darker); z-index: 10; font-size: 0.85rem; }
+    td { padding: 16px; border-bottom: 1px solid var(--sage-darker); color: var(--dark-green); }
+    tr:hover td { background: rgba(255, 255, 255, 0.4); }
+    .td-num { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
 
-      100% {
-        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
-      }
-    }
+    .status-blob { display: inline-flex; align-items: center; gap: 8px; }
+    .status-blob .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .status-blob.green { color: var(--brand-green); }
+    .status-blob.green .dot { background: var(--brand-green); }
+    .status-blob.red { color: var(--alert-soft); }
+    .status-blob.red .dot { background: var(--alert-soft); }
 
-    /* ── Layout ── */
-    main {
-      max-width: 1200px;
-      margin: 36px auto;
-      padding: 0 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
+    /* How it works */
+    .how-it-works { margin-top: 60px; text-align: center; border-top: 1px solid var(--sage-darker); padding-top: 60px; }
+    .how-it-works h3 { font-size: 2rem; margin-bottom: 48px; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .step-item { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .step-icon svg { width: 48px; height: 48px; stroke: var(--brand-green); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+    .step-item p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; max-width: 280px; }
+    footer { text-align: center; padding: 48px 32px; font-size: 0.9rem; color: var(--text-muted); }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    /* ── Banner Anomalía ── */
-    .anomalia-banner {
-      padding: 20px 24px;
-      border-radius: 12px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      transition: all 0.3s ease;
-      border-left: 4px solid transparent;
-    }
-
-    .anomalia-banner.normal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left-color: var(--emerald);
-      box-shadow: var(--shadow);
-    }
-
-    .anomalia-banner.alert {
-      background: #FFF1F2;
-      border: 1px solid #FECDD3;
-      border-left-color: var(--red);
-      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.1);
-    }
-
-    .banner-icon {
-      margin-top: 2px;
-    }
-
-    .normal .banner-icon {
-      color: var(--emerald);
-    }
-
-    .alert .banner-icon {
-      color: var(--red);
-    }
-
-    .banner-content h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    .banner-content p {
-      font-size: 0.875rem;
-      color: var(--text-mut);
-      line-height: 1.5;
-    }
-
-    .alert .banner-content h3 {
-      color: #9F1239;
-    }
-
-    .alert .banner-content p {
-      color: #BE123C;
-    }
-
-    /* ── KPIs ── */
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-    }
-
-    .kpi-card {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .kpi-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .kpi-icon {
-      color: var(--text-mut);
-      opacity: 0.8;
-    }
-
-    .kpi-card.primary .kpi-icon {
-      color: var(--primary);
-      opacity: 1;
-    }
-
-    .kpi-card.primary {
-      background: #F8FAFC;
-      border-color: #E2E8F0;
-      border-left: 3px solid var(--primary);
-    }
-
-    .kpi-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-mut);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .kpi-value {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-      line-height: 1;
-    }
-
-    .kpi-card.primary .kpi-value {
-      color: var(--primary);
-    }
-
-    .kpi-unit {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--text-mut);
-    }
-
-    /* ── Charts Grid ── */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 24px;
-    }
-
-    .card-header {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .gauge-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      position: relative;
-    }
-
-    .gauge-reading {
-      margin-top: -14px;
-      text-align: center;
-    }
-
-    .gauge-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1;
-    }
-
-    .gauge-unit {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-mut);
-      margin-top: 6px;
-      letter-spacing: 0.02em;
-    }
-
-    canvas {
-      width: 100%;
-      display: block;
-    }
-
-    #gaugeCanvas {
-      width: 220px;
-      height: 130px;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 200px;
-      width: 100%;
-    }
-
-    /* ── History Table ── */
-    .table-wrap {
-      overflow-x: auto;
-      max-height: 350px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #CBD5E1 transparent;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      background: var(--surface);
-      font-weight: 600;
-      color: #475569;
-      padding: 12px 16px;
-      border-bottom: 2px solid #E2E8F0;
-      z-index: 10;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-    }
-
-    td {
-      padding: 14px 16px;
-      border-bottom: 1px solid #F1F5F9;
-      color: var(--text-main);
-    }
-
-    tr:hover td {
-      background: #F8FAFC;
-    }
-
-    .td-mono {
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-    }
-
-    .td-muted {
-      color: #64748B;
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-    }
-
-    .td-primary {
-      color: var(--primary);
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-      font-weight: 500;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .status-pill.green {
-      background: #F0FDF4;
-      color: #166534;
-      border: 1px solid #BBF7D0;
-    }
-
-    .status-pill.red {
-      background: #FEF2F2;
-      color: #991B1B;
-      border: 1px solid #FECACA;
-    }
-
-    .status-dot-inner {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    footer {
-      text-align: center;
-      padding: 32px;
-      font-size: 0.8rem;
-      color: #94A3B8;
-      font-family: var(--font-mono);
-    }
-
-    /* Responsive */
     @media (max-width: 900px) {
-      .kpis {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .charts-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 500px) {
-      .kpis {
-        grid-template-columns: 1fr;
-      }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; gap: 48px; }
     }
   </style>
 </head>
-
 <body>
 
-  <header>
-    <div class="header-logo">
-      <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-        </svg>
-      </div>
-      <div>
-        <div class="logo-title">Custos Dashboard</div>
-        <div class="logo-sub">Panel de Control de Caudalímetro</div>
-      </div>
+<div class="flow-bg">
+  <div class="flow-wave"></div>
+  <div class="flow-wave-2"></div>
+</div>
+
+<header>
+  <div class="brand-logo">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="brand-icon" stroke="var(--brand-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+    </svg>
+    Custos
+  </div>
+  <div class="badge-status offline" id="statusBadge">
+    <div class="badge-dot"></div>
+    <span id="statusText">Buscando refugio...</span>
+  </div>
+</header>
+
+<main>
+  <div class="card status-banner normal" id="anomaliaBanner">
+    <div class="status-icon" id="anomaliaIcon">
+      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-dasharray="30" stroke-dashoffset="0"></path></svg>
     </div>
-    <div class="badge-offline" id="statusBadge">
-      <div class="dot"></div>
-      <span id="statusText">Conectando...</span>
+    <div class="status-content">
+      <h2 id="anomaliaTitle">Vivienda protegida y fluida</h2>
+      <p id="anomaliaDesc" class="text-muted">El flujo de agua fluye silenciosa y constantemente por el espacio.</p>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <!-- Banner -->
-    <div class="anomalia-banner normal" id="anomaliaBanner">
-      <div class="banner-icon" id="anomaliaIcon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      </div>
-      <div class="banner-content">
-        <h3 id="anomaliaTitle">Suministro Estable</h3>
-        <p id="anomaliaDesc">El flujo de agua se encuentra operando bajo parámetros normales en tiempo real.</p>
-      </div>
+  <div class="kpis">
+    <div class="card kpi-card">
+      <div class="kpi-top"><span class="accent-label">Caudal Vivo</span><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M2,12 C6,8 10,16 14,12 C18,8 22,12 22,12"></path></svg></div></div>
+      <div><div class="kpi-value" id="kpiLPM">0.00</div><div class="kpi-unit">litros cada minuto</div></div>
     </div>
-
-    <!-- KPIs -->
-    <div class="kpis">
-      <div class="card kpi-card primary">
-        <div class="kpi-top">
-          <span class="kpi-label">Caudal Actual</span>
-          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-          </svg>
-        </div>
-        <div>
-          <div class="kpi-value" id="kpiLPM">0.00</div>
-          <div class="kpi-unit">litros / min</div>
-        </div>
-      </div>
-
-      <div class="card kpi-card">
-        <div class="kpi-top">
-          <span class="kpi-label">Instantáneo</span>
-          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-        </div>
-        <div>
-          <div class="kpi-value" id="kpiLPS">0.00</div>
-          <div class="kpi-unit">litros / seg</div>
-        </div>
-      </div>
-
-      <div class="card kpi-card">
-        <div class="kpi-top">
-          <span class="kpi-label">Esta Sesión</span>
-          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
-            <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
-            <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
-          </svg>
-        </div>
-        <div>
-          <div class="kpi-value" id="kpiSesion">0.00</div>
-          <div class="kpi-unit">litros acumulados</div>
-        </div>
-      </div>
-
-      <div class="card kpi-card">
-        <div class="kpi-top">
-          <span class="kpi-label">Volumen Total</span>
-          <svg class="kpi-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-          </svg>
-        </div>
-        <div>
-          <div class="kpi-value" id="kpiTotal">0.00</div>
-          <div class="kpi-unit">rendimiento histórico</div>
-        </div>
-      </div>
+    <div class="card kpi-card">
+      <div class="kpi-top"><span class="accent-label">Pulso Actual</span><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M12,2 L12,6 M12,18 L12,22 M4.9,4.9 L7.7,7.7 M16.3,16.3 L19.1,19.1 M2,12 L6,12 M18,12 L22,12"></path></svg></div></div>
+      <div><div class="kpi-value" id="kpiLPS">0.00</div><div class="kpi-unit">litros por segundo</div></div>
     </div>
-
-    <!-- Charts -->
-    <div class="charts-grid">
-      <div class="card">
-        <div class="card-header">Medidor en Vivo</div>
-        <div class="gauge-wrap">
-          <canvas id="gaugeCanvas"></canvas>
-          <div class="gauge-reading">
-            <div class="gauge-value" id="gaugeLPM">0.00</div>
-            <div class="gauge-unit">L / MIN</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">Gestión de Tráfico de Fluidos</div>
-        <div class="chart-container">
-          <canvas id="chartCanvas"></canvas>
-        </div>
-      </div>
+    <div class="card kpi-card">
+      <div class="kpi-top"><span class="accent-label">Recorrido</span><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M3,12 C7,12 9,6 14,6 C19,6 21,12 21,12"></path></svg></div></div>
+      <div><div class="kpi-value" id="kpiSesion">0.00</div><div class="kpi-unit">litros transitados hoy</div></div>
     </div>
+    <div class="card kpi-card">
+      <div class="kpi-top"><span class="accent-label">Nutrición</span><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M12,22 L12,8 M12,14 C8,14 4,12 4,8 C8,8 12,10 12,14 Z"></path></svg></div></div>
+      <div><div class="kpi-value" id="kpiTotal">0.00</div><div class="kpi-unit">litros aportados totales</div></div>
+    </div>
+  </div>
 
-    <!-- Table -->
+  <div class="charts-grid">
     <div class="card">
-      <div class="card-header">Registro Inteligente (Últimos Eventos)</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Marca Temporal</th>
-              <th>Caudal (L/min)</th>
-              <th>Sesión (L)</th>
-              <th>Total Acumulado (L)</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody id="histBody">
-            <tr>
-              <td colspan="5" style="text-align:center;color:var(--text-mut);padding:32px">Esperando conexión
-                criptográfica segura...</td>
-            </tr>
-          </tbody>
-        </table>
+      <span class="accent-label">Ritmo Acuático</span>
+      <div class="gauge-wrap">
+        <canvas id="gaugeCanvas"></canvas>
+        <div class="gauge-reading">
+          <div class="gauge-value" id="gaugeLPM">0.00</div>
+          <div class="gauge-unit">L / MIN</div>
+        </div>
       </div>
     </div>
-  </main>
+    <div class="card">
+      <span class="accent-label">Respiración del Hogar</span>
+      <div class="chart-container"><canvas id="chartCanvas"></canvas></div>
+    </div>
+  </div>
 
-  <footer>CUSTOS IoT PLATFORM · <span id="footerTime">—</span></footer>
+  <div class="card">
+    <span class="accent-label">Memoria del Hogar</span>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Momento</th><th>Ritmo (L/min)</th><th>Tránsito Reciente</th><th>Equilibrio Total</th><th>Armonía</th></tr></thead>
+        <tbody id="histBody"><tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">Despertando memorias pacientemente...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <section class="how-it-works">
+    <h3>Diseñado para cuidar tu espacio</h3>
+    <div class="steps-grid">
+      <div class="step-item"><div class="step-icon"><svg viewBox="0 0 24 24"><path d="M4 12c1.5-1.5 3-1.5 5 0s3.5 1.5 5 0 3.5-1.5 5 0"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+        <div class="accent-label">Sensado silencioso</div><p>El caudalímetro se integra invisblemente velando por la calma de tu entorno sin interrupciones visuales.</p></div>
+      <div class="step-item"><div class="step-icon"><svg viewBox="0 0 24 24"><path d="M12 21v-8M12 13C8 13 5 9 5 5c4 0 7 4 7 8zM12 13c4 0 7-4 7-8-4 0-7 4-7 8z"></path></svg></div>
+        <div class="accent-label">Fluidez natural</div><p>Los datos vitales viajan orgánicamente como oxígeno a esta pantalla, creando información viva y armoniosa.</p></div>
+      <div class="step-item"><div class="step-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect><path d="M12 18h.01M8 8h8M8 12h5"></path></svg></div>
+        <div class="accent-label">Bienestar garantizado</div><p>Ante cualquier ausencia acuática inusual, te avisaremos amablemente para que el equilibrio no deje de latir.</p></div>
+    </div>
+  </section>
+</main>
+<footer>Latiendo orgánicamente — Custos Reflexiones · <span id="footerTime">—</span></footer>
 
-  <script>
-    // ─── Firebase Config ─────────────────────────────────────
-    const firebaseConfig = {
-      apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ",
-      authDomain: "custos-database.firebaseapp.com",
-      databaseURL: "https://custos-database-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "custos-database",
-      storageBucket: "custos-database.firebasestorage.app",
-      messagingSenderId: "973520011818",
-      appId: "1:973520011818:web:a245d327ad157320227953"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    // ─── Variables de Estado ─────────────────────────────────
-    const chartPoints = [];
-    const MAX_CHART = 40;
-    let lastPing = null;
-    let chartColor = '#3366FF'; // Azul primario
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDcyvrXPXudjOpcOpMt3zI6PC64TEoKgnQ", authDomain: "custos-database.firebaseapp.com",
+  databaseURL: "https://custos-database-default-rtdb.europe-west1.firebasedatabase.app", projectId: "custos-database",
+  storageBucket: "custos-database.firebasestorage.app", messagingSenderId: "973520011818", appId: "1:973520011818:web:a245d327ad157320227953"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    // ─── Helpers ─────────────────────────────────────────────
-    const $ = id => document.getElementById(id);
-    const fmt = (n, d = 2) => (n ?? 0).toFixed(d);
+const chartPoints = []; const MAX_CHART = 40;
+let lastPing = null;
+let chartColor = '#1D9E75';
 
-    function formatHora(ts) {
-      return new Date(ts * 1000).toLocaleTimeString('es-ES', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
-    }
+const $ = id => document.getElementById(id); const fmt = (n, d=2) => (n ?? 0).toFixed(d);
+function formatHora(ts) { return new Date(ts * 1000).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'}); }
 
-    function setStatus(online) {
-      const badge = $('statusBadge');
-      badge.className = online ? 'badge-online' : 'badge-offline';
-      $('statusText').textContent = online ? 'En Línea' : 'Sin Señal';
-    }
+function setStatus(online) {
+  $('statusBadge').className = 'badge-status ' + (online ? 'online' : 'offline');
+  $('statusText').textContent = online ? 'Conectado y cuidando' : 'Refugio desconectado';
+}
 
-    // ─── Gauge Canvas (Modo Claro Premium) ───────────────────
-    const gc = $('gaugeCanvas').getContext('2d');
-    const GW = 220, GH = 130;
-    // Soporte HighDPI para pantallas modernas
-    $('gaugeCanvas').width = GW * 2;
-    $('gaugeCanvas').height = GH * 2;
-    gc.scale(2, 2);
+const gc = $('gaugeCanvas').getContext('2d');
+const GW = 220, GH = 130;
+$('gaugeCanvas').width = GW * 2; $('gaugeCanvas').height = GH * 2; gc.scale(2, 2);
 
-    const GCX = GW / 2, GCY = GH - 16;
-    const GR = 90;
-    const GMAX = 20;
+function drawGauge(val) {
+  gc.clearRect(0, 0, GW, GH);
+  const frac = Math.min(Math.max(val, 0) / 20, 1);
+  const start = Math.PI, end = 2 * Math.PI, curr = start + frac * Math.PI;
 
-    function drawGauge(val) {
-      gc.clearRect(0, 0, GW, GH);
-      const frac = Math.min(Math.max(val, 0) / GMAX, 1);
-      const start = Math.PI;
-      const end = 2 * Math.PI;
-      const curr = start + frac * Math.PI;
+  gc.beginPath(); gc.arc(GW/2, GH-16, 90, start, end); gc.strokeStyle = '#CFE8DF'; gc.lineWidth = 16; gc.lineCap = 'round'; gc.stroke();
 
-      // Fondo arco (Gris Claro Suave)
-      gc.beginPath();
-      gc.arc(GCX, GCY, GR, start, end);
-      gc.strokeStyle = '#F1F5F9';
-      gc.lineWidth = 14;
-      gc.lineCap = 'round';
-      gc.stroke();
+  if (frac > 0) {
+    const isDanger = chartColor === '#D97A5E';
+    const grad = gc.createLinearGradient(GW/2-90, GH-16, GW/2+90, GH-16);
+    if(isDanger){ grad.addColorStop(0, '#E8AA95'); grad.addColorStop(1, '#D97A5E'); } 
+    else { grad.addColorStop(0, '#1D9E75'); grad.addColorStop(1, '#085041'); }
+    gc.beginPath(); gc.arc(GW/2, GH-16, 90, start, curr); gc.strokeStyle = grad; gc.lineWidth = 16; gc.lineCap = 'round'; gc.stroke();
+  }
 
-      // Arco valor (Gradientes según si hay anomalía o no)
-      if (frac > 0) {
-        const isDanger = chartColor === '#F43F5E';
-        const grad = gc.createLinearGradient(GCX - GR, GCY, GCX + GR, GCY);
-        if (isDanger) {
-          grad.addColorStop(0, '#FDA4AF');
-          grad.addColorStop(1, '#E11D48');
-        } else {
-          grad.addColorStop(0, '#93C5FD');
-          grad.addColorStop(1, '#2563EB');
-        }
+  const nx = GW/2 + 64 * Math.cos(curr), ny = GH-16 + 64 * Math.sin(curr);
+  gc.beginPath(); gc.moveTo(GW/2, GH-16); gc.lineTo(nx, ny); gc.strokeStyle = '#085041'; gc.lineWidth = 4; gc.lineCap = 'round'; gc.stroke();
+  gc.beginPath(); gc.arc(GW/2, GH-16, 10, 0, 2*Math.PI); gc.fillStyle = '#085041'; gc.fill();
+  gc.beginPath(); gc.arc(GW/2, GH-16, 4, 0, 2*Math.PI); gc.fillStyle = '#FAF7F2'; gc.fill();
+}
+drawGauge(0);
 
-        gc.beginPath();
-        gc.arc(GCX, GCY, GR, start, curr);
-        gc.strokeStyle = grad;
-        gc.lineWidth = 14;
-        gc.lineCap = 'round';
-        gc.stroke();
-      }
+const cc = $('chartCanvas'), cctx = cc.getContext('2d');
+function resizeChart() {
+  const rect = cc.parentElement.getBoundingClientRect();
+  cc.width = rect.width * 2; cc.height = rect.height * 2;
+  cc.style.width = rect.width + 'px'; cc.style.height = rect.height + 'px'; cctx.scale(2, 2);
+}
+window.addEventListener('resize', () => { resizeChart(); drawChart(); }); resizeChart();
 
-      // Marcas de cuadrante
-      for (let i = 0; i <= 5; i++) {
-        const a = Math.PI + (i / 5) * Math.PI;
-        const x1 = GCX + (GR - 22) * Math.cos(a);
-        const y1 = GCY + (GR - 22) * Math.sin(a);
-        const x2 = GCX + (GR - 8) * Math.cos(a);
-        const y2 = GCY + (GR - 8) * Math.sin(a);
-        gc.beginPath();
-        gc.moveTo(x1, y1); gc.lineTo(x2, y2);
-        gc.strokeStyle = '#CBD5E1';
-        gc.lineWidth = 2;
-        gc.stroke();
-      }
+function drawChart() {
+  const W = cc.width / 2, H = cc.height / 2; cctx.clearRect(0, 0, W, H);
+  if (chartPoints.length < 2) return;
 
-      // Aguja central (Oscura profesional)
-      const nx = GCX + (GR - 26) * Math.cos(curr);
-      const ny = GCY + (GR - 26) * Math.sin(curr);
-      gc.beginPath();
-      gc.moveTo(GCX, GCY); gc.lineTo(nx, ny);
-      gc.strokeStyle = '#334155';
-      gc.lineWidth = 3;
-      gc.lineCap = 'round';
-      gc.stroke();
+  const maxV = Math.max(...chartPoints, 1), pad = { t: 15, b: 24, l: 4, r: 4 };
+  const iW = W - pad.l - pad.r, iH = H - pad.t - pad.b;
 
-      // Pinche central (Blanco con borde oscuro)
-      gc.beginPath(); gc.arc(GCX, GCY, 8, 0, 2 * Math.PI);
-      gc.fillStyle = '#334155'; gc.fill();
-      gc.beginPath(); gc.arc(GCX, GCY, 4, 0, 2 * Math.PI);
-      gc.fillStyle = '#FFFFFF'; gc.fill();
-    }
-    drawGauge(0);
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + iH - (i / 4) * iH;
+    cctx.beginPath(); cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y); cctx.strokeStyle = '#CFE8DF'; cctx.lineWidth = 1; cctx.stroke();
+  }
 
-    // ─── Chart Canvas (Modo Claro Moderno) ───────────────────
-    const cc = $('chartCanvas');
-    const cctx = cc.getContext('2d');
+  const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
+  const isDanger = chartColor === '#D97A5E';
+  grad.addColorStop(0, isDanger ? 'rgba(217,122,94,0.25)' : 'rgba(29,158,117,0.25)');
+  grad.addColorStop(1, 'transparent');
 
-    function resizeChart() {
-      const rect = cc.parentElement.getBoundingClientRect();
-      // Retina display fix
-      cc.width = rect.width * 2;
-      cc.height = rect.height * 2;
-      cc.style.width = rect.width + 'px';
-      cc.style.height = rect.height + 'px';
-      cctx.scale(2, 2);
-    }
-    window.addEventListener('resize', () => { resizeChart(); drawChart(); });
-    resizeChart();
+  cctx.beginPath(); cctx.moveTo(pad.l, pad.t + iH - (chartPoints[0]/maxV)*iH);
+  for (let i = 0; i < chartPoints.length - 1; i++) {
+    const p1X = pad.l + (i / (chartPoints.length - 1)) * iW, p1Y = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const p2X = pad.l + ((i+1) / (chartPoints.length - 1)) * iW, p2Y = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    cctx.bezierCurveTo((p1X+p2X)/2, p1Y, (p1X+p2X)/2, p2Y, p2X, p2Y);
+  }
+  cctx.lineTo(pad.l + iW, pad.t + iH); cctx.lineTo(pad.l, pad.t + iH); cctx.closePath(); cctx.fillStyle = grad; cctx.fill();
 
-    function drawChart() {
-      // Ajustar dimensiones virtuales
-      const W = cc.width / 2, H = cc.height / 2;
-      cctx.clearRect(0, 0, W, H);
-      if (chartPoints.length < 2) return;
+  cctx.beginPath(); cctx.moveTo(pad.l, pad.t + iH - (chartPoints[0]/maxV)*iH);
+  for (let i = 0; i < chartPoints.length - 1; i++) {
+    const p1X = pad.l + (i / (chartPoints.length - 1)) * iW, p1Y = pad.t + iH - (chartPoints[i] / maxV) * iH;
+    const p2X = pad.l + ((i+1) / (chartPoints.length - 1)) * iW, p2Y = pad.t + iH - (chartPoints[i+1] / maxV) * iH;
+    cctx.bezierCurveTo((p1X + p2X) / 2, p1Y, (p1X + p2X) / 2, p2Y, p2X, p2Y);
+  }
+  cctx.strokeStyle = chartColor; cctx.lineWidth = 4; cctx.lineJoin = 'round'; cctx.lineCap = 'round'; cctx.stroke();
 
-      const maxV = Math.max(...chartPoints, 1);
-      const pad = { t: 10, b: 24, l: 4, r: 4 };
-      const iW = W - pad.l - pad.r;
-      const iH = H - pad.t - pad.b;
+  const lastX = pad.l + iW, lastY = pad.t + iH - (chartPoints[chartPoints.length-1] / maxV) * iH;
+  cctx.beginPath(); cctx.arc(lastX, lastY, 7, 0, 2 * Math.PI); cctx.fillStyle = '#FAF7F2'; cctx.fill();
+  cctx.lineWidth = 3; cctx.strokeStyle = chartColor; cctx.stroke();
+}
 
-      // Grid Horizontal
-      for (let i = 0; i <= 4; i++) {
-        const y = pad.t + iH - (i / 4) * iH;
-        cctx.beginPath();
-        cctx.moveTo(pad.l, y); cctx.lineTo(W - pad.r, y);
-        cctx.strokeStyle = '#F1F5F9';
-        cctx.lineWidth = 1;
-        cctx.stroke();
-      }
+db.ref('/caudalimetro/tiempo_real').on('value', snap => {
+  const d = snap.val(); if (!d) return; lastPing = Date.now(); setStatus(true);
+  $('footerTime').textContent = new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
 
-      // Gradiente Sólido a Transparente
-      const grad = cctx.createLinearGradient(0, pad.t, 0, pad.t + iH);
-      const isDanger = chartColor === '#F43F5E';
+  $('kpiLPM').textContent = fmt(d.caudal_lpm, 2); $('kpiLPS').textContent = fmt(d.caudal_lps, 3);
+  $('kpiSesion').textContent = fmt(d.litros_sesion, 2); $('kpiTotal').textContent = fmt(d.litros_totales, 2);
+  const lpm = d.caudal_lpm ?? 0;
+  if (chartPoints.length >= MAX_CHART) chartPoints.shift(); chartPoints.push(lpm);
+  const on = d.anomalia ?? false; chartColor = on ? '#D97A5E' : '#1D9E75';
+  
+  if(on) {
+     $('anomaliaBanner').className = 'status-banner alert';
+     $('anomaliaIcon').innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+     $('anomaliaTitle').textContent = 'El hogar requiere atención suave';
+     $('anomaliaDesc').textContent = 'Sentimos un corte en la fluidez habitual. Es un buen momento para verificar pacientemente el espacio.';
+  } else {
+     $('anomaliaBanner').className = 'status-banner normal';
+     $('anomaliaIcon').innerHTML = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>';
+     $('anomaliaTitle').textContent = 'Vivienda equilibrada y viva';
+     $('anomaliaDesc').textContent = 'El cauce acuático transita armónicamente. Tu entorno percibe seguridad y paz sin sobresaltos.';
+  }
+  drawGauge(lpm); $('gaugeLPM').textContent = fmt(lpm, 2); drawChart();
+});
 
-      if (isDanger) {
-        grad.addColorStop(0, 'rgba(244, 63, 94, 0.15)');
-        grad.addColorStop(1, 'rgba(244, 63, 94, 0)');
-      } else {
-        grad.addColorStop(0, 'rgba(51, 102, 255, 0.15)');
-        grad.addColorStop(1, 'rgba(51, 102, 255, 0)');
-      }
+db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
+  const d = snap.val(); const tbody = $('histBody');
+  if (!d) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">Despertando memorias pacientemente...</td></tr>'; return; }
+  const rows = Object.entries(d).sort((a, b) => Number(b[0]) - Number(a[0])).slice(0, 25);
+  tbody.innerHTML = rows.map(([, v]) => `<tr><td class="text-muted">${formatHora(v.ts)}</td><td class="td-num" style="color:var(--brand-green); font-weight: 500;">${fmt(v.caudal_lpm, 3)}</td><td class="td-num">${fmt(v.litros_sesion, 4)}</td><td class="td-num">${fmt(v.litros_totales, 3)}</td><td><div class="status-blob ${v.anomalia ? 'red' : 'green'}"><div class="dot"></div>${v.anomalia ? 'Inquietud' : 'Serenidad'}</div></td></tr>`).join('');
+});
 
-      // Relleno suave bajo la linea
-      cctx.beginPath();
-      chartPoints.forEach((v, i) => {
-        const x = pad.l + (i / (chartPoints.length - 1)) * iW;
-        const y = pad.t + iH - (v / maxV) * iH;
-        i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
-      });
-      cctx.lineTo(pad.l + iW, pad.t + iH);
-      cctx.lineTo(pad.l, pad.t + iH);
-      cctx.closePath();
-      cctx.fillStyle = grad;
-      cctx.fill();
-
-      // Línea gruesa
-      cctx.beginPath();
-      chartPoints.forEach((v, i) => {
-        const x = pad.l + (i / (chartPoints.length - 1)) * iW;
-        const y = pad.t + iH - (v / maxV) * iH;
-        i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
-      });
-      cctx.strokeStyle = chartColor;
-      cctx.lineWidth = 3; // Ligeramente más grueso
-      cctx.lineJoin = 'round';
-      cctx.lineCap = 'round';
-      cctx.stroke();
-
-      // Punto resaltado del dato final
-      const lastX = pad.l + iW;
-      const lastY = pad.t + iH - (chartPoints[chartPoints.length - 1] / maxV) * iH;
-      cctx.beginPath();
-      cctx.arc(lastX, lastY, 5, 0, 2 * Math.PI);
-      cctx.fillStyle = '#FFFFFF';
-      cctx.fill();
-      cctx.lineWidth = 2.5;
-      cctx.strokeStyle = chartColor;
-      cctx.stroke();
-    }
-
-    // ─── Firebase realtime events ────────────────────────────
-
-    // 1. Datos del streaming
-    db.ref('/caudalimetro/tiempo_real').on('value', snap => {
-      const d = snap.val();
-      if (!d) return;
-
-      lastPing = Date.now();
-      setStatus(true);
-      $('footerTime').textContent = new Date().toLocaleTimeString('es-ES');
-
-      // Asignar KPIs numéricos
-      $('kpiLPM').textContent = fmt(d.caudal_lpm, 2);
-      $('kpiLPS').textContent = fmt(d.caudal_lps, 3);
-      $('kpiSesion').textContent = fmt(d.litros_sesion, 2);
-      $('kpiTotal').textContent = fmt(d.litros_totales, 2);
-
-      // Animar Gauge
-      const lpm = d.caudal_lpm ?? 0;
-
-      // Reflejar la gráfica de historial
-      if (chartPoints.length >= MAX_CHART) chartPoints.shift();
-      chartPoints.push(lpm);
-
-      // Manejar el estado del Banner de Anomalía Funcional
-      const on = d.anomalia ?? false;
-      chartColor = on ? '#F43F5E' : '#3366FF';
-
-      const banner = $('anomaliaBanner');
-      if (on) {
-        banner.className = 'anomalia-banner alert';
-        $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
-        $('anomaliaTitle').textContent = 'Anomalía Detectada en Infraestructura';
-        $('anomaliaDesc').textContent = 'Atención: Se ha registrado una anomalía de flujo en los sensores periféricos. Requiere inspección de tuberías.';
-      } else {
-        banner.className = 'anomalia-banner normal';
-        $('anomaliaIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-        $('anomaliaTitle').textContent = 'Suministro de red estable';
-        $('anomaliaDesc').textContent = 'El flujo de agua central opera bajo parámetros paramétricos completamente normales en vivo.';
-      }
-
-      // Forzar repintado de grafos con nuevo color
-      drawGauge(lpm);
-      $('gaugeLPM').textContent = fmt(lpm, 2);
-      drawChart();
-    });
-
-    // 2. Histórico de Puntos
-    db.ref('/caudalimetro/historial').limitToLast(30).on('value', snap => {
-      const d = snap.val();
-      const tbody = $('histBody');
-      if (!d) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-mut);padding:32px">Iniciando recopilación de datos de telemetría...</td></tr>';
-        return;
-      }
-
-      const rows = Object.entries(d)
-        .sort((a, b) => Number(b[0]) - Number(a[0]))
-        .slice(0, 25);
-
-      tbody.innerHTML = rows.map(([, v]) => {
-        const isAnom = v.anomalia;
-        const dotColor = isAnom ? 'var(--red)' : 'var(--emerald)';
-        const textLabel = isAnom ? 'Crítico' : 'Normal';
-        const pillClass = isAnom ? 'red' : 'green';
-
-        return `
-    <tr>
-      <td class="td-muted">${formatHora(v.ts)}</td>
-      <td class="td-primary">${fmt(v.caudal_lpm, 3)}</td>
-      <td class="td-mono">${fmt(v.litros_sesion, 4)}</td>
-      <td class="td-mono">${fmt(v.litros_totales, 3)}</td>
-      <td>
-        <div class="status-pill ${pillClass}">
-           <span class="status-dot-inner" style="background:${dotColor}"></span>
-           ${textLabel}
-        </div>
-      </td>
-    </tr>
-  `}).join('');
-    });
-
-    // Watchdog de latencia
-    setInterval(() => {
-      if (lastPing && Date.now() - lastPing > 15000) setStatus(false);
-      if (!lastPing) setStatus(false);
-    }, 5000);
-  </script>
+setInterval(() => { if (lastPing && Date.now() - lastPing > 15000) setStatus(false); if (!lastPing) setStatus(false); }, 5000);
+</script>
 </body>
-
 </html>
