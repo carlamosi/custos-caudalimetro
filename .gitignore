@@ -1,0 +1,63 @@
+# Environment variables (NEVER commit)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+/build/
+/dist/
+*.o
+*.obj
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Credentials and secrets
+credentials.json
+secrets.json
+firebase-key.json
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Arduino
+build/
+.arduino/
+
+# Compiled files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Database
+*.db
+.sqlite
+.sqlite3
+
+# Cache
+.cache/
+tmp/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
