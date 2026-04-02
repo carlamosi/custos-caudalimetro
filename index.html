@@ -606,83 +606,6 @@
       border-radius: 50%;
     }
 
-    /* ── Gauge (Semi-circle) ── */
-    .gauge-card {
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .gauge-canvas-wrap {
-      position: relative;
-      width: 100%;
-      flex-grow: 1;
-      min-height: 180px;
-    }
-
-    .gauge-canvas-wrap canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .gauge-overlay {
-      position: absolute;
-      bottom: 14%;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .gauge-overlay .g-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--text-label);
-      display: block;
-      margin-bottom: -2px;
-    }
-
-    .gauge-overlay .g-val {
-      font-family: var(--font-serif);
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: var(--text-head);
-      letter-spacing: -0.03em;
-      display: block;
-    }
-
-    .gauge-stats {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 16px;
-    }
-
-    .gauge-stat {
-      text-align: center;
-    }
-
-    .gauge-stat .gs-val {
-      font-family: var(--font-serif);
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text-head);
-    }
-
-    .gauge-stat .gs-lbl {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-label);
-    }
-
-    .gauge-divider {
-      width: 1px;
-      background: rgba(8, 80, 65, 0.10);
-    }
 
     /* ── Simulation Panel ── */
     .sim-panel {
@@ -854,18 +777,6 @@
       gap: 20px;
     }
 
-    @media (max-width: 1100px) {
-      .dashboard-grid {
-        flex-direction: column;
-      }
-
-      .main-chart-area,
-      .side-cards-area {
-        flex: none;
-        width: 100%;
-      }
-    }
-
     /* ── Bottom Row & Activity Feed ── */
     .bottom-row {
       display: grid;
@@ -1006,19 +917,26 @@
     }
 
     /* ── Responsive ── */
-    @media (max-width: 1100px) {
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        flex-direction: column;
+      }
+      
+      .main-chart-area,
+      .side-cards-area {
+        flex: none;
+        width: 100%;
+      }
+
+      .side-cards-area {
+        flex-direction: row;
+      }
 
       .charts-row,
       .bottom-row {
         grid-template-columns: 1fr;
       }
 
-      .gauge-canvas-wrap {
-        min-height: 260px;
-      }
-    }
-
-    @media (max-width: 768px) {
       .page {
         padding: 20px 16px 48px;
       }
@@ -1031,11 +949,7 @@
 
       .header-right {
         flex-direction: column;
-      }
-
-      .search-glass,
-      .search-glass:focus-within {
-        width: 100%;
+        align-items: stretch;
       }
 
       .kpi-val {
@@ -1045,9 +959,23 @@
       .sim-grid {
         grid-template-columns: 1fr 1fr;
       }
+
+      .alert-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
     }
 
     @media (max-width: 480px) {
+      .page {
+        padding: 16px 12px 32px;
+      }
+
+      .side-cards-area {
+        flex-direction: column;
+      }
+
       .kpi-grid {
         grid-template-columns: 1fr;
       }
@@ -1058,6 +986,23 @@
 
       .brand-words h1 {
         font-size: 1.5rem;
+      }
+
+      .chart-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .chart-title-group h2 {
+        font-size: 1.2rem;
+      }
+      
+      .chart-live-val {
+        font-size: 1.6rem;
+      }
+
+      .kpi-card, .chart-card, .sim-panel, .feed-panel {
+        padding: 20px;
       }
     }
   </style>
@@ -1483,56 +1428,6 @@
       ax.lineWidth = 2.5; ax.strokeStyle = lineCol; ax.stroke();
     }
 
-    /* ═══════════════════════════
-       CANVAS 2 — Semi-circle Gauge
-    ═══════════════════════════ */
-    const gC = $('gaugeCanvas');
-    const gx2 = gC.getContext('2d');
-
-    function drawGauge(totVal, sesRatio) {
-      const wrap = gC.parentElement;
-      const dpr = devicePixelRatio || 1;
-      const W = wrap.clientWidth;
-      const H = wrap.clientHeight;
-      gC.width = W * dpr;
-      gC.height = H * dpr;
-      gx2.scale(dpr, dpr);
-      gx2.clearRect(0, 0, W, H);
-
-      const cx = W / 2, cy = H * 0.84;
-      const rOuter = Math.min(cx, cy) * 0.88;
-      const lw = Math.max(20, rOuter * 0.22);
-
-      const SA = Math.PI, EA = 2 * Math.PI; // left → right semicircle
-
-      // ── Track (background arc)
-      gx2.beginPath(); gx2.arc(cx, cy, rOuter, SA, EA);
-      gx2.strokeStyle = 'rgba(8,80,65,0.07)'; gx2.lineWidth = lw; gx2.lineCap = 'round';
-      gx2.stroke();
-
-      // ── Progress arc
-      const frac = Math.min((totVal % 20000) / 20000, 1) || 0;
-      const ea2 = SA + frac * Math.PI;
-
-      if (frac > 0.005) {
-        const gl = gx2.createLinearGradient(cx - rOuter, 0, cx + rOuter, 0);
-        if (anomaly) {
-          gl.addColorStop(0, '#F87171'); gl.addColorStop(1, '#DC2626');
-        } else {
-          gl.addColorStop(0, '#1D9E75'); gl.addColorStop(1, '#5EEAD4');
-        }
-        gx2.beginPath(); gx2.arc(cx, cy, rOuter, SA, ea2);
-        gx2.strokeStyle = gl; gx2.lineWidth = lw; gx2.lineCap = 'round';
-        gx2.shadowColor = anomaly ? 'rgba(220,78,65,0.3)' : 'rgba(29,158,117,0.3)';
-        gx2.shadowBlur = 16; gx2.shadowOffsetY = 4;
-        gx2.stroke(); gx2.shadowBlur = 0; gx2.shadowOffsetY = 0;
-      }
-
-      // ── Inner dashed ring detail
-      gx2.beginPath(); gx2.arc(cx, cy, rOuter - lw - 8, SA, EA);
-      gx2.strokeStyle = 'rgba(8,80,65,0.06)'; gx2.lineWidth = 1.5;
-      gx2.setLineDash([3, 7]); gx2.stroke(); gx2.setLineDash([]);
-    }
 
     /* ─── Clear ─── */
     function clearHistory() {
