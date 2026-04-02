@@ -1127,8 +1127,8 @@
             </div>
             <div class="filter-chip">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
               </svg>
               Tiempo real
             </div>
@@ -1169,70 +1169,71 @@
       </div>
     </div>
 
-  <!-- Bottom Row: Sim Panel & Feed -->
-  <div class="bottom-row">
+    <!-- Bottom Row: Sim Panel & Feed -->
+    <div class="bottom-row">
 
-    <!-- Sim Panel -->
-    <div class="glass sim-panel">
-      <div class="sim-header">
-        <div class="sim-title-group">
-          <div class="kpi-label">Herramienta</div>
-          <h3>Panel de Demostración</h3>
-          <p>Inyecta datos locales sin consumir cuota Firebase</p>
+      <!-- Sim Panel -->
+      <div class="glass sim-panel">
+        <div class="sim-header">
+          <div class="sim-title-group">
+            <div class="kpi-label">Herramienta</div>
+            <h3>Panel de Demostración</h3>
+            <p>Inyecta datos locales sin consumir cuota Firebase</p>
+          </div>
+          <div class="mode-pill live" id="modePill">Hardware Activo</div>
         </div>
-        <div class="mode-pill live" id="modePill">Hardware Activo</div>
-      </div>
 
-      <div class="sim-grid">
-        <button class="sim-btn" onclick="startSim(9.5)">
-          <div class="sim-ico">🌊</div>
-          <div class="sim-name">Caudal Intenso</div>
-          <div class="sim-desc">Forzar 9.5 L/min</div>
-        </button>
-        <button class="sim-btn cyan" onclick="startSim(2.4)">
-          <div class="sim-ico" style="background:rgba(2,185,211,0.10);">💧</div>
-          <div class="sim-name">Goteo Continuo</div>
-          <div class="sim-desc">Forzar 2.4 L/min</div>
-        </button>
-        <button class="sim-btn" onclick="startSim(0)" style="--sim-hover-bg: rgba(8,80,65,0.04);">
-          <div class="sim-ico" style="background:rgba(8,80,65,0.06);">⏸</div>
-          <div class="sim-name">Corte de Agua</div>
-          <div class="sim-desc">Detener flujo</div>
-        </button>
-        <button class="sim-btn red" onclick="triggerAnomaly(true)">
-          <div class="sim-ico">⚠️</div>
-          <div class="sim-name">Simular Fallo</div>
-          <div class="sim-desc">Activar anomalía</div>
-        </button>
-        <button class="sim-btn ok" onclick="triggerAnomaly(false)">
-          <div class="sim-ico">✓</div>
-          <div class="sim-name">Normalizar</div>
-          <div class="sim-desc">Restaurar OK</div>
-        </button>
-      </div>
-
-      <button class="btn-reconnect" onclick="stopSim()">
-        Reconectar Telemetría Hardware (ESP32-C3)
-      </button>
-    </div>
-
-    <!-- Feed Panel -->
-    <div class="glass feed-panel">
-      <div class="feed-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-          <div class="kpi-label">Bitácora</div>
-          <h3 class="feed-title">Registro Hídrico</h3>
+        <div class="sim-grid">
+          <button class="sim-btn" onclick="startSim(9.5)">
+            <div class="sim-ico">🌊</div>
+            <div class="sim-name">Caudal Intenso</div>
+            <div class="sim-desc">Forzar 9.5 L/min</div>
+          </button>
+          <button class="sim-btn cyan" onclick="startSim(2.4)">
+            <div class="sim-ico" style="background:rgba(2,185,211,0.10);">💧</div>
+            <div class="sim-name">Goteo Continuo</div>
+            <div class="sim-desc">Forzar 2.4 L/min</div>
+          </button>
+          <button class="sim-btn" onclick="startSim(0)" style="--sim-hover-bg: rgba(8,80,65,0.04);">
+            <div class="sim-ico" style="background:rgba(8,80,65,0.06);">⏸</div>
+            <div class="sim-name">Corte de Agua</div>
+            <div class="sim-desc">Detener flujo</div>
+          </button>
+          <button class="sim-btn red" onclick="triggerAnomaly(true)">
+            <div class="sim-ico">⚠️</div>
+            <div class="sim-name">Simular Fallo</div>
+            <div class="sim-desc">Activar anomalía</div>
+          </button>
+          <button class="sim-btn ok" onclick="triggerAnomaly(false)">
+            <div class="sim-ico">✓</div>
+            <div class="sim-name">Normalizar</div>
+            <div class="sim-desc">Restaurar OK</div>
+          </button>
         </div>
-        <button class="filter-chip" onclick="clearHistory()" style="background:rgba(220,78,65,0.06); color:var(--danger); border-color:rgba(220,78,65,0.15);">
-          Borrar Historial
+
+        <button class="btn-reconnect" onclick="stopSim()">
+          Reconectar Telemetría Hardware (ESP32-C3)
         </button>
       </div>
-      <div class="feed-list" id="feedList">
-        <!-- Inject entries here -->
-      </div>
-    </div>
 
-  </div><!-- /bottom-row -->
+      <!-- Feed Panel -->
+      <div class="glass feed-panel">
+        <div class="feed-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div class="kpi-label">Bitácora</div>
+            <h3 class="feed-title">Registro Hídrico</h3>
+          </div>
+          <button class="filter-chip" onclick="clearHistory()"
+            style="background:rgba(220,78,65,0.06); color:var(--danger); border-color:rgba(220,78,65,0.15);">
+            Borrar Historial
+          </button>
+        </div>
+        <div class="feed-list" id="feedList">
+          <!-- Inject entries here -->
+        </div>
+      </div>
+
+    </div><!-- /bottom-row -->
 
   </div><!-- /page -->
 
@@ -1247,14 +1248,8 @@
     const f1 = n => (+(n ?? 0)).toFixed(1);
     const f0 = n => Math.round(+(n ?? 0)).toString();
 
-    /* ─── PWA Service Worker ─── */
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(r => console.log('PWA Ready'))
-          .catch(e => console.log('SW fail', e));
-      });
-    }
+    /* ─── PWA Service Worker (Removed if missing) ─── */
+    // if ('serviceWorker' in navigator) { ... }
 
     /* ─── Connection pill ─── */
     function setConn(mode, text) {
@@ -1282,7 +1277,9 @@
     const db = firebase.database();
 
     /* ─── State ─── */
-    let pts = Array(40).fill(0);
+    let pts = Array(120).fill(0);
+    let latestLPM = 0;
+    let latestSes = 0;
     let anomaly = false;
     let isSim = false, simTimer = null, simV = 0, simTot = 15842.3;
     let lastPing = null;
@@ -1311,24 +1308,21 @@
 
     /* ─── Render ─── */
     function render(d) {
-      // KPIs
-      $('valLPM').textContent = f2(d.caudal_lpm);
-      $('valSes').textContent = f2(d.litros_sesion);
-      $('chartLiveVal').innerHTML = f2(d.caudal_lpm) + ' <small style="font-size:0.9rem; color:var(--text-muted); font-family:var(--font-sans); font-weight:500;">L/min</small>';
-
-      // KPI coloring
-      const lpmEl = $('valLPM');
-      lpmEl.className = 'kpi-val' + (d.anomalia ? ' danger' : '');
-
-      // Badge
-      const b = $('badgeLPM');
-      if (d.anomalia) { b.className = 'kpi-badge down'; b.textContent = '¡ALERTA!'; }
-      else if (d.caudal_lpm > 0.05) { b.className = 'kpi-badge up'; b.textContent = '↗ vivo'; }
-      else { b.className = 'kpi-badge flat'; b.textContent = '⇌ reposo'; }
-
+      // Update global state only, rendering happens in the animation loop
+      latestLPM = d.caudal_lpm;
+      latestSes = d.litros_sesion;
       anomaly = d.anomalia;
       setAlert(anomaly);
 
+      // (Badge and state logic stays here for one-time updates)
+      const b = $('badgeLPM');
+      if (b) {
+        if (d.anomalia) { b.className = 'kpi-badge down'; b.textContent = '¡ALERTA!'; }
+        else if (d.caudal_lpm > 0.05) { b.className = 'kpi-badge up'; b.textContent = '↗ vivo'; }
+        else { b.className = 'kpi-badge flat'; b.textContent = '⇌ reposo'; }
+      }
+
+      // Local state updates
       let newState = 'REPOSO';
       if (d.anomalia) newState = 'ALERTA';
       else if (d.caudal_lpm > 8.0) newState = 'INTENSO';
@@ -1342,10 +1336,33 @@
         addFeed(newState, d.caudal_lpm, d.anomalia);
       }
       currentFeedState = newState;
-
-      pts.shift(); pts.push(d.caudal_lpm);
-      drawArea();
     }
+
+    // ── Continuous Animation & UI Refresh (Refresh every 10Hz/100ms) ──
+    setInterval(() => {
+      // 1. Shift History
+      pts.shift();
+      pts.push(latestLPM);
+
+      // 2. Refresh UI Numbers (Real-time feel)
+      if ($('valLPM')) $('valLPM').textContent = f2(latestLPM);
+      if ($('valSes')) $('valSes').textContent = f2(latestSes);
+      if ($('chartLiveVal')) {
+        $('chartLiveVal').innerHTML = f2(latestLPM) + ' <small style="font-size:0.9rem; color:var(--text-muted); font-family:var(--font-sans); font-weight:500;">L/min</small>';
+      }
+
+      // 3. Render Graph
+      drawArea();
+    }, 100);
+
+    // ── Data Pull (Bypass slow push API) ──
+    setInterval(() => {
+      if (isSim) return;
+      db.ref('/caudalimetro/tiempo_real').once('value').then(snap => {
+        const d = snap.val();
+        if (d) render({ caudal_lpm: d.caudal_lpm || 0, caudal_lps: d.caudal_lps || 0, litros_sesion: d.litros_sesion || 0, litros_totales: d.litros_totales || 0, anomalia: !!d.anomalia });
+      });
+    }, 500);
 
     /* ─── Sim ─── */
     function startSim(v) {
@@ -1355,16 +1372,16 @@
       setConn('demo', 'Simulación Activa');
       if (simTimer) clearInterval(simTimer);
       simTimer = setInterval(() => {
-        const j = v > 0 ? (Math.random() * 0.5 - 0.25) : 0;
+        const j = v > 0 ? (Math.random() * 0.4 - 0.2) : 0;
         const a = Math.max(0, v + j);
-        simTot += a / 60;
+        simTot += a / (60 * 5);
         render({ caudal_lpm: a, caudal_lps: a / 60, litros_sesion: simTot * 0.03, litros_totales: simTot, anomalia: anomaly });
-      }, 1000);
+      }, 200);
     }
     function triggerAnomaly(s) { anomaly = s; if (!isSim) startSim(simV); }
     function stopSim() {
       isSim = false; if (simTimer) clearInterval(simTimer);
-      pts = Array(40).fill(0);
+      pts = Array(120).fill(0);
       $('modePill').className = 'mode-pill live'; $('modePill').textContent = 'Hardware Activo';
       setConn('off', 'Reconectando...');
       db.ref('/caudalimetro/tiempo_real').on('value', snap => {
@@ -1392,9 +1409,14 @@
       const dpr = devicePixelRatio || 1;
       const W = wrap.clientWidth;
       const H = wrap.clientHeight;
-      aC.width = W * dpr;
-      aC.height = H * dpr;
-      ax.scale(dpr, dpr);
+
+      // Only resize if needed (Expensive operation)
+      if (aC.width !== W * dpr || aC.height !== H * dpr) {
+        aC.width = W * dpr;
+        aC.height = H * dpr;
+        ax.scale(dpr, dpr);
+      }
+
       ax.clearRect(0, 0, W, H);
       if (pts.length < 2) return;
 
