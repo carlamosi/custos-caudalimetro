@@ -1114,28 +1114,6 @@
     </div>
 
     <!-- Dashboard Grid -->
-    <section class="kpi-grid">
-      <!-- flow kpi -->
-      <div class="glass kpi-card">
-        <div class="kpi-top">
-          <div class="kpi-icon-wrap">🌊</div>
-          <div class="kpi-badge up" id="badgeLPM">⇌ reposo</div>
-        </div>
-        <div class="kpi-label">Caudal Actual</div>
-        <div class="kpi-val" id="valLPM">0.00</div>
-        <div class="kpi-unit">Litros por minuto (L/min)</div>
-      </div>
-      <!-- session kpi -->
-      <div class="glass kpi-card">
-        <div class="kpi-top">
-          <div class="kpi-icon-wrap">💧</div>
-          <div class="kpi-badge flat">✓ estable</div>
-        </div>
-        <div class="kpi-label">Volumen Sesión</div>
-        <div class="kpi-val" id="valSes">0.00</div>
-        <div class="kpi-unit">Litros acumulados (L)</div>
-      </div>
-    </section>
 
     <div class="dashboard-grid">
       <!-- Main Chart Area -->
@@ -1167,28 +1145,26 @@
         </div>
       </div>
 
-      <!-- Side Cards (Gauge) -->
       <div class="side-cards-area">
-        <div class="glass gauge-card">
-          <div class="kpi-label">Carga del Circuito</div>
-          <div class="gauge-canvas-wrap">
-            <canvas id="gaugeCanvas"></canvas>
-            <div class="gauge-overlay">
-              <span class="g-label">Estado</span>
-              <span class="g-val" id="gStateVal">OK</span>
-            </div>
+        <!-- flow kpi -->
+        <div class="glass kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">🌊</div>
+            <div class="kpi-badge up" id="badgeLPM">⇌ reposo</div>
           </div>
-          <div class="gauge-stats">
-            <div class="gauge-stat">
-              <div class="gs-val">20K</div>
-              <div class="gs-lbl">Máximo</div>
-            </div>
-            <div class="gauge-divider"></div>
-            <div class="gauge-stat">
-              <div class="gs-val">0.1</div>
-              <div class="gs-lbl">Ratio</div>
-            </div>
+          <div class="kpi-label">Caudal Actual</div>
+          <div class="kpi-val" id="valLPM">0.00</div>
+          <div class="kpi-unit">Litros por minuto (L/min)</div>
+        </div>
+        <!-- session kpi -->
+        <div class="glass kpi-card" style="flex-grow: 1;">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">💧</div>
+            <div class="kpi-badge flat">✓ estable</div>
           </div>
+          <div class="kpi-label">Volumen Sesión</div>
+          <div class="kpi-val" id="valSes">0.00</div>
+          <div class="kpi-unit">Litros acumulados (L)</div>
         </div>
       </div>
     </div>
@@ -1242,9 +1218,14 @@
 
     <!-- Feed Panel -->
     <div class="glass feed-panel">
-      <div class="feed-header">
-        <div class="kpi-label">Bitácora</div>
-        <h3 class="feed-title">Registro Hídrico</h3>
+      <div class="feed-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div class="kpi-label">Bitácora</div>
+          <h3 class="feed-title">Registro Hídrico</h3>
+        </div>
+        <button class="filter-chip" onclick="clearHistory()" style="background:rgba(220,78,65,0.06); color:var(--danger); border-color:rgba(220,78,65,0.15);">
+          Borrar Historial
+        </button>
       </div>
       <div class="feed-list" id="feedList">
         <!-- Inject entries here -->
@@ -1364,7 +1345,6 @@
 
       pts.shift(); pts.push(d.caudal_lpm);
       drawArea();
-      drawGauge(d.litros_totales || d.litros_sesion || simTot, 0);
     }
 
     /* ─── Sim ─── */
@@ -1532,8 +1512,14 @@
       gx2.setLineDash([3, 7]); gx2.stroke(); gx2.setLineDash([]);
     }
 
+    /* ─── Clear ─── */
+    function clearHistory() {
+      const list = $('feedList');
+      if (list) list.innerHTML = '';
+    }
+
     /* ── Resize handler ── */
-    window.addEventListener('resize', () => { drawArea(); drawGauge(simTot, 0); });
+    window.addEventListener('resize', () => { drawArea(); });
 
   </script>
 </body>
