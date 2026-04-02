@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Custos — Plataforma de Inteligencia Hídrica">
   <title>Custos · Water Intelligence</title>
-  <link rel="icon" type="image/svg+xml" href="identidad%20marca/logo.svg">
+  
+  <!-- ── Modo Kiosco & PWA ── -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="logo.svg">
+  <meta name="theme-color" content="#FAF7F2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -142,6 +150,14 @@
       display: flex;
       align-items: center;
       gap: 18px;
+      text-decoration: none;
+      transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+    }
+    .brand:hover {
+      transform: scale(1.02);
+    }
+    .brand:active {
+      transform: scale(0.97);
     }
     .brand-mark {
       width: 54px; height: 54px;
@@ -417,23 +433,19 @@
 
   <!-- Header -->
   <header>
-    <div class="brand">
+    <a href="https://custos-guardian.vercel.app/" class="brand" target="_blank" rel="noopener noreferrer">
       <div class="brand-mark">
         <svg viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.01 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z"/>
+          <path d="M 709.29 67.7C 319.43 115.99 48.88 413.53 48.88 794.87C 48.88 1116.56 229.96 1356.58 537.44 1442.5C 614.14 1463.81 809.42 1468.78 894.64 1452.45C 1036.66 1424.04 1234.78 1338.83 1234.78 1305.45C 1234.78 1301.9 1256.09 1239.41 1281.65 1167.69C 1332.07 1026.37 1332.78 1011.46 1292.3 1016.43C 1277.39 1017.85 1268.16 1029.92 1241.89 1076.79C 1167.32 1213.14 1056.54 1282.73 901.03 1289.83C 702.9 1299.06 557.33 1190.41 531.05 1013.59C 514.72 902.1 536.73 842.45 668.82 643.61C 724.21 560.53 778.17 476.73 789.54 458.27C 814.39 415.66 818.65 417.8 858.42 486.67C 876.17 517.21 920.2 586.09 955 638.64C 1065.07 802.68 1085.66 848.13 1085.66 928.37C 1085.66 1044.12 1005.41 1152.77 908.84 1168.4C 848.48 1177.63 833.57 1207.45 889.66 1206.74C 1013.94 1205.32 1144.6 1107.33 1175.14 992.28C 1207.09 870.85 1175.14 789.19 996.18 530.71C 903.16 396.49 877.59 351.04 852.03 275.06C 830.0 209.02 815.81 198.37 801.61 235.29C 762.55 339.68 742.67 374.48 646.09 514.37C 537.44 670.6 518.98 698.29 493.41 750.13C 363.46 1010.75 465.01 1279.17 722.07 1355.16C 763.26 1367.23 776.75 1385.69 747.64 1389.96C 720.66 1393.51 634.02 1371.49 586.44 1348.77C 407.49 1261.42 327.25 1056.2 384.76 833.93C 394.71 794.87 407.49 716.76 413.88 659.95C 447.26 344.65 560.88 171.38 760.42 133.75C 940.08 99.66 1131.82 258.01 1217.03 510.82C 1231.94 555.56 1233.37 556.98 1258.22 559.11C 1288.75 561.95 1290.89 555.56 1283.07 489.52C 1280.23 463.95 1275.97 380.16 1273.13 302.75l-4.97-140.6l-18.46-9.23C 1132.53 92.56 859.13 49.24 709.29 67.7Z"/>
         </svg>
       </div>
       <div class="brand-words">
         <h1>Custos</h1>
         <span>Water Intelligence Platform</span>
       </div>
-    </div>
+    </a>
 
     <div class="header-right">
-      <div class="search-glass">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Buscar métrica...">
-      </div>
       <div class="conn-pill live" id="connPill">
         <div class="conn-dot"></div>
         <span id="connText">Conectando...</span>
@@ -608,15 +620,11 @@
         <div class="sim-desc">Restaurar OK</div>
       </button>
     </div>
-
+    
     <button class="btn-reconnect" onclick="stopSim()">
       Reconectar Telemetría Hardware (ESP32-C3)
     </button>
   </div>
-
-  <footer>
-    Custos Water Intelligence &nbsp;·&nbsp; <span id="clockEl">—</span>
-  </footer>
 
 </div><!-- /page -->
 
@@ -631,8 +639,14 @@ const f3 = n  => (+(n ?? 0)).toFixed(3);
 const f1 = n  => (+(n ?? 0)).toFixed(1);
 const f0 = n  => Math.round(+(n ?? 0)).toString();
 
-/* ─── Clock ─── */
-setInterval(() => { $('clockEl').textContent = new Date().toLocaleTimeString('es-ES'); }, 1000);
+/* ─── PWA Service Worker ─── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(r => console.log('PWA Ready'))
+      .catch(e => console.log('SW fail', e));
+  });
+}
 
 /* ─── Connection pill ─── */
 function setConn(mode, text) {
