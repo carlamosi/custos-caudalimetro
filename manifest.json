@@ -1,0 +1,22 @@
+{
+    "name": "Custos Water Intelligence",
+    "short_name": "Custos",
+    "description": "Monitorización de patrones de hidratación y anomalías hídricas.",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#FAF7F2",
+    "theme_color": "#085041",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "favicon.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ]
+}
